@@ -1,6 +1,6 @@
 // PreCex - fifo_sync L3 缺陷样本 s06（buggy 版）
-// 作者：Toylog | 版本：v0.1 | 功能概述：注入『FIFO 满空』类缺陷——半满标志比较 >= 改 >（count==DEPTH/2 时半满错误为 0，击穿 A5）
-// 来源：rtl/fifo_sync/fifo_sync.sv 单点注入（行 35）| 击穿断言：fifo_sync A5（half_full==(count>=DEPTH/2)）
+// 作者：Toylog | 版本：v0.1 | 功能概述：注入『FIFO 满空』类缺陷——空标志比较 ==0 改 <=1（count==1 时误报空，击穿 A2 类性质）
+// 来源：rtl/fifo_sync/fifo_sync.sv 单点注入（行 34）| 击穿断言：fifo_sync A2（空时不读）
 
 // PreCex - fifo_sync 黄金基线
 // 作者：Toylog | 版本：v0.1 | 功能概述：参数化同步 FIFO（读优先语义，full/empty/半满输出，count 计数防指针回绕错）
@@ -35,8 +35,8 @@ module fifo_sync #(
     wire can_rd = rd_en && !empty;
 
     assign full      = (count == DEPTH);
-    assign empty     = (count == 0);
-    assign half_full = (count > (DEPTH >> 1));
+    assign empty     = (count == 1'b1);
+    assign half_full = (count >= (DEPTH >> 1));
 
     // 时序逻辑：指针与计数更新
     always @(posedge clk or negedge rst_n) begin

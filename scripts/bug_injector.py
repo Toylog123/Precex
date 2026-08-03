@@ -27,12 +27,12 @@ from evaluator import compile_check, sim_check, formal_check  # noqa: E402  复�
 RTL_DIR = os.path.join(REPO_ROOT, "rtl")
 SAMPLES_DIR = os.path.join(REPO_ROOT, "samples", "bugs")
 DATE = "2026-08-03"          # 构造日期（数据集污染检查用）
-FORMAL_TIMEOUT = 240.0       # 注入校验时 formal 超时（sby smtbmc+z3，秒）
+FORMAL_TIMEOUT = 900.0       # 注入校验时 formal 超时（sby smtbmc+z3，秒；uart_rx 深度 240 需较长 BMC）
 SIM_TIMEOUT = 120.0          # 弱 tb 仿真超时
 
 # 各模块 sby BMC 深度：反例可达拍数 + 裕量（fifo A5 需写 4 拍；fsm A6 需走完序列约 12 拍）
 MODULE_DEPTH = {
-    "fifo_sync": 12, "fsm_ctrl": 24, "uart_tx": 24, "uart_rx": 24,
+    "fifo_sync": 12, "fsm_ctrl": 40, "uart_tx": 24, "uart_rx": 24,
     "axi_lite_slave": 16, "counter_alu": 12,
 }
 
@@ -62,12 +62,12 @@ GLOBAL_ASSUME = {
 # 会在 sim 阶段击穿 buggy，导致 L3 校验失败。清洗即删除含这些关键字的 $fatal 检查行（保留数据通路检查）。
 WEAK_TB_STRIP = {
     "fifo_full": ["full", "empty", "half_full", "count", "dout"],
-    "state_trans": ["state", "done", "timeout_irq"],
-    "reset": ["cnt", "dout"],
-    "width_trunc": ["cnt", "count", "full", "empty", "half_full", "dout"],
-    "boundary_wrap": ["cnt", "count", "dout"],
-    "edge": ["txd", "tx_busy"],
-    "handshake": ["txd", "tx_busy", "BVALID"],
+    "state_trans": ["state", "done", "timeout_irq", "rx_data", "rx_valid", "alu_out"],
+    "reset": ["cnt", "dout", "rx_data", "rx_valid", "rx_busy", "readback", "mask", "WSTRB"],
+    "width_trunc": ["cnt", "count", "full", "empty", "half_full", "dout", "readback", "mask", "WSTRB", "reg"],
+    "boundary_wrap": ["cnt", "count", "dout", "state", "done", "timeout_irq", "txd", "tx_busy", "readback", "WSTRB", "RVALID", "BVALID", "reg", "rx_data", "rx_valid"],
+    "edge": ["txd", "tx_busy", "full", "empty", "half_full", "count", "dout", "state"],
+    "handshake": ["txd", "tx_busy", "BVALID", "full", "empty", "half_full", "count", "dout", "RVALID", "readback"],
 }
 
 
@@ -122,6 +122,27 @@ INJECTORS = {
             {"desc": "IDLE 启动目标 S1 改 S2（击穿启动语义断言）",
              "pat": re.compile(r"if\s*\(\s*start\s*\)\s*begin\s*\n(\s*)state\s*<=\s*S1;"),
              "repl": r"if (start) begin\n\1state    <= S2;", "hit": "启动语义断言", "expect": "fsm_ctrl"},
+            {"desc": "uart_rx 跳过起始位中点确认：IDLE 检测到下降沿直接进 DATA（击穿 A1/A2）",
+             "pat": re.compile(r"(S_IDLE:\s*begin\n\s*rx_busy\s*<=\s*1'b0;\n\s*if\s*\(!rxd\)\s*begin\n\s*baud_cnt\s*<=\s*\{DIV_W\{1'b0\}\};\n)(\s*)state\s*<=\s*S_START;"),
+             "repl": r"\1\2state    <= S_DATA;", "hit": "uart_rx A1/A2（起始位中点确认）", "expect": "uart_rx"},
+            {"desc": "uart_rx 起始位确认后跳过数据位：START 中点确认后直接进 STOP（击穿 A4）",
+             "pat": re.compile(r"(bit_cnt\s*<=\s*4'd0;\n\s*state\s*<=\s*S_DATA;)"),
+             "repl": r"bit_cnt  <= 4'd0;\n                            state    <= S_STOP;", "hit": "uart_rx A4（状态机跳转合法性）", "expect": "uart_rx"},
+            {"desc": "S1 正常完成分支直接回空闲（state <= S2 改 S_IDLE，跳过 S2/S3，击穿 A1）",
+             "pat": re.compile(r"hold_cnt\s*==\s*S1_HOLD\)\s*begin\s*\n(\s*)state\s*<=\s*S2;"),
+             "repl": r"hold_cnt == S1_HOLD) begin\n\1state    <= S_IDLE;", "hit": "fsm_ctrl A1（跳转合法性）", "expect": "fsm_ctrl"},
+            {"desc": "uart_tx 数据位结束跳过 STOP 直接回 IDLE（帧缺停止位，击穿 A4）",
+             "pat": re.compile(r"(if \(bit_cnt == DATA_W - 1\) begin\n\s*)state <= S_STOP;"),
+             "repl": r"\1state    <= S_IDLE;", "hit": "uart_tx A4（DATA→STOP 收尾）", "expect": "uart_tx"},
+            {"desc": "counter ALU 运算译码对调：op==OP_ADD 输出改减法（加法变减法，击穿 A4）",
+             "pat": re.compile(r"(\(op == OP_ADD\) \? \()(a \+ b)(\))"),
+             "repl": r"\g<1>a - b\g<3>", "hit": "counter_alu A4（ALU 输出正确性）", "expect": "counter_alu"},
+            {"desc": "axi 写响应前置放宽：BVALID 仅需 aw_done（无写数据也响应，击穿 A3）",
+             "pat": re.compile(r"(else if \()(aw_done && w_done)( && !S_AXI_BVALID\))"),
+             "repl": r"\g<1>aw_done\g<3>", "hit": "axi A3（BVALID 前置 AW/W 完成）", "expect": "axi_lite_slave"},
+            {"desc": "uart_rx 数据位结束跳过 STOP 直接回 IDLE（帧无完成脉冲，击穿 A4）",
+             "pat": re.compile(r"(if \(bit_cnt == \(DATA_W - 1\)\) begin\n\s*)state <= S_STOP;"),
+             "repl": r"\1state    <= S_IDLE;", "hit": "uart_rx A4（DATA→STOP 跳转）", "expect": "uart_rx"},
         ],
     },
     "handshake": {
@@ -135,6 +156,15 @@ INJECTORS = {
              "pat": re.compile(r"(\s*end\s+else\s+if\s+\(S_AXI_BVALID\s*&&\s*S_AXI_BREADY\)\s*begin\s*\n)(\s*)S_AXI_BVALID\s*<=\s*1'b0;\s*\n(\s*)end\n"),
              "repl": r"\1\2// BUG: BVALID 释放分支被删除（写响应不释放）\n\2// S_AXI_BVALID <= 1'b0;\n\3end\n",
              "hit": "axi 写通道握手断言（BVALID 不释放）", "expect": "axi_lite_slave"},
+            {"desc": "空时仍读：can_rd 去掉 !empty 门控（空时读出无效数据，击穿 A2）",
+             "pat": re.compile(r"(wire\s+can_rd\s*=\s*rd_en\s*)\&\&\s*!empty\s*;"),
+             "repl": r"\g<1>;", "hit": "fifo_sync A2（空时不读）", "expect": "fifo_sync"},
+            {"desc": "满时仍写：can_wr 去掉 !full 门控（满时写入覆盖，击穿 A1）",
+             "pat": re.compile(r"(wire\s+can_wr\s*=\s*wr_en\s*)\&\&\s*!full\s*;"),
+             "repl": r"\g<1>;", "hit": "fifo_sync A1（满时不写）", "expect": "fifo_sync"},
+            {"desc": "读响应不释放：RVALID 释放分支删除（读响应持续有效）",
+             "pat": re.compile(r"(else\s+if\s+\(S_AXI_RVALID\s*&&\s*S_AXI_RREADY\)\s*begin\s*\n)(\s*)S_AXI_RVALID\s*<=\s*1'b0;\s*\n(\s*)end\n"),
+             "repl": r"\1\2// BUG: RVALID 释放分支被删除\n\2// S_AXI_RVALID <= 1'b0;\n\3end\n", "hit": "axi 读通道握手断言（RVALID 不释放）", "expect": "axi_lite_slave"},
         ],
     },
     "fifo_full": {
@@ -150,6 +180,12 @@ INJECTORS = {
             {"desc": "空标志比较 ==0 改 <=1（count==1 时误报空，击穿 A2 类性质）",
              "pat": re.compile(r"(assign\s+empty\s*=\s*\(count\s*==\s*)0(\s*\);)$", re.M),
              "repl": r"\g<1>1'b1\g<2>", "hit": "fifo_sync A2（空时不读）", "expect": "fifo_sync"},
+            {"desc": "同拍读写 count 守恒破坏：删 can_wr&&can_rd 的保持分支（同拍读写 count 仍 +1，击穿 A4）",
+             "pat": re.compile(r"(\s*// 计数守恒：同拍读写 count 不变\n\s*)if \(can_wr && can_rd\) begin\n\s*count <= count;\n\s*end else "),
+             "repl": r"\1", "hit": "fifo_sync A4（count 增量守恒）", "expect": "fifo_sync"},
+            {"desc": "写入动作整体删除：删 mem[tail]<=din 与 tail<=tail+1（写请求被吞但 count 仍 +1，击穿 A6）",
+             "pat": re.compile(r"(\s*// 写：非满时写入 tail 位置并回绕\n\s*)if \(can_wr\) begin\n(\s*)mem\[tail\] <= din;\n(\s*)tail      <= tail \+ 1'b1;\n(\s*)end\n"),
+             "repl": r"\1", "hit": "fifo_sync A6（写指针推进）", "expect": "fifo_sync"},
         ],
     },
     "boundary_wrap": {
@@ -164,7 +200,26 @@ INJECTORS = {
              "repl": r"\1tail;", "hit": "fifo_sync A4/A3 类指针性质", "expect": "fifo_sync"},
             {"desc": "数据位计数终值偏移：bit_cnt == DATA_W-1 改 == DATA_W（数据位永不结束，卡死 DATA）",
              "pat": re.compile(r"(bit_cnt\s*==\s*DATA_W\s*-\s*)1'b1(\s*\)\s*begin)"),
-             "repl": r"\g<1>1'b1\g<2>", "hit": "uart_tx A4（DATA→STOP 收尾）", "expect": "uart_tx"},
+             "repl": r"\g<1>1'b0\g<2>", "hit": "uart_tx A4（DATA→STOP 收尾）", "expect": "uart_tx"},
+            {"desc": "超时阈值提前一拍：step_cnt >= TIMEOUT 改 >= TIMEOUT-1（提前触发超时，击穿 A3 前置）",
+             "pat": re.compile(r"(step_cnt\s*>=\s*)(TIMEOUT)(\s*\)\s*begin)"),
+             "repl": r"\g<1>(TIMEOUT - 1'b1)\g<3>", "hit": "fsm_ctrl A3（timeout_irq 前置 step_cnt_d>=TIMEOUT）", "expect": "fsm_ctrl"},
+            {"desc": "写指针越步：tail+1 改 tail+2（跳过一个单元，击穿 A6 推进）",
+             "pat": re.compile(r"(mem\[tail\]\s*<=\s*din;\n\s*)(tail\s*<=\s*tail\s*\+\s*1'b1);"),
+             "repl": r"\1tail      <= tail + 2'd2;", "hit": "fifo_sync A6（写指针推进）", "expect": "fifo_sync"},
+            {"desc": "axi 写地址译码偏移：AWADDR[ADDR_W-1:2] 改 [ADDR_W-2:1]（寄存器错位写，击穿 A7）",
+             "pat": re.compile(r"case \(S_AXI_AWADDR\[ADDR_W-1:2\]\)"),
+             "repl": "case (S_AXI_AWADDR[ADDR_W-2:1])", "hit": "axi A7（写数据生效）", "expect": "axi_lite_slave"},
+            {"desc": "计数器提前回绕：cnt==8 时强制归 0（正常应连续计数到 255 才回绕，击穿 A1）",
+             "pat": re.compile(r"(cnt\s*<=\s*)(cnt\s*\+\s*1'b1)(\s*;)"),
+             "repl": r"\g<1>(cnt == 8'd8) ? 8'd0 : cnt + 1'b1\g<3>",
+             "hit": "counter_alu A1（仅使能自增 1）", "expect": "counter_alu"},
+            {"desc": "uart_rx 起始位中点偏移：baud_cnt == HALF-1 改 == HALF（中点确认迟到一拍，击穿 A1/A2）",
+             "pat": re.compile(r"(if \(baud_cnt == \()HALF - 1(\%\)\) begin)"),
+             "repl": r"\g<1>HALF\g<2>", "hit": "uart_rx A1/A2（起始位中点确认）", "expect": "uart_rx"},
+            {"desc": "axi 读地址译码偏移：ARADDR[ADDR_W-1:2] 改 [ADDR_W-2:1]（读数据错位，击穿 A6）",
+             "pat": re.compile(r"case \(S_AXI_ARADDR\[ADDR_W-1:2\]\)"),
+             "repl": "case (S_AXI_ARADDR[ADDR_W-2:1])", "hit": "axi A6（读数据译码正确性）", "expect": "axi_lite_slave"},
         ],
     },
     "reset": {
@@ -177,10 +232,18 @@ INJECTORS = {
             {"desc": "计数器复位值 0 改全 1（复位释放后 cnt 非 0，击穿 A3 复位归 0）",
              "pat": re.compile(r"(cnt\s*<=\s*\{DATA_W\{)1'b0(\}\};)"),
              "repl": r"\g<1>1'b1\g<2>", "hit": "counter_alu A3（复位释放归 0）", "expect": "counter_alu"},
-            {"desc": "复位条件取反：!rst_n 改 rst_n（复位/运行反转，状态机失序）",
-             "pat": re.compile(r"always\s*@\(posedge\s+clk\s+or\s+negedge\s+rst_n\)\s*begin\s*\n(\s*)if\s*\(!rst_n\)\s*begin"),
-             "repl": r"always @(posedge clk or negedge rst_n) begin\n\1if (rst_n) begin",
-             "hit": "复位行为断言", "expect": "通用"},
+            {"desc": "uart_rx 复位后忙标志错误：复位时 rx_busy 改为 1（复位后误报忙，击穿 A5）",
+             "pat": re.compile(r"(rx_busy\s*<=\s*1')b0(;)"),
+             "repl": r"\g<1>b1\g<2>", "hit": "uart_rx A5（忙标志与状态一致）", "expect": "uart_rx"},
+            {"desc": "写指针复位值 0 改全 1（tail 越界，击穿 A3 复位归 0）",
+             "pat": re.compile(r"(tail\s*<=\s*\{ADDR_W\{)1'b0(\}\};)"),
+             "repl": r"\g<1>1'b1\g<2>", "hit": "fifo_sync A3（tail 复位归 0）", "expect": "fifo_sync"},
+            {"desc": "fsm 步进计数复位不清零：step_cnt 复位 6'd0 改 6'd1（空闲期计数非 0，击穿 A6）",
+             "pat": re.compile(r"(step_cnt\s*<=\s*)6'd0(;)"),
+             "repl": r"\g<1>6'd1\g<2>", "hit": "fsm_ctrl A6（空闲期 step_cnt 归 0）", "expect": "fsm_ctrl"},
+            {"desc": "axi 复位后读响应错误：复位时 RVALID 改为 1（复位释放后读响应错误，击穿 A8）",
+             "pat": re.compile(r"(S_AXI_RVALID\s*<=\s*1')b0(;\s*\n\s*S_AXI_RDATA\s*<=\s*\{DATA_W\{1'b0\}\};)"),
+             "repl": r"\g<1>b1\g<2>", "hit": "axi A8（复位释放输出）", "expect": "axi_lite_slave"},
         ],
     },
     "width_trunc": {
@@ -193,6 +256,12 @@ INJECTORS = {
             {"desc": "计数器增量 1 改 2（cnt_en 时 +2，击穿 A1 仅使能 +1）",
              "pat": re.compile(r"(cnt\s*<=\s*cnt\s*\+\s*)1'b1(\s*;)$", re.M),
              "repl": r"\g<1>2'd2\g<2>", "hit": "counter_alu A1（仅使能自增 1）", "expect": "counter_alu"},
+            {"desc": "hold_cnt 位宽收窄 1 位（停留计数截断，击穿 A4 上界）",
+             "pat": re.compile(r"(reg\s+\[3:0\]\s+hold_cnt;)"),
+             "repl": r"reg [2:0] hold_cnt;", "hit": "fsm_ctrl A4（停留拍数上界）", "expect": "fsm_ctrl"},
+            {"desc": "axi 寄存器位宽收窄 1 位（reg0-3 高位截断，击穿 A6/A7 读译码/写生效）",
+             "pat": re.compile(r"(reg\s+\[DATA_W-1:0\]\s+reg0, reg1, reg2, reg3;)"),
+             "repl": r"reg [DATA_W-2:0] reg0, reg1, reg2, reg3;", "hit": "axi A6/A7（读数据译码/写数据生效）", "expect": "axi_lite_slave"},
         ],
     },
     "edge": {
@@ -205,6 +274,9 @@ INJECTORS = {
             {"desc": "波特率脉冲取反：baud_tick 改 !baud_tick（位节奏错误）",
              "pat": re.compile(r"(if\s*\()(baud_tick)(\)\s*begin\s*\n\s*baud_cnt\s*<=\s*DIV\s*-\s*1'b1;)"),
              "repl": r"\g<1>!\g<2>\g<3>", "hit": "uart_tx 位周期性质", "expect": "uart_tx"},
+            {"desc": "axi 时钟边沿取反：ACLK posedge 改 negedge（与断言 posedge 打拍错拍）",
+             "pat": re.compile(r"(always\s*@\(posedge\s+ACLK\s+or\s+negedge\s+ARESETN\))"),
+             "repl": r"always @(negedge ACLK or negedge ARESETN)", "hit": "跨周期打拍断言", "expect": "axi_lite_slave"},
         ],
     },
 }
@@ -293,7 +365,7 @@ def _gen_formal_top(module, params, ports, assert_ports):
     return "\n".join(lines)
 
 
-def _gen_sby(module, top_mod, depth):
+def _gen_sby(module, top_mod, depth, design_file='buggy.v'):
     """生成 verify.sby（bmc + smtbmc/z3，read -formal 与断言矩阵收敛路径一致）。"""
     return (
         "# PreCex - L3 样本 (module=%s) SymbiYosys 配置：对 buggy 版运行 BMC，期望 Assert failed\n"
@@ -301,9 +373,9 @@ def _gen_sby(module, top_mod, depth):
         "# 运行方式（WSL）：export PATH=$HOME/.local/bin:$PATH; export SMTBMC=%s;\n"
         "#   sby -f verify.sby -d <workdir>    # 期望 DONE FAIL（counterexample）\n"
         "\n[tasks]\nbmc\n\n[options]\nbmc: mode bmc\nbmc: depth %d\n\n[engines]\nbmc: smtbmc z3\n\n"
-        "[script]\nread -sv -formal buggy.v\n"
-        "prep -top %s\n\n[files]\nbuggy.v\n"
-    ) % (module, depth, os.path.join(REPO_ROOT, "smoke", "yosys-smtbmc-z3.sh"), depth, top_mod)
+        "[script]\nread -sv -formal %s\n"
+        "prep -top %s\n\n[files]\n%s\n"
+    ) % (module, depth, os.path.join(REPO_ROOT, "smoke", "yosys-smtbmc-z3.sh"), depth, design_file, top_mod, design_file)
 
 
 def _with_init(src):
@@ -379,16 +451,20 @@ def _inline_assert(design_src, assert_src, module):
 
 
 # ---- 三通过校验（复用 evaluator 三函数）----
-def _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir):
+def _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, module, top_mod):
     """对临时样本目录跑三通过判定。返回 (ok, 明细 dict)。"""
     buggy = os.path.join(tmp_dir, "buggy.v")
     tb = os.path.join(tmp_dir, "tb_weak.sv")
+    # uart_rx \u56de\u73af\u4f9d\u8d56\uff1atb \u5b9e\u4f8b\u5316 uart_tx \u53d1\u9001\u7aef\uff08\u9700\u7f16\u8bd1\u65f6\u540c\u65f6\u63d0\u4f9b\uff09
+    extra_files = []
+    if module == "uart_rx":
+        extra_files = [os.path.join(tmp_dir, "uart_tx.sv")]
     # ① 编译：buggy 设计（含内联断言），0 error
-    comp = compile_check([buggy], cwd=tmp_dir, out="a.out")
+    comp = compile_check([buggy] + extra_files, cwd=tmp_dir, out="a.out")
     if not comp["ok"]:
         return False, {"stage": "compile", "detail": (comp["stdout"] + comp["stderr"])[-800:]}
     # ② 弱 tb 仿真：必须放过 buggy（exit 0 且无 FAIL/$fatal 且含 $finish）
-    sim = sim_check([buggy, tb], top=tb_top, cwd=tmp_dir,
+    sim = sim_check([buggy, tb] + extra_files, top=tb_top, cwd=tmp_dir,
                     out_bin="sim.out", sim_timeout=SIM_TIMEOUT)
     if not sim["ok"]:
         out = sim["stdout"] + sim["stderr"]
@@ -399,7 +475,16 @@ def _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir):
                           design_dir=os.path.join(work_dir, "sby_work"))
     if formal["result"] != "fail":
         return False, {"stage": "formal", "result": formal["result"], "detail": formal["log_tail"][-400:]}
-    return True, {"stage": "all", "formal": formal, "sby_work": os.path.join(work_dir, "sby_work")}
+    # golden dual-check: same sby on golden.v, expect formal=PASS (non-vacuous)
+    golden_sby = os.path.join(tmp_dir, "verify_golden.sby")
+    with open(golden_sby, "w", encoding="utf-8") as f:
+        f.write(_gen_sby(module, top_mod, depth, design_file="golden.v"))
+    golden_formal = formal_check(golden_sby, timeout=FORMAL_TIMEOUT, cwd=tmp_dir,
+        design_dir=os.path.join(work_dir, "sby_golden"))
+    if golden_formal["result"] not in ("pass", "prove"):
+        return False, {"stage": "golden", "result": golden_formal["result"], "detail": golden_formal["log_tail"][-400:]}
+    return True, {"stage": "all", "formal": formal, "golden_formal": golden_formal,
+        "sby_work": os.path.join(work_dir, "sby_work")}
 
 
 def _copy_cex(sby_work, sample_dir):
@@ -437,6 +522,9 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
     """生成 7 件套（buggy/golden/弱tb/cex.vcd/cex.log/meta.json/evidence.json/notes.md）+ verify.sby。
     断言已内联于 buggy.v/golden.v（不再生成独立 assertions.sv / formal_top.sv）。"""
     os.makedirs(sample_dir, exist_ok=True)
+    # uart_rx 回环依赖：拷贝 uart_tx.sv 到样本目录（弱 tb 实例化 uart_tx 发送端，复现时需同目录编译）
+    if module == "uart_rx":
+        shutil.copy(os.path.join(RTL_DIR, "uart_tx", "uart_tx.sv"), os.path.join(sample_dir, "uart_tx.sv"))
     # 设计/弱 tb（设计含内联断言 + initial 初值约束，避免 formal 空洞反例）
     with open(os.path.join(sample_dir, "golden.v"), "w", encoding="utf-8") as f:
         f.write(golden_src)
@@ -451,6 +539,9 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
         f.write(tb_src)
     with open(os.path.join(sample_dir, "verify.sby"), "w", encoding="utf-8") as f:
         f.write(_gen_sby(module, top_mod, depth))
+    # golden 对照 sby（可复现证据：golden 版同配置 BMC 期望 PASS，证明断言非空洞）
+    with open(os.path.join(sample_dir, "verify_golden.sby"), "w", encoding="utf-8") as f:
+        f.write(_gen_sby(module, top_mod, depth, design_file="golden.v"))
     # meta.json（可复现：记录注入命令与参数）
     meta = {
         "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
@@ -461,7 +552,7 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
         "hit_assertion": variant["hit"],
         "golden_source": "rtl/%s/%s.sv" % (module, module),
         "date": DATE, "reproduce_cmd": cmd_line,
-        "verification": {"compile_ok": True, "sim_ok": True, "formal_result": "fail", "verdict": "L3_VALID"},
+        "verification": {"compile_ok": True, "sim_ok": True, "formal_result": "fail", "golden_formal_result": "pass", "verdict": "L3_VALID"},
     }
     with open(os.path.join(sample_dir, "meta.json"), "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
@@ -513,6 +604,7 @@ def main(argv=None):
     ap.add_argument("--error-type", help="错误类型 code（见 --list-types）")
     ap.add_argument("--sample-id", default="s01", help="样本标识（默认 s01）")
     ap.add_argument("--line", type=int, default=None, help="指定注入点行号（限制 variant 匹配该行）")
+    ap.add_argument("--variant", type=int, default=None, help="指定变体序号（1-based，--list-types 查看顺序）；默认按顺序尝试")
     ap.add_argument("--seed", type=int, default=0, help="variant 尝试顺序随机种子（默认 0=声明顺序）")
     ap.add_argument("--dry-run", action="store_true", help="仅打印将应用的 diff，不落盘不校验")
     args = ap.parse_args(argv)
@@ -582,14 +674,18 @@ def main(argv=None):
     variants = list(err["variants"])
     if args.seed:
         random.Random(args.seed).shuffle(variants)
-    cmd_line = "python3 scripts/bug_injector.py --module %s --error-type %s --sample-id %s%s%s" % (
+    cmd_line = "python3 scripts/bug_injector.py --module %s --error-type %s --sample-id %s%s%s%s" % (
         args.module, args.error_type, args.sample_id,
-        " --line %d" % args.line if args.line else "", " --seed %d" % args.seed if args.seed else "")
+        " --line %d" % args.line if args.line else "",
+        " --seed %d" % args.seed if args.seed else "",
+        " --variant %d" % args.variant if args.variant else "")
 
     # 逐 variant 注入 + 校验（dry-run 时仅打印所有可应用 diff，不落盘不校验）
     fails = []
     sample_dir = os.path.join(SAMPLES_DIR, args.sample_id)
-    for v in variants:
+    for i, v in enumerate(variants, 1):
+        if args.variant is not None and i != args.variant:
+            continue
         applied = _apply_variant(golden, v)
         if not applied:
             continue
@@ -610,10 +706,13 @@ def main(argv=None):
                     ("tb_weak.sv", tb)):
                 with open(os.path.join(tmp_dir, name), "w", encoding="utf-8") as f:
                     f.write(data)
+            # uart_rx \u56de\u73af\u4f9d\u8d56\uff1a\u62f7\u8d1d uart_tx.sv \u5230\u4e34\u65f6\u76ee\u5f55\uff08\u5f31 tb \u5b9e\u4f8b\u5316 uart_tx \u53d1\u9001\u7aef\uff09
+            if args.module == "uart_rx":
+                shutil.copy(os.path.join(RTL_DIR, "uart_tx", "uart_tx.sv"), os.path.join(tmp_dir, "uart_tx.sv"))
             sby_file = os.path.join(tmp_dir, "verify.sby")
             with open(sby_file, "w", encoding="utf-8") as f:
                 f.write(_gen_sby(args.module, top_mod, depth))
-            ok, detail = _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir)
+            ok, detail = _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, args.module, top_mod)
             if not ok:
                 fails.append((v, detail))
                 print("  校验失败（%s），尝试下一变体…" % detail["stage"])

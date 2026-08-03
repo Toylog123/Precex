@@ -1,0 +1,22 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s29",
+  "module": "fifo_sync",
+  "error_type": "FIFO 满空",
+  "error_type_code": "fifo_full",
+  "level": "L3",
+  "inject_line": 44,
+  "inject_desc": "写入动作整体删除：删 mem[tail]<=din 与 tail<=tail+1（写请求被吞但 count 仍 +1，击穿 A6）",
+  "diff": "- \n            // 写：非满时写入 tail 位置并回绕\n            if (can_wr) begin\n                mem[tail] <= din;\n                tail      <= tail + 1'b1;\n            end\n+ \n            // 写：非满时写入 tail 位置并回绕\n            ",
+  "hit_assertion": "fifo_sync A6（写指针推进）",
+  "golden_source": "rtl/fifo_sync/fifo_sync.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module fifo_sync --error-type fifo_full --sample-id s29 --variant 5",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID"
+  }
+}

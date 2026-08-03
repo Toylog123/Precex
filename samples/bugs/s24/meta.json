@@ -1,0 +1,22 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s24",
+  "module": "fsm_ctrl",
+  "error_type": "边界回绕",
+  "error_type_code": "boundary_wrap",
+  "level": "L3",
+  "inject_line": 53,
+  "inject_desc": "超时阈值提前一拍：step_cnt >= TIMEOUT 改 >= TIMEOUT-1（提前触发超时，击穿 A3 前置）",
+  "diff": "- step_cnt >= TIMEOUT) begin\n+ step_cnt >= (TIMEOUT - 1'b1)) begin",
+  "hit_assertion": "fsm_ctrl A3（timeout_irq 前置 step_cnt_d>=TIMEOUT）",
+  "golden_source": "rtl/fsm_ctrl/fsm_ctrl.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module fsm_ctrl --error-type boundary_wrap --sample-id s24",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID"
+  }
+}

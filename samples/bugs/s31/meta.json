@@ -1,0 +1,22 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s31",
+  "module": "counter_alu",
+  "error_type": "状态跳转",
+  "error_type_code": "state_trans",
+  "level": "L3",
+  "inject_line": 28,
+  "inject_desc": "counter ALU 运算译码对调：op==OP_ADD 输出改减法（加法变减法，击穿 A4）",
+  "diff": "- (op == OP_ADD) ? (a + b)\n+ (op == OP_ADD) ? (a - b)",
+  "hit_assertion": "counter_alu A4（ALU 输出正确性）",
+  "golden_source": "rtl/counter_alu/counter_alu.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module counter_alu --error-type state_trans --sample-id s31 --variant 8",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID"
+  }
+}

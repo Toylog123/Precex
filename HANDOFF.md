@@ -2,7 +2,7 @@
 
 > 作者：Toylog | 版本：v1.1（2026-08-03）
 > 功能概述：给接手的智能体/会话的项目状态与待办说明。**新会话第一步：完整阅读本文件 + docs/ 下文档，再动手。**
-> v1.1 更新：W1 Gate-1 已完成；M0.5 预研已启动（llm_client / bug_injector / 3 例样本骨架就绪，API key 已配置）；下一步为证据管线 + T1 + 预研评测 → Gate-0。
+> v1.2 更新：M0.5 三例预研完成（Gate-0 通过，主叙事定案：反例语义化驱动 + 充分性闭环，见 docs/Gate-0-决策记录.md）；M1 数据集推进中（BugBench-PS 31 个 L3 样本 s04–s34，三通过 + golden 双对照全绿）；下一步为数据集补齐至 30–40 → Gate-2。
 
 ## 1. 项目速览
 
@@ -36,19 +36,19 @@
   - harness/llm_client.py（MiniMax M3 封装 + token 记账强制 + mock 模式；API key 已写入根 `.env`，gitignore 保护）
   - scripts/bug_injector.py（7 类错误模板注入器 + L3 自动校验，`--list-types` 可查模板）
   - samples/prestudy/s01–s03 三例 L3 样本骨架（fifo_sync fifo_count / fsm_ctrl state_trans / counter_alu boundary_wrap；弱 tb 已验证 s01 过）
-- **未完成（M0.5 预研主体）**：
-  - 样本补全：s01–s03 跑 sby 抓 cex.vcd/cex.log 入库（.gitignore 已加例外）；s02/s03 三通过验证
-  - EvidenceEngine（B：日志+反例→结构化 JSON，agents/evidence_engine/）
-  - CexSemantizer（C：VCD→周期事件/状态轨迹 + NL 摘要，agents/cex_semantizer/）
-  - A/B/C 三设置 prompt 模板族（experiments/configs/，同模板族仅换证据段）
-  - T1 视觉快测（VCD→SVG 波形渲染 + 多模态摘要，CexSemantizer 视觉通道）
-  - 3 样本 × A/B/C × 真实 LLM 预研评测 → **Gate-0（决定论文主叙事）**
+- **已完成（M0.5 预研主体，Gate-0 通过，2026-08-03）**：
+  - EvidenceEngine / CexSemantizer（含轨迹压缩）/ A-B-C prompt 模板族 / T1 视觉快测 / run_prestudy 一键评测 全部落地；
+    3 样本 × A/B/C × 真实 MiniMax M3 评测 9/9 修复三通过，主叙事定案（详见 docs/Gate-0-决策记录.md 与 docs/进度.md）
+- **进行中（M1 数据集，W4–7）**：
+  - BugBench-PS 当前 31 个 L3 样本（s04–s34 连续编号，6 模块 × 7 错误类型矩阵，10 件套 + golden 双对照）；
+    samples/README.md 为数据集规范；注入器 --variant 选择器与变体池见 scripts/bug_injector.py
+  - 待办：按矩阵缺口（uart_tx/uart_rx/handshake/edge）补齐至 30–40 → **Gate-2 逐样本校验**
 
 ### Gate 状态表
 | Gate | 内容 | 状态 |
 | --- | --- | --- |
 | Gate-1 | 工具链自检 + 断言子集双工具实测 | **通过（2026-08-03）** |
-| Gate-0 | 3 例预研：C vs B 增益 + A 基线难度 + T1 快测（**决定论文主叙事**） | 待执行（M0.5） |
+| Gate-0 | 3 例预研：C vs B 增益 + A 基线难度 + T1 快测（**决定论文主叙事**） | **通过（2026-08-03）：反例语义化驱动 + 充分性闭环** |
 | Gate-2 | 数据集 30–40 样本逐样本校验 | 待执行（W4–7） |
 
 ## 4. 关键技术定案（不要推翻，除非有强证据）
@@ -63,15 +63,14 @@
 - **实验设置**：A 原始日志 / B 结构化 / C 反例语义化（主）/ D FVDebug 式因果图（对照）/ T1 视觉通道（探索）
 - **自动化原则**：数据注入器无人值守、评测一键化、失败重试内置（≤N 轮防死循环）、Gate 决策点才暂停确认
 
-## 5. 下一步执行清单（M0.5 预研 → Gate-0）
+## 5. 下一步执行清单（M1 数据集 → Gate-2）
 
-1. 补全 3 例样本：s01–s03 跑 sby 抓反例（cex.vcd/cex.log 入库）；s02/s03 三通过验证（弱 tb 过 + formal 败）；golden 对照（无 cex）
-2. EvidenceEngine（agents/evidence_engine/）：解析编译/仿真/sby 日志 → 统一 JSON schema（error_type/file/line/signals/trigger/fail_stage + X 态归一化）——设置 B 证据
-3. CexSemantizer 文本通道（agents/cex_semantizer/）：VCD→周期事件表/状态轨迹/故障锥 + M3 NL 摘要（附录 A 模板）——设置 C 证据
-4. A/B/C prompt 模板族（experiments/configs/）：同模板族仅证据段替换（A=原始日志、B=结构化 JSON、C=语义化）
-5. T1 视觉快测：VCD→SVG 波形图 → M3 多模态摘要（与文本通道对比）
-6. 预研评测：3 样本 × A/B/C × 真实 LLM 定位+修复 → 指标（定位 Top-1/修复三通过率/token 成本）→ **C vs B 增益 + A 基线难度结论**
-7. Gate-0 定案（反例语义化驱动 or 证据工程+充分性闭环）→ **更新 docs/进度.md** → git commit + push
+1. 按 samples/README.md 矩阵缺口扩展样本：重点 uart_tx/uart_rx/handshake/edge 新变体（uart_rx 深时序可参数化小 DIV；counter 满值回绕可接受长 BMC）
+2. 新增样本逐一过注入器三通过校验 + golden 双对照（verify_golden.sby）
+3. 唯一性 + 结构审计：模块×类型矩阵、件套完整、sample_id 一致、cex.vcd/cex.log 存在
+4. 主实验 n≥20：A/B/C × 样本 × 种子批量评测（scripts/run_experiments.py + run_prestudy.py 管线）
+5. Verifier 充分性量化：mutation/非空洞/假阳性率 + T2 验证 agent
+6. **Gate-2 数据集定案**（30–40 样本逐样本校验）→ **更新 docs/进度.md** → git commit + push
 
 ## 6. 协作规则（强制）
 

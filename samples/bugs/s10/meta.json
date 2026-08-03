@@ -16,6 +16,7 @@
     "compile_ok": true,
     "sim_ok": true,
     "formal_result": "fail",
-    "verdict": "L3_VALID"
+    "verdict": "L3_VALID",
+    "golden_formal_result": "pass"
   }
 }

@@ -1,6 +1,6 @@
 // PreCex - fsm_ctrl L3 缺陷样本 s08（buggy 版）
-// 作者：Toylog | 版本：v0.1 | 功能概述：注入『状态跳转』类缺陷——删 S_IDLE 中 step_cnt 清零（状态机内部步进计数不清零，击穿 fsm_ctrl A6 单调性）
-// 来源：rtl/fsm_ctrl/fsm_ctrl.sv 单点注入（行 43）| 击穿断言：fsm_ctrl A6（空闲期 step_cnt 必须为 0）
+// 作者：Toylog | 版本：v0.1 | 功能概述：注入『状态跳转』类缺陷——S1 正常完成分支跳转目标 S2 改 S3（跳过 S2，击穿状态跳转合法性）
+// 来源：rtl/fsm_ctrl/fsm_ctrl.sv 单点注入（行 58）| 击穿断言：状态跳转合法性断言
 
 // PreCex - fsm_ctrl 黄金基线
 // 作者：Toylog | 版本：v0.1 | 功能概述：3 状态序列控制器（S1/S2/S3 分级停留 + 异常跳转 + 全局超时保护，done/timeout_irq 单拍脉冲）
@@ -45,6 +45,7 @@ module fsm_ctrl #(
             case (state)
                 // 空闲：等待启动
                 S_IDLE: begin
+                    step_cnt <= 6'd0;
                     if (start) begin
                         state    <= S1;
                         hold_cnt <= 4'd1;
@@ -59,7 +60,7 @@ module fsm_ctrl #(
                     end else if (data_in == 8'hAA) begin
                         hold_cnt    <= hold_cnt;  // 等待条件（卡住，直到超时）
                     end else if (hold_cnt == S1_HOLD) begin
-                        state    <= S2;
+                        state    <= S3;
                         hold_cnt <= 4'd1;
                     end else begin
                         hold_cnt <= hold_cnt + 1'b1;

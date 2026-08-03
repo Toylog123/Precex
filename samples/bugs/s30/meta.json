@@ -1,0 +1,22 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s30",
+  "module": "fsm_ctrl",
+  "error_type": "复位",
+  "error_type_code": "reset",
+  "level": "L3",
+  "inject_line": 36,
+  "inject_desc": "fsm 步进计数复位不清零：step_cnt 复位 6'd0 改 6'd1（空闲期计数非 0，击穿 A6）",
+  "diff": "- step_cnt    <= 6'd0;\n+ step_cnt    <= 6'd1;",
+  "hit_assertion": "fsm_ctrl A6（空闲期 step_cnt 归 0）",
+  "golden_source": "rtl/fsm_ctrl/fsm_ctrl.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module fsm_ctrl --error-type reset --sample-id s30 --variant 5",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID"
+  }
+}

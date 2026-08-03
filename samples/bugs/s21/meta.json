@@ -1,0 +1,22 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s21",
+  "module": "fifo_sync",
+  "error_type": "握手",
+  "error_type_code": "handshake",
+  "level": "L3",
+  "inject_line": 31,
+  "inject_desc": "空时仍读：can_rd 去掉 !empty 门控（空时读出无效数据，击穿 A2）",
+  "diff": "- wire can_rd = rd_en && !empty;\n+ wire can_rd = rd_en ;",
+  "hit_assertion": "fifo_sync A2（空时不读）",
+  "golden_source": "rtl/fifo_sync/fifo_sync.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module fifo_sync --error-type handshake --sample-id s21",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID"
+  }
+}

@@ -1,6 +1,6 @@
 // PreCex - fsm_ctrl L3 缺陷样本 s09（buggy 版）
-// 作者：Toylog | 版本：v0.1 | 功能概述：注入『状态跳转』类缺陷——删 S_IDLE 中 step_cnt 清零（状态机内部步进计数不清零，击穿 fsm_ctrl A6 单调性）
-// 来源：rtl/fsm_ctrl/fsm_ctrl.sv 单点注入（行 43）| 击穿断言：fsm_ctrl A6（空闲期 step_cnt 必须为 0）
+// 作者：Toylog | 版本：v0.1 | 功能概述：注入『状态跳转』类缺陷——IDLE 启动目标 S1 改 S2（击穿启动语义断言）
+// 来源：rtl/fsm_ctrl/fsm_ctrl.sv 单点注入（行 45）| 击穿断言：启动语义断言
 
 // PreCex - fsm_ctrl 黄金基线
 // 作者：Toylog | 版本：v0.1 | 功能概述：3 状态序列控制器（S1/S2/S3 分级停留 + 异常跳转 + 全局超时保护，done/timeout_irq 单拍脉冲）
@@ -45,8 +45,9 @@ module fsm_ctrl #(
             case (state)
                 // 空闲：等待启动
                 S_IDLE: begin
+                    step_cnt <= 6'd0;
                     if (start) begin
-                        state    <= S1;
+                        state    <= S2;
                         hold_cnt <= 4'd1;
                     end
                 end

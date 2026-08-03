@@ -1,0 +1,22 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s34",
+  "module": "axi_lite_slave",
+  "error_type": "边界回绕",
+  "error_type_code": "boundary_wrap",
+  "level": "L3",
+  "inject_line": 144,
+  "inject_desc": "axi 读地址译码偏移：ARADDR[ADDR_W-1:2] 改 [ADDR_W-2:1]（读数据错位，击穿 A6）",
+  "diff": "- case (S_AXI_ARADDR[ADDR_W-1:2])\n+ case (S_AXI_ARADDR[ADDR_W-2:1])",
+  "hit_assertion": "axi A6（读数据译码正确性）",
+  "golden_source": "rtl/axi_lite_slave/axi_lite_slave.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module axi_lite_slave --error-type boundary_wrap --sample-id s34 --variant 9",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID"
+  }
+}

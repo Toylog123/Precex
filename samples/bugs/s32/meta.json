@@ -1,0 +1,22 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s32",
+  "module": "counter_alu",
+  "error_type": "边界回绕",
+  "error_type_code": "boundary_wrap",
+  "level": "L3",
+  "inject_line": 39,
+  "inject_desc": "计数器提前回绕：cnt==8 时强制归 0（正常应连续计数到 255 才回绕，击穿 A1）",
+  "diff": "- cnt <= cnt + 1'b1;\n+ cnt <= (cnt == 8'd8) ? 8'd0 : cnt + 1'b1;",
+  "hit_assertion": "counter_alu A1（仅使能自增 1）",
+  "golden_source": "rtl/counter_alu/counter_alu.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module counter_alu --error-type boundary_wrap --sample-id s32 --variant 7",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID"
+  }
+}

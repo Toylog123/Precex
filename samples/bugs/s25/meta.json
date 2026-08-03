@@ -1,0 +1,22 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s25",
+  "module": "axi_lite_slave",
+  "error_type": "复位",
+  "error_type_code": "reset",
+  "level": "L3",
+  "inject_line": 138,
+  "inject_desc": "axi 复位后读响应错误：复位时 RVALID 改为 1（复位释放后读响应错误，击穿 A8）",
+  "diff": "- S_AXI_RVALID <= 1'b0;\n            S_AXI_RDATA  <= {DATA_W{1'b0}};\n+ S_AXI_RVALID <= 1'b1;\n            S_AXI_RDATA  <= {DATA_W{1'b0}};",
+  "hit_assertion": "axi A8（复位释放输出）",
+  "golden_source": "rtl/axi_lite_slave/axi_lite_slave.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module axi_lite_slave --error-type reset --sample-id s25",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "verdict": "L3_VALID",
+    "golden_formal_result": "pass"
+  }
+}

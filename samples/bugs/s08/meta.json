@@ -5,17 +5,18 @@
   "error_type": "状态跳转",
   "error_type_code": "state_trans",
   "level": "L3",
-  "inject_line": 43,
-  "inject_desc": "删 S_IDLE 中 step_cnt 清零（状态机内部步进计数不清零，击穿 fsm_ctrl A6 单调性）",
-  "diff": "- S_IDLE: begin\n                    step_cnt <= 6'd0;\n+ S_IDLE: begin",
-  "hit_assertion": "fsm_ctrl A6（空闲期 step_cnt 必须为 0）",
+  "inject_line": 58,
+  "inject_desc": "S1 正常完成分支跳转目标 S2 改 S3（跳过 S2，击穿状态跳转合法性）",
+  "diff": "- hold_cnt == S1_HOLD) begin\n                        state    <= S2;\n+ hold_cnt == S1_HOLD) begin\n                        state    <= S3;",
+  "hit_assertion": "状态跳转合法性断言",
   "golden_source": "rtl/fsm_ctrl/fsm_ctrl.sv",
   "date": "2026-08-03",
-  "reproduce_cmd": "python3 scripts/bug_injector.py --module fsm_ctrl --error-type state_trans --sample-id s08",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module fsm_ctrl --error-type state_trans --sample-id s08 --line 58",
   "verification": {
     "compile_ok": true,
     "sim_ok": true,
     "formal_result": "fail",
+    "golden_formal_result": "pass",
     "verdict": "L3_VALID"
   }
 }

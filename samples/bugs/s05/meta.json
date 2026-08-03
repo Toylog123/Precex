@@ -5,17 +5,18 @@
   "error_type": "FIFO 满空",
   "error_type_code": "fifo_full",
   "level": "L3",
-  "inject_line": 35,
-  "inject_desc": "半满标志比较 >= 改 >（count==DEPTH/2 时半满错误为 0，击穿 A5）",
-  "diff": "- assign half_full = (count >= (DEPTH >> 1));\n+ assign half_full = (count > (DEPTH >> 1));",
-  "hit_assertion": "fifo_sync A5（half_full==(count>=DEPTH/2)）",
+  "inject_line": 30,
+  "inject_desc": "写满保护去除：can_wr 去掉 !full 门控（满时仍写，击穿 A1）",
+  "diff": "- wire can_wr = wr_en && !full;\n+ wire can_wr = wr_en ;",
+  "hit_assertion": "fifo_sync A1（满时不写）",
   "golden_source": "rtl/fifo_sync/fifo_sync.sv",
   "date": "2026-08-03",
-  "reproduce_cmd": "python3 scripts/bug_injector.py --module fifo_sync --error-type fifo_full --sample-id s05",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module fifo_sync --error-type fifo_full --sample-id s05 --line 30",
   "verification": {
     "compile_ok": true,
     "sim_ok": true,
     "formal_result": "fail",
+    "golden_formal_result": "pass",
     "verdict": "L3_VALID"
   }
 }
