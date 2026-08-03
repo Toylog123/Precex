@@ -31,10 +31,16 @@ module uart_tx_assert #(
 
     // 打拍寄存器：用于跨周期跳转合法性检查
     reg [1:0] state_d;            // 上周期状态
+    reg       baud_tick_d;        // 上周期波特率脉冲（A6 检查切换前一拍的 tick）
 
     always @(posedge clk) begin
-        if (!rst_n) state_d <= S_IDLE;
-        else        state_d <= state;
+        if (!rst_n) begin
+            state_d     <= S_IDLE;
+            baud_tick_d <= 1'b0;
+        end else begin
+            state_d     <= state;
+            baud_tick_d <= baud_tick;
+        end
     end
 
     // A1 起始位为低：处于 START 状态时 txd 必须为 0
@@ -84,7 +90,9 @@ module uart_tx_assert #(
     always @(posedge clk) begin
         if (rst_n && (state_d != state) &&
             !(state_d == S_IDLE && state == S_START)) begin
-            assert (baud_tick);
+            // 切换发生在 tick 后的下一拍（进入新状态时 baud_cnt 已重载），
+            // 故断言的是切换前一拍 baud_tick_d（避免切换拍 baud_tick 恒 0 的空洞误报）
+            assert (baud_tick_d);
         end
     end
 

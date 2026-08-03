@@ -33,27 +33,30 @@ module uart_rx_assert #(
     // 打拍寄存器：用于跨周期性质
     reg [1:0]        state_d;
     reg [DIV_W-1:0]  baud_cnt_d;
+    reg              rxd_d;          // 上周期 rxd（中点采样拍的值）
 
     always @(posedge clk) begin
         if (!rst_n) begin
             state_d   <= S_IDLE;
             baud_cnt_d <= {DIV_W{1'b0}};
+            rxd_d     <= 1'b1;
         end else begin
             state_d   <= state;
             baud_cnt_d <= baud_cnt;
+            rxd_d     <= rxd;
         end
     end
 
     // A1 起始位中点确认：中点在 rxd 为高（毛刺误触发）时，下一状态必须回 IDLE
     always @(posedge clk) begin
-        if (rst_n && (state_d == S_START) && (baud_cnt_d == (HALF - 1)) && rxd) begin
+        if (rst_n && (state_d == S_START) && (baud_cnt_d == (HALF - 1)) && rxd_d) begin
             assert (state == S_IDLE);
         end
     end
 
     // A2 起始位中点确认：中点在 rxd 为低（真起始位）时，下一状态必须进入 DATA
     always @(posedge clk) begin
-        if (rst_n && (state_d == S_START) && (baud_cnt_d == (HALF - 1)) && !rxd) begin
+        if (rst_n && (state_d == S_START) && (baud_cnt_d == (HALF - 1)) && !rxd_d) begin
             assert (state == S_DATA);
         end
     end

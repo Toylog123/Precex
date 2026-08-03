@@ -4,12 +4,12 @@
 
 ## 1. 数据集总览
 
-- **规模**：31 个 L3 样本（s04–s34 连续编号；s01–s03 为预研样本，见 samples/prestudy/）
+- **规模**：34 个 L3 样本（s04–s37 连续编号；s01–s03 预研样本位于 samples/prestudy/）
 - **模块**：6 个黄金模块（fifo_sync / fsm_ctrl / uart_tx / uart_rx / axi_lite_slave / counter_alu）
 - **错误类型**：7 类（state_trans 状态跳转 / handshake 握手 / fifo_full 满空 / boundary_wrap 边界回绕 / reset 复位 / width_trunc 位宽截断 / edge 边沿）
 - **判定标准**：全部样本通过三通过校验（① iverilog 编译 0 error；② 弱 tb 仿真全绿放过 buggy；③ sby smtbmc+z3 BMC 抓到反例）+ golden 双对照（golden.v 同配置 BMC PASS，断言非空洞）
 
-## 2. 样本清单（s04–s34）
+## 2. 样本清单（s04–s37）
 
 | 样本 | 模块 | 错误类型 | 注入行 | 击穿断言 |
 | --- | --- | --- | --- | --- |
@@ -44,6 +44,9 @@
 | s32 | counter_alu | 边界回绕 | L39 | counter_alu A1（仅使能自增 1） |
 | s33 | axi_lite_slave | 状态跳转 | L114 | axi A3（BVALID 前置 AW/W 完成） |
 | s34 | axi_lite_slave | 边界回绕 | L144 | axi A6（读数据译码正确性） |
+| s35 | uart_tx | 状态跳转 | L78 | uart_tx A4（DATA→STOP 收尾，帧缺停止位） |
+| s36 | uart_rx | 状态跳转 | L67 | uart_rx A4（状态机跳转合法性） |
+| s37 | uart_rx | 边界回绕 | L60 | uart_rx A1/A2（起始位中点确认） |
 
 ## 3. 模块 × 错误类型矩阵
 
@@ -51,15 +54,15 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | fifo_sync | - | s21,s23 | s04,s05,s06,s19,s29 | s13,s20 | s12,s22 | s14 | - | 12 |
 | fsm_ctrl | s07,s08,s09 | - | - | s24 | s30 | - | - | 5 |
-| uart_tx | - | s15 | - | - | - | - | s16 | 2 |
-| uart_rx | s18 | - | - | - | s26 | - | - | 2 |
+| uart_tx | s35 | s15 | - | - | - | - | s16 | 3 |
+| uart_rx | s18,s36 | - | - | s37 | s26 | - | - | 4 |
 | axi_lite_slave | s33 | s17 | - | s27,s34 | s25 | s28 | - | 6 |
 | counter_alu | s31 | - | - | s32 | s10 | s11 | - | 4 |
 
-## 4. 件套定义（每样本 11 文件）
+## 4. 件套定义（每样本 12 文件）
 
 - buggy.v / golden.v / tb_weak.sv / verify.sby / verify_golden.sby / verify_repair.sby /
-  cex.vcd / cex.log / meta.json / evidence.json / notes.md
+  cex.vcd / cex.log / meta.json / evidence.json / semantics.json / notes.md
 - verify_repair.sby：修复验证配置（prove 模式，k-induction）——修复后三通过判定第 ③ 步用
   证明而非 BMC，避免只查有限深度；golden 对照已 PASS（bmc），此处证明修复充分性
 - uart_rx 样本额外含 uart_tx.sv（回环联测依赖，编译时同目录提供）
@@ -76,9 +79,11 @@ sby -f verify_golden.sby -d sby_golden                     # 期望 DONE PASS（
 ```
 
 重生样本：`python3 scripts/bug_injector.py --module <m> --error-type <t> --sample-id sNN --variant N`（参见各 meta.json 的 reproduce_cmd）
+- 参数化覆写：`--param CLK_FREQ=<clk>,BAUD=<baud>` 同步替换设计/tb/uart_tx.sv 参数；s35 用 DIV=4（depth 56），
+  s36/s37 用 DIV=16（depth 176）——小 DIV 使 uart_rx 深时序反例 BMC 可收敛；meta.json 记录 param_override
 
 ## 6. 已知限制与后续
 
-- uart_tx/uart_rx 各仅 2 例；edge 类型仅 1 例（注入器变体池瓶颈）；边沿变体（posedge→negedge）因 yosys 双极性冲突不可用
-- uart_rx 深时序反例（START 中点等）需 BMC depth≥230，运行成本过高，暂不入库；counter 满值回绕（≥第 256 拍）同理，采用低阈值提前回绕变体（s32）
-- 目标 30–40：当前 31 例达下限；Gate-2 前按矩阵缺口补足（重点：uart_tx/uart_rx/handshake/edge 新变体）
+- edge 类型仍仅 1 例（注入器变体池瓶颈）；边沿变体（posedge→negedge）因 yosys 双极性冲突不可用；uart_tx 3 例（s15,s16,s35）、uart_rx 4 例（s18,s26,s36,s37），s35–s37 为参数化深时序样本
+- 深时序反例成本控制：uart_rx START 中点类原需 depth≥230 不可收敛，经 --param 小 DIV（DIV=16）降为 depth 176 入库（s36/s37）；DIV=4 过激进（HALF=2 竞态）不可用；counter 满值回绕仍用低阈值变体（s32）
+- 目标 30–40：当前 34 例；Gate-2 前按矩阵缺口补足（重点：edge/handshake 新变体）

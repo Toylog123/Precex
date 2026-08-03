@@ -54,6 +54,10 @@ RESET_SILENCE = {
 # 用于断言依赖的环境假设（如 counter_alu 的 op 必须为有效运算，否则 golden 也会 FAIL）
 GLOBAL_ASSUME = {
     "counter_alu": [("clk", "op < OP_NUM")],
+    # uart_rx ????START ???? rxd ?????????????????
+    # ?? tb ? uart_tx ?????????? BMC ???????????? rxd ??????
+    "uart_rx": [("clk", "!(state == S_START) || !rxd"),
+                 ("clk", "!(state == S_STOP) || rxd")],
 }
 
 
@@ -62,7 +66,8 @@ GLOBAL_ASSUME = {
 # 会在 sim 阶段击穿 buggy，导致 L3 校验失败。清洗即删除含这些关键字的 $fatal 检查行（保留数据通路检查）。
 WEAK_TB_STRIP = {
     "fifo_full": ["full", "empty", "half_full", "count", "dout"],
-    "state_trans": ["state", "done", "timeout_irq", "rx_data", "rx_valid", "alu_out"],
+    "state_trans": ["state", "done", "timeout_irq", "rx_data", "rx_valid", "alu_out",
+                     "txd", "tx_busy", "start", "stop"],
     "reset": ["cnt", "dout", "rx_data", "rx_valid", "rx_busy", "readback", "mask", "WSTRB"],
     "width_trunc": ["cnt", "count", "full", "empty", "half_full", "dout", "readback", "mask", "WSTRB", "reg"],
     "boundary_wrap": ["cnt", "count", "dout", "state", "done", "timeout_irq", "txd", "tx_busy", "readback", "WSTRB", "RVALID", "BVALID", "reg", "rx_data", "rx_valid"],
@@ -104,6 +109,26 @@ def _weaken_tb(tb_src, error_type):
         new += "\n// [bug_injector] weak tb sanitized for %s: stripped %d fatal check(s) on %s\n" % (
             error_type, removed, "/".join(keys))
     return new
+
+
+def _apply_params(src, param_map):
+    """把源码中的参数声明值替换为测试用小值（--param 覆写）。"
+
+    替换两处：
+    1) module 头 parameter CLK_FREQ = 50000000;   → parameter CLK_FREQ = 400;
+    2) 实例化 .CLK_FREQ(CLK_FREQ) 或 .CLK_FREQ(50000000) → .CLK_FREQ(400)
+    3) tb 内 localparam CLK_FREQ = 50000000;     → localparam CLK_FREQ = 400;
+    """
+    for name, val in param_map.items():
+        # 声明行（parameter/localparam NAME = <value>）
+        src = re.sub(
+            r"(?m)^(\s*(?:local)?parameter\s+%s\s*=\s*)[^,;]+(;?)" % re.escape(name),
+            r"\g<1>%s\g<2>" % val, src)
+        # 实例化参数 .NAME(<expr>) 或 .NAME(NAME)
+        src = re.sub(
+            r"\.%s\s*\(\s*[^)]+?\s*\)" % re.escape(name),
+            ".%s(%s)" % (name, val), src)
+    return src
 
 
 # ---- 7 类错误注入器：每类 = 一组规则化文本变换 variant（正则匹配黄金源码，优先顺序即尝试顺序）----
@@ -199,7 +224,7 @@ INJECTORS = {
              "pat": re.compile(r"(tail\s*<=\s*)(tail\s*\+\s*1'b1);"),
              "repl": r"\1tail;", "hit": "fifo_sync A4/A3 类指针性质", "expect": "fifo_sync"},
             {"desc": "数据位计数终值偏移：bit_cnt == DATA_W-1 改 == DATA_W（数据位永不结束，卡死 DATA）",
-             "pat": re.compile(r"(bit_cnt\s*==\s*DATA_W\s*-\s*)1'b1(\s*\)\s*begin)"),
+             "pat": re.compile(r"(bit_cnt\s*==\s*DATA_W\s*-\s*)1(\s*\)\s*begin)"),
              "repl": r"\g<1>1'b0\g<2>", "hit": "uart_tx A4（DATA→STOP 收尾）", "expect": "uart_tx"},
             {"desc": "超时阈值提前一拍：step_cnt >= TIMEOUT 改 >= TIMEOUT-1（提前触发超时，击穿 A3 前置）",
              "pat": re.compile(r"(step_cnt\s*>=\s*)(TIMEOUT)(\s*\)\s*begin)"),
@@ -215,7 +240,7 @@ INJECTORS = {
              "repl": r"\g<1>(cnt == 8'd8) ? 8'd0 : cnt + 1'b1\g<3>",
              "hit": "counter_alu A1（仅使能自增 1）", "expect": "counter_alu"},
             {"desc": "uart_rx 起始位中点偏移：baud_cnt == HALF-1 改 == HALF（中点确认迟到一拍，击穿 A1/A2）",
-             "pat": re.compile(r"(if \(baud_cnt == \()HALF - 1(\%\)\) begin)"),
+             "pat": re.compile(r"(if \(baud_cnt == \()HALF - 1(\)\) begin)"),
              "repl": r"\g<1>HALF\g<2>", "hit": "uart_rx A1/A2（起始位中点确认）", "expect": "uart_rx"},
             {"desc": "axi 读地址译码偏移：ARADDR[ADDR_W-1:2] 改 [ADDR_W-2:1]（读数据错位，击穿 A6）",
              "pat": re.compile(r"case \(S_AXI_ARADDR\[ADDR_W-1:2\]\)"),
@@ -457,6 +482,15 @@ def _inline_assert(design_src, assert_src, module):
     body = re.sub(r"always\s*@\(posedge\s+ACLK\s+or\s+negedge\s+ARESETN\)", "always @(posedge ACLK)", body)
     body = re.sub(r"\n{3,}", "\n\n", body)
     body = body.strip("\n")
+    # 断言打拍 reg 初始化为 0（避免 sby 中未初始化 reg 初始值任意导致空洞反例，
+    # 如 uart_tx A6 state_d 初始为 START 时复位释放前误报；不影响设计 reg）
+    assert_regs = re.findall(r"\breg\s+(?:\[[^\]]*\]\s*)?(\w+)\s*;", body)
+    if assert_regs:
+        init_lines = ["    initial begin"]
+        for r_ in assert_regs:
+            init_lines.append("        %s = 1'b0;" % r_)
+        init_lines.append("    end")
+        body = "\n".join(init_lines) + "\n" + body
     inline = (
         "\n    // ------------------------------------------------------------------\n"
         "    // 内联强断言（安全子集：immediate assert + 单边沿打拍；源自 rtl/%s/assertions.sv）\n"
@@ -532,13 +566,19 @@ def _copy_cex(sby_work, sample_dir):
 
 # ---- 样本落盘 ----
 def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertions_src,
-                  tb_src, top_mod, tb_top, depth, variant, line_no, diff, verify, cmd_line):
+                  tb_src, top_mod, tb_top, depth, variant, line_no, diff, verify, cmd_line,
+                  param_map=None):
+    param_map = param_map or {}
     """生成 7 件套（buggy/golden/弱tb/cex.vcd/cex.log/meta.json/evidence.json/notes.md）+ verify.sby。
     断言已内联于 buggy.v/golden.v（不再生成独立 assertions.sv / formal_top.sv）。"""
     os.makedirs(sample_dir, exist_ok=True)
     # uart_rx 回环依赖：拷贝 uart_tx.sv 到样本目录（弱 tb 实例化 uart_tx 发送端，复现时需同目录编译）
     if module == "uart_rx":
-        shutil.copy(os.path.join(RTL_DIR, "uart_tx", "uart_tx.sv"), os.path.join(sample_dir, "uart_tx.sv"))
+        tx_src = open(os.path.join(RTL_DIR, "uart_tx", "uart_tx.sv"), encoding="utf-8").read()
+        if param_map:
+            tx_src = _apply_params(tx_src, param_map)
+        with open(os.path.join(sample_dir, "uart_tx.sv"), "w", encoding="utf-8") as f:
+            f.write(tx_src)
     # 设计/弱 tb（设计含内联断言 + initial 初值约束，避免 formal 空洞反例）
     with open(os.path.join(sample_dir, "golden.v"), "w", encoding="utf-8") as f:
         f.write(golden_src)
@@ -569,6 +609,7 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
         "hit_assertion": variant["hit"],
         "golden_source": "rtl/%s/%s.sv" % (module, module),
         "date": DATE, "reproduce_cmd": cmd_line,
+        "param_override": param_map or None,
         "verification": {"compile_ok": True, "sim_ok": True, "formal_result": "fail", "golden_formal_result": "pass", "verdict": "L3_VALID"},
     }
     with open(os.path.join(sample_dir, "meta.json"), "w", encoding="utf-8") as f:
@@ -623,6 +664,7 @@ def main(argv=None):
     ap.add_argument("--line", type=int, default=None, help="指定注入点行号（限制 variant 匹配该行）")
     ap.add_argument("--variant", type=int, default=None, help="指定变体序号（1-based，--list-types 查看顺序）；默认按顺序尝试")
     ap.add_argument("--seed", type=int, default=0, help="variant 尝试顺序随机种子（默认 0=声明顺序）")
+    ap.add_argument("--param", default="", help="测试参数覆写，逗号分隔如 CLK_FREQ=400,BAUD=100（用于 uart 小 DIV 深时序样本）")
     ap.add_argument("--dry-run", action="store_true", help="仅打印将应用的 diff，不落盘不校验")
     args = ap.parse_args(argv)
 
@@ -637,6 +679,17 @@ def main(argv=None):
     if not (args.module and args.error_type):
         ap.print_help()
         return 1
+    param_map = {}
+    if args.param:
+        for kv in args.param.split(","):
+            kv = kv.strip()
+            if not kv:
+                continue
+            if "=" not in kv:
+                print("error: --param 需 NAME=VALUE 格式（%s）" % kv, file=sys.stderr)
+                return 1
+            k, v = kv.split("=", 1)
+            param_map[k.strip()] = v.strip()
     err = INJECTORS.get(args.error_type)
     if not err:
         print("error: 未知错误类型 '%s'（--list-types 查看）" % args.error_type, file=sys.stderr)
@@ -655,6 +708,9 @@ def main(argv=None):
     golden = open(golden_path, encoding="utf-8").read()
     assertions = open(assert_path, encoding="utf-8").read()
     tb = open(tb_path, encoding="utf-8").read()
+    if param_map:
+        golden = _apply_params(golden, param_map)
+        tb = _apply_params(tb, param_map)
     tb = _weaken_tb(tb, args.error_type)   # 弱 tb 清洗：剥离会击穿本类缺陷的仿真检查行
     tb = _strip_tb_assert(tb)              # 剥离断言模块实例化（断言已内联）
     # 内联断言到设计（golden/buggy 均含内联断言块 + initial 初值 + 复位静默环境约束）
@@ -687,15 +743,27 @@ def main(argv=None):
     tb_top = _TB_MODULE.search(tb)
     tb_top = tb_top.group(1) if tb_top else None
     depth = MODULE_DEPTH.get(args.module, 24)
+    # 参数感知深度：--param 提供 CLK_FREQ/BAUD 时按 DIV 估算完整 UART 帧深度
+    if param_map and args.module in ("uart_tx", "uart_rx"):
+        try:
+            clk = int(param_map.get("CLK_FREQ", 50000000))
+            baud = int(param_map.get("BAUD", 115200))
+            div = max(1, clk // baud)
+            # 完整帧：起始位 1 + 数据 8 + 停止 1 = 10 位周期，每周期 DIV 拍 + 裕量
+            depth = 10 * div + 16
+            print("  参数化深度：DIV=%d → depth=%d" % (div, depth))
+        except ValueError:
+            pass
 
     variants = list(err["variants"])
     if args.seed:
         random.Random(args.seed).shuffle(variants)
-    cmd_line = "python3 scripts/bug_injector.py --module %s --error-type %s --sample-id %s%s%s%s" % (
+    cmd_line = "python3 scripts/bug_injector.py --module %s --error-type %s --sample-id %s%s%s%s%s" % (
         args.module, args.error_type, args.sample_id,
         " --line %d" % args.line if args.line else "",
         " --seed %d" % args.seed if args.seed else "",
-        " --variant %d" % args.variant if args.variant else "")
+        " --variant %d" % args.variant if args.variant else "",
+        " --param %s" % args.param if args.param else "")
 
     # 逐 variant 注入 + 校验（dry-run 时仅打印所有可应用 diff，不落盘不校验）
     fails = []
@@ -726,6 +794,10 @@ def main(argv=None):
             # uart_rx \u56de\u73af\u4f9d\u8d56\uff1a\u62f7\u8d1d uart_tx.sv \u5230\u4e34\u65f6\u76ee\u5f55\uff08\u5f31 tb \u5b9e\u4f8b\u5316 uart_tx \u53d1\u9001\u7aef\uff09
             if args.module == "uart_rx":
                 shutil.copy(os.path.join(RTL_DIR, "uart_tx", "uart_tx.sv"), os.path.join(tmp_dir, "uart_tx.sv"))
+                if param_map:
+                    tx_src = open(os.path.join(tmp_dir, "uart_tx.sv"), encoding="utf-8").read()
+                    with open(os.path.join(tmp_dir, "uart_tx.sv"), "w", encoding="utf-8") as f:
+                        f.write(_apply_params(tx_src, param_map))
             sby_file = os.path.join(tmp_dir, "verify.sby")
             with open(sby_file, "w", encoding="utf-8") as f:
                 f.write(_gen_sby(args.module, top_mod, depth))
@@ -737,7 +809,7 @@ def main(argv=None):
             # 三通过成立 → 落盘样本 + 拷贝 cex 证据
             _write_sample(sample_dir, args.module, args.sample_id, golden_inline, buggy_inline, assertions,
                           tb, top_mod, tb_top, depth, v, line_no, diff,
-                          {"err_name": err["name"], "code": args.error_type}, cmd_line)
+                          {"err_name": err["name"], "code": args.error_type}, cmd_line, param_map)
             copied = _copy_cex(detail["sby_work"], sample_dir)
             print("  校验通过：compile ✓ sim ✓ formal=fail ✓  → 样本 %s 已产出（cex: %s）"
                   % (sample_dir, ",".join(copied) or "(未找到 trace 波形)"))

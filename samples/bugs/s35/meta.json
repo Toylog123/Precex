@@ -1,0 +1,26 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s35",
+  "module": "uart_tx",
+  "error_type": "状态跳转",
+  "error_type_code": "state_trans",
+  "level": "L3",
+  "inject_line": 78,
+  "inject_desc": "uart_tx 数据位结束跳过 STOP 直接回 IDLE（帧缺停止位，击穿 A4）",
+  "diff": "- if (bit_cnt == DATA_W - 1) begin\n                            state <= S_STOP;\n+ if (bit_cnt == DATA_W - 1) begin\n                            state    <= S_IDLE;",
+  "hit_assertion": "uart_tx A4（DATA→STOP 收尾）",
+  "golden_source": "rtl/uart_tx/uart_tx.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module uart_tx --error-type state_trans --sample-id s35 --variant 7 --param CLK_FREQ=400,BAUD=100",
+  "param_override": {
+    "CLK_FREQ": "400",
+    "BAUD": "100"
+  },
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID"
+  }
+}

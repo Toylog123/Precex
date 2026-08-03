@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-# PreCex - scripts/run_experiments.py 主实验批量评测（M1 数据集 s04-s34）
+# PreCex - scripts/run_experiments.py 主实验批量评测（M1 数据集 s04-s37）
 # 作者：Toylog | 版本：v0.1 | 功能概述：对 samples/bugs 下 L3 样本批量跑 A/B/C × 3 随机种子评测：
 #   - 证据链：A=cex 原始日志/VCD，B=evidence.json（结构化），C=semantics.json（反例语义化）
 #   - LLM 定位+修复 → evaluator 三通过判定（compile/sim/formal，修复后期望 PASS）
 #   - 指标：loc_top1 / repair_pass / verdict / tokens / cost / attempts
 #   - 输出 experiments/runs/experiments_results.json + .csv（不入库），token 记账由 llm_client 强制
 # 用法：
-#   python3 scripts/run_experiments.py [--samples s04-s34] [--settings A,B,C]
+#   python3 scripts/run_experiments.py [--samples s04-s37] [--settings A,B,C]
 #            [--seeds 0,1,2] [--retries 2] [--mock] [--out ...]
 """
 PreCex 主实验批量评测。
@@ -192,7 +192,7 @@ def _build_evidence_text(setting, sample_dir):
 
 def main(argv=None):
     argv = list(argv if argv is not None else sys.argv[1:])
-    samples = ["s04-s34"]
+    samples = ["s04-s37"]
     settings = ["A", "B", "C"]
     seeds = [0, 1, 2]
     mock = False

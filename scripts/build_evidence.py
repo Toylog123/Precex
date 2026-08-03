@@ -5,7 +5,7 @@
 #   反例语义化，设置 C，mock 摘要默认；--real 时真实调用 MiniMax M3）。
 #   生成后可被 run_experiments.py A/B/C 评测直接消费。
 # 用法：
-#   python3 scripts/build_evidence.py [--samples s04-s34 或 s04,s05] [--mock|--real] [--window 8]
+#   python3 scripts/build_evidence.py [--samples s04-s37 或 s04,s05] [--mock|--real] [--window 8]
 """
 PreCex 证据批量生成。
 """
@@ -28,7 +28,7 @@ SAMPLES_PRESTUDY = os.path.join(REPO_ROOT, "samples", "prestudy")
 
 
 def expand_samples(spec):
-    """展开样本列表：'s04-s34' 区间或 's04,s05' 列表；返回排序后的 sample_id 列表。"""
+    """展开样本列表：'s04-s37' 区间或 's04,s05' 列表；返回排序后的 sample_id 列表。"""
     ids = []
     for part in spec.split(","):
         part = part.strip()
@@ -71,7 +71,7 @@ def write_json(path, obj):
 def main(argv=None):
     argv = list(argv if argv is not None else sys.argv[1:])
     ap = argparse.ArgumentParser(prog="build_evidence.py")
-    ap.add_argument("--samples", default="s04-s34", help="样本列表/区间（默认 s04-s34）")
+    ap.add_argument("--samples", default="s04-s37", help="样本列表/区间（默认 s04-s37）")
     ap.add_argument("--mock", action="store_true", help="semantics 摘要用 mock（默认）")
     ap.add_argument("--real", action="store_true", help="semantics 摘要真实调用 MiniMax M3")
     ap.add_argument("--window", type=int, default=8, help="语义化触发窗口（默认 8）")

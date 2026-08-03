@@ -3,6 +3,7 @@
 > 作者：Toylog | 版本：v1.1（2026-08-03）
 > 功能概述：给接手的智能体/会话的项目状态与待办说明。**新会话第一步：完整阅读本文件 + docs/ 下文档，再动手。**
 > v1.2 更新：M0.5 三例预研完成（Gate-0 通过，主叙事定案：反例语义化驱动 + 充分性闭环，见 docs/Gate-0-决策记录.md）；M1 数据集推进中（BugBench-PS 31 个 L3 样本 s04–s34，三通过 + golden 双对照全绿）；下一步为数据集补齐至 30–40 → Gate-2。
+> v1.3 更新（2026-08-04）：M1 数据集扩至 34 个 L3 样本（s04–s37），UART 参数化深时序机制（--param 小 DIV，uart_rx 深时序反例 depth 230+→176 收敛）+ 黄金断言时序修复（uart_tx A6 baud_tick_d、uart_rx A1/A2 rxd_d）+ 环境约束落地；下一步：主实验真实评测 → Gate-2。
 
 ## 1. 项目速览
 
@@ -40,8 +41,11 @@
   - EvidenceEngine / CexSemantizer（含轨迹压缩）/ A-B-C prompt 模板族 / T1 视觉快测 / run_prestudy 一键评测 全部落地；
     3 样本 × A/B/C × 真实 MiniMax M3 评测 9/9 修复三通过，主叙事定案（详见 docs/Gate-0-决策记录.md 与 docs/进度.md）
 - **进行中（M1 数据集，W4–7）**：
-  - BugBench-PS 当前 31 个 L3 样本（s04–s34 连续编号，6 模块 × 7 错误类型矩阵，11 件套 + golden 双对照 + prove 修复验证）；
+  - BugBench-PS 当前 34 个 L3 样本（s04–s37 连续编号，6 模块 × 7 错误类型矩阵，11 件套 + golden 双对照 + prove 修复验证）；
     samples/README.md 为数据集规范；注入器 --variant 选择器与变体池见 scripts/bug_injector.py
+  - **UART 参数化深时序机制（2026-08-04）**：注入器 --param 覆写 CLK_FREQ/BAUD（小 DIV），uart_rx 深时序反例
+    BMC 深度 230+ → 176 可收敛，s35–s37 入库（uart_tx 3 / uart_rx 4）；黄金断言时序修复（A6 baud_tick_d、
+    A1/A2 rxd_d）+ uart_rx 环境约束（START/STOP 期间 rxd 保持）
   - **主实验管线就绪（2026-08-04）**：A/B/C 证据链全量生成（evidence.json + semantics.json，
     axi 时钟自动识别）；scripts/run_experiments.py 批量评测（A/B/C × 3 种子，prove 修复验证，
     k-induction 充分性）；s04 端到端实测 buggy FAIL → 修复 PASS
@@ -71,7 +75,7 @@
 1. 按 samples/README.md 矩阵缺口扩展样本：重点 uart_tx/uart_rx/handshake/edge 新变体（uart_rx 深时序可参数化小 DIV；counter 满值回绕可接受长 BMC）
 2. 新增样本逐一过注入器三通过校验 + golden 双对照（verify_golden.sby）+ verify_repair.sby（注入器已自动生成）
 3. 唯一性 + 结构审计：模块×类型矩阵、件套完整、sample_id 一致、cex.vcd/cex.log 存在
-4. **主实验正式跑**：scripts/build_evidence.py --real 生成真实 M3 摘要 → scripts/run_experiments.py A/B/C × 3 种子（31 × 3 × 3 = 279 次调用，token 记账）
+4. **主实验正式跑**：scripts/build_evidence.py --real 生成真实 M3 摘要 → scripts/run_experiments.py A/B/C × 3 种子（34 × 3 × 3 = 306 次调用，token 记账）
 5. Verifier 充分性量化：mutation/非空洞/假阳性率 + T2 验证 agent
 6. **Gate-2 数据集定案**（30–40 样本逐样本校验）→ **更新 docs/进度.md** → git commit + push
 
@@ -85,4 +89,4 @@
 
 ## 7. 交接话术（新会话开场可直接使用）
 
-> 请先完整阅读 D:\BaiduSyncdisk\02_Precex\HANDOFF.md（项目交接文档）与 docs/ 下的 方案.md、目录结构规范.md、进度.md、文献调研与评估.md，以及 README.md 与 smoke/断言子集收敛.md，然后告诉我你已掌握的项目要点。这是 PreCex 项目：反例驱动的综合前 RTL 缺陷定位与修复智能体。当前状态：W1（Gate-1）已完成并推送；M0.5 三例预研进行中（llm_client/bug_injector/3 例样本骨架就绪，MiniMax M3 key 已配置在 .env）；下一步按 HANDOFF.md 第 5 节执行 M0.5 预研 → Gate-0（决定论文主叙事）。完成后更新 docs/进度.md 并推送 GitHub。工作区根目录是 D:\BaiduSyncdisk\02_Precex。
+> 请先完整阅读 D:\BaiduSyncdisk\02_Precex\HANDOFF.md（项目交接文档）与 docs/ 下的 方案.md、目录结构规范.md、进度.md、文献调研与评估.md，以及 README.md 与 smoke/断言子集收敛.md，然后告诉我你已掌握的项目要点。这是 PreCex 项目：反例驱动的综合前 RTL 缺陷定位与修复智能体。当前状态：W1（Gate-1）与 M0.5 预研均已完成并推送（Gate-0 通过，主叙事：反例语义化驱动 + 充分性闭环）；M1 数据集 34 样本（s04–s37）就绪。下一步：主实验真实评测（build_evidence --real → run_experiments）→ Gate-2。完成后更新 docs/进度.md 并推送 GitHub。工作区根目录是 D:\BaiduSyncdisk\02_Precex。
