@@ -1,0 +1,20 @@
+# PreCex - L3 样本 s03 (counter_alu) 修复验证配置（prove 模式，k-induction）
+# 作者：Toylog | 版本：v0.1 | 功能概述：修复后三通过判定第 ③ 步用 k-induction 证明
+
+[tasks]
+prove
+
+[options]
+prove: mode prove
+prove: depth 20
+prove: timeout 600
+
+[engines]
+prove: smtbmc
+
+[script]
+read -sv -formal buggy.sv
+prep -top counter_alu
+
+[files]
+buggy.sv

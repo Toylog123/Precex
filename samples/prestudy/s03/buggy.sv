@@ -62,6 +62,10 @@ module counter_alu #(
     // ------------------------------------------------------------------
     localparam OP_NUM = 5;                    // 有效运算个数（0..4）
 
+    // 环境约束（formal）：op 恒为有效运算（0..OP_NUM-1）。A5 断言依赖该环境假设——
+    // 无 assume 时求解器可在任意周期驱动非法 op（5..7）制造与缺陷无关的假反例（golden 也会 FAIL）
+    always @(posedge clk) assume (op < OP_NUM);
+
     reg              rst_n_d;                 // 上周期复位信号
     reg              cnt_en_d;                // 上周期计数器使能
     reg [DATA_W-1:0] cnt_d;                   // 上周期计数值

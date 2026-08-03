@@ -9,14 +9,15 @@
 # 说明：depth 需覆盖 255 拍计数 + 1 拍断言（复位后 cnt 从 0 连续使能 255 拍到 255，再 1 拍回绕判定）
 
 [tasks]
-bmc
+prove
 
 [options]
-bmc: mode bmc
-bmc: depth 270
+prove: mode prove
+prove: depth 20
+prove: timeout 600
 
 [engines]
-bmc: smtbmc
+prove: smtbmc
 
 [script]
 read -sv -formal golden.sv

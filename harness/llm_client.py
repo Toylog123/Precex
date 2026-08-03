@@ -22,6 +22,7 @@
 
 import json
 import os
+import socket
 import sys
 import time
 import uuid
@@ -174,9 +175,9 @@ class LLMClient:
                 raise RuntimeError(
                     "MiniMax API 请求被拒(HTTP %d)：%s\n提示：请检查 MINIMAX_API_KEY 是否正确、"
                     "账户额度/权限是否可用。" % (e.code, detail))
-            except urllib_error.URLError as e:
-                # 网络层错误（DNS/连接超时等）：可重试
-                last_err = e.reason
+            except (urllib_error.URLError, socket.timeout, TimeoutError) as e:
+                # 网络层错误（DNS/连接超时/socket 读超时等）：可重试
+                last_err = getattr(e, "reason", e)
                 if attempt < self.max_retries:
                     time.sleep(min(1.5 * (2 ** attempt), 20.0))
                     continue
