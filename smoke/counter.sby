@@ -1,0 +1,19 @@
+# PreCex - Gate-1 smoke test: SymbiYosys config (bmc)
+# 作者：Toylog | 版本：v0.1 | 功能概述：对 counter.sv 运行 bmc，期望产生反例
+
+[tasks]
+bmc
+
+[options]
+bmc: mode bmc
+bmc: depth 8
+
+[engines]
+bmc: smtbmc
+
+[script]
+read -sv counter.sv
+prep -top counter
+
+[files]
+counter.sv

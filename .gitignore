@@ -1,0 +1,37 @@
+# PreCex - Git ignore
+# 作者：Toylog | 版本：v0.1 | 功能概述：排除构建产物、仿真输出与本地环境文件
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.eggs/
+
+# 仿真 / 形式验证产物
+*.vcd
+*.fst
+*.lxt
+*.lxt2
+*.log
+sby_*/
+*.ys
+*.dot
+
+# 构建
+build/
+dist/
+*.o
+*.exe
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.tmp
+
+# 凭据（绝不提交）
+.env
+*.key
+*.pem
