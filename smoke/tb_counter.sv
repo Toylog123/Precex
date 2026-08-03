@@ -25,13 +25,13 @@ module tb_counter;
         #20 rst_n = 1;
         // 弱场景 1：en=0 保持
         #20
-        if (cnt !== 2'd0) $fatal("FAIL: cnt != 0 after idle");
+        if (cnt !== 2'd0) $fatal(1, "FAIL: cnt != 0 after idle");
         // 弱场景 2：单周期使能，只验证 en 有效时 cnt 变化一拍的可见行为
         en = 1; #10 en = 0;
-        if (cnt !== 2'd1) $fatal("FAIL: cnt != 1 after one en pulse");
+        if (cnt !== 2'd1) $fatal(1, "FAIL: cnt != 1 after one en pulse");
         // 弱场景 3：再给一拍
         en = 1; #10 en = 0;
-        if (cnt !== 2'd2) $fatal("FAIL: cnt != 2 after two en pulses");
+        if (cnt !== 2'd2) $fatal(1, "FAIL: cnt != 2 after two en pulses");
         $display("PASS: weak testbench passed (buggy design)");
         $finish;
     end

@@ -1,18 +1,23 @@
 # PreCex - Gate-1 smoke test: SymbiYosys config (bmc)
-# 作者：Toylog | 版本：v0.1 | 功能概述：对 counter.sv 运行 bmc，期望产生反例
+# 作者：Toylog | 版本：v0.5 | 功能概述：对 counter.sv 运行 bmc，期望产生反例
+# 修改说明：read 显式加 -formal（与断言矩阵诊断路径一致，sby 官方模板亦为 read -formal）；
+#           depth 由 8 -> 10（反例触发约需 6 拍，留 4 拍裕量）；
+#           引擎历经 smtbmc(缺yices) -> abc bmc3(sby0.33与新版abc cex格式不兼容 KeyError: asserts) ->
+#           smtbmc + z3：已通过 pip --user 安装 z3-solver（~/.local/bin/z3），
+#           运行 sby 前需 export PATH=$HOME/.local/bin:$PATH（sby 环境说明见收敛文档）
 
 [tasks]
 bmc
 
 [options]
 bmc: mode bmc
-bmc: depth 8
+bmc: depth 10
 
 [engines]
 bmc: smtbmc
 
 [script]
-read -sv counter.sv
+read -sv -formal counter.sv
 prep -top counter
 
 [files]

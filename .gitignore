@@ -17,6 +17,14 @@ venv/
 sby_*/
 *.ys
 *.dot
+*.smt2
+*.aiw
+*.yw
+
+# sby 状态库 / iverilog 可执行 / 诊断工作目录
+*.sqlite
+tb_out
+.svatest/
 
 # 构建
 build/
