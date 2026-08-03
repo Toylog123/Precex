@@ -187,13 +187,13 @@ def _discover(sample_dir, cfg):
         files = sorted(
             os.path.join(sample_dir, f)
             for f in os.listdir(sample_dir)
-            if f.endswith(".sv") and not f.startswith("tb_")
+            if (f.endswith(".sv") or f.endswith(".v")) and not f.startswith("tb_") and f not in ("formal_top.sv", "golden.v", "golden.sv")
         )
     else:
         files = [f if os.path.isabs(f) else os.path.join(sample_dir, f) for f in files]
     tb_file = cfg.get("tb")
     if tb_file is None:
-        tbs = [f for f in sorted(os.listdir(sample_dir)) if f.startswith("tb_") and f.endswith(".sv")]
+        tbs = [f for f in sorted(os.listdir(sample_dir)) if f.startswith("tb_") and (f.endswith(".sv") or f.endswith(".v"))]
         tb_file = tbs[0] if tbs else None
     if tb_file and not os.path.isabs(tb_file):
         tb_file = os.path.join(sample_dir, tb_file)
@@ -212,7 +212,7 @@ def evaluate(sample_dir, cfg=None):
     返回统一 JSON：{"sample", "compile", "sim", "formal", "verdict"}
     """
     cfg = cfg or {}
-    sample_dir = _to_wsl_path(sample_dir)
+    sample_dir = os.path.abspath(_to_wsl_path(sample_dir))  # 绝对路径：避免相对路径叠加到 cwd 导致文件找不到
     design_files, tb_file, sby_file = _discover(sample_dir, cfg)
     sample = os.path.basename(os.path.normpath(sample_dir))
 
@@ -230,7 +230,11 @@ def evaluate(sample_dir, cfg=None):
 
         # ② 弱 tb 仿真（设计 + tb 一起编译运行）
         sim_files = design_files + ([tb_file] if tb_file else [])
-        sim_top = cfg.get("tb_top") or (os.path.splitext(os.path.basename(tb_file))[0] if tb_file else None)
+        # tb top 从文件内容提取模块名（文件名可能被重命名，如 tb_weak.sv 内模块 tb_fifo_sync）；cfg 可覆盖
+        sim_top = cfg.get("tb_top")
+        if not sim_top and tb_file:
+            m = re.search(r"module\s+(tb_\w+)", open(tb_file, encoding="utf-8").read())
+            sim_top = m.group(1) if m else os.path.splitext(os.path.basename(tb_file))[0]
         sim_out = os.path.join(tmpdir, "sim.out")
         sim_res = sim_check(sim_files, top=sim_top, out_bin=sim_out,
                             iverilog=cfg.get("iverilog", "iverilog"),

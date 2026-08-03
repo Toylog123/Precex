@@ -37,6 +37,32 @@ MODULE_DEPTH = {
 }
 
 
+# ---- 弱 tb 清洗规则：按 error_type 剥离会击穿该缺陷的仿真检查行 ----
+# 弱 tb 要求“放过缺陷”：黄金 tb 若显式断言 full/empty/half_full/count 等被注入缺陷直接影响的信号，
+# 会在 sim 阶段击穿 buggy，导致 L3 校验失败。清洗即删除含这些关键字的 $fatal 检查行（保留数据通路检查）。
+WEAK_TB_STRIP = {"fifo_full": ["full", "empty", "half_full", "count", "dout"]}
+
+
+def _weaken_tb(tb_src, error_type):
+    # 按错误类型清洗弱 tb：删除会击穿该缺陷的仿真检查行，返回清洗后源码
+    keys = WEAK_TB_STRIP.get(error_type)
+    if not keys:
+        return tb_src
+    out = []
+    removed = 0
+    for line in tb_src.splitlines():
+        # 命中 $fatal 且包含任一关键字的行：整行剥离（弱 tb 不再检查该信号）
+        if "$fatal" in line and any(k in line for k in keys):
+            removed += 1
+            continue
+        out.append(line)
+    new = "\n".join(out)
+    if removed:
+        new += "\n// [bug_injector] weak tb sanitized for %s: stripped %d fatal check(s) on %s\n" % (
+            error_type, removed, "/".join(keys))
+    return new
+
+
 # ---- 7 类错误注入器：每类 = 一组规则化文本变换 variant（正则匹配黄金源码，优先顺序即尝试顺序）----
 # variant 结构：{"desc", "pat"(编译后正则), "repl"(替换串/None=删除整行), "hit"(击穿的断言提示), "expect"(预期适用模块)}
 INJECTORS = {
@@ -211,11 +237,6 @@ def _gen_formal_top(module, params, ports, assert_ports):
         lines.append("    %s wire %s %s%s" % (d, w or "", n, "," if i < len(ports) - 1 else ""))
     lines.append(");")
     # 设计输出连线声明
-    outs = [(w, n) for d, w, n in ports if d == "output"]
-    if outs:
-        lines += ["", "    // 设计输出连线"]
-        for w, n in outs:
-            lines.append("    wire %s %s;" % (w or "", n))
     # 设计实例（实例名 uut 与弱 tb 一致）
     lines += ["", "    // 设计实例（实例名 uut 与弱 tb 一致）", "    %s #(" % module, param_inst, "    ) uut ("]
     for i, (_d, _w, n) in enumerate(ports):
@@ -239,7 +260,7 @@ def _gen_sby(module, top_mod, depth):
         "\n[tasks]\nbmc\n\n[options]\nbmc: mode bmc\nbmc: depth %d\n\n[engines]\nbmc: smtbmc\n\n"
         "[script]\nread -sv -formal buggy.v\nread -sv -formal assertions.sv\nread -sv -formal formal_top.sv\n"
         "prep -top %s\n\n[files]\nbuggy.v\nassertions.sv\nformal_top.sv\n"
-    ) % (module, depth, os.path.join(REPO_ROOT, "smoke", "yosys-smtbmc-z3.sh"), depth, top_mod)
+    ) % (module, depth, os.path.join(REPO_ROOT, "smoke", "yosys-smtbmc-z3.sh"), depth, top_mod + "_formal_top")
 
 
 def _with_init(src):
@@ -421,6 +442,7 @@ def main(argv=None):
     golden = open(golden_path, encoding="utf-8").read()
     assertions = open(assert_path, encoding="utf-8").read()
     tb = open(tb_path, encoding="utf-8").read()
+    tb = _weaken_tb(tb, args.error_type)   # 弱 tb 清洗：剥离会击穿本类缺陷的仿真检查行
     top_mod, _params, _ports = _module_info(golden)
     tb_top = _TB_MODULE.search(tb)
     tb_top = tb_top.group(1) if tb_top else None
@@ -433,10 +455,7 @@ def main(argv=None):
         args.module, args.error_type, args.sample_id,
         " --line %d" % args.line if args.line else "", " --seed %d" % args.seed if args.seed else "")
 
-    if args.dry_run:
-        print("\n== dry-run：以上为将应用的 diff（未落盘、未校验）==")
-        return 0
-    # 逐 variant 注入 + 校验
+    # 逐 variant 注入 + 校验（dry-run 时仅打印所有可应用 diff，不落盘不校验）
     fails = []
     sample_dir = os.path.join(SAMPLES_DIR, args.sample_id)
     for v in variants:
@@ -481,6 +500,9 @@ def main(argv=None):
         finally:
             shutil.rmtree(tmp_dir, ignore_errors=True)
             shutil.rmtree(work_dir, ignore_errors=True)
+    if args.dry_run:
+        print("\n== dry-run：以上为将应用的 diff（未落盘、未校验）==")
+        return 0
     _report_failure(cmd_line, args.module, args.error_type, fails)
     return 1
 
