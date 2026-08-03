@@ -77,8 +77,15 @@ class CexSemantizer:
         self.vp = VcdParser(cex_path, clk_sig=clk_sig).parse() if os.path.isfile(cex_path) else None
         self.semantics = {}
 
-    def build(self, max_cycles=None):
-        """生成语义化证据（不含 NL 摘要，摘要由 summarize() 生成）。"""
+    def build(self, max_cycles=None, window=8):
+        """生成语义化证据（不含 NL 摘要，摘要由 summarize() 生成）。
+
+        window: 触发窗口（fail_step 前后各保留的周期数）。压缩策略：
+          - 周期事件表：保留触发窗口 ±window 拍，之前每 4 拍取一帧（降采样），
+            之后截断（反例之后通常无新信息）；
+          - 状态轨迹：与周期事件表同窗口；
+          - 故障锥：只保留设计可见信号（过滤参数/内部辅助信号）。
+        """
         ev = self.evidence
         cycles = self.vp.cycle_events if self.vp else []
         if max_cycles:
@@ -95,14 +102,39 @@ class CexSemantizer:
                 "changes": [{"sig": k, "val": v} for k, v in sorted(changed.items())],
             })
             prev = cur
-        # 状态轨迹：关键信号
+        # 触发窗口压缩
+        fail_step = ev.get("fail_step")
+        if fail_step is not None and window > 0:
+            lo = max(0, fail_step - window)
+            hi = min(len(event_table), fail_step + window + 1)
+            # 触发前部分降采样（每 4 拍一帧）避免丢失长期计数趋势
+            pre = []
+            for i in range(0, lo, 4):
+                pre.append(event_table[i])
+            if pre and pre[-1]["cycle"] != lo - 1 and lo > 0:
+                pre.append({"cycle": "...", "time": None, "changes": []})
+            keep = event_table[lo:hi]
+            event_table = pre + keep
+        # 状态轨迹：关键信号（与周期事件表同窗口，保证一致）
         sigs = [s for s in KEY_SIGS if self.vp and s in set(self.vp.all_signals())]
         state_trace = self.vp.state_trace(sigs) if self.vp else []
+        if fail_step is not None and window > 0:
+            lo = max(0, fail_step - window)
+            hi = min(len(state_trace), fail_step + window + 1)
+            pre_trace = []
+            for i in range(0, lo, 4):
+                pre_trace.append(state_trace[i])
+            if pre_trace and pre_trace[-1]["cycle"] != lo - 1 and lo > 0:
+                pre_trace.append({"cycle": "...", "time": None})
+            state_trace = pre_trace + state_trace[lo:hi]
         # 故障锥（静态近似）：断言触发信号 + 代码切片引用的信号
         cone = set()
         cone |= _extract_sig_names(ev.get("trigger_condition"))
         cone |= _extract_sig_names(ev.get("code_slice"))
         cone |= set(sigs)
+        # 过滤内部/参数噪声（DATA_W/OP_W/OP_NUM/函数形参 f_* 等）
+        cone = {c for c in cone if not c.startswith(("DATA_", "OP_", "f_", "buggy", "golden"))
+                and not re.match(r"^\d", c)}
         cone = sorted(cone)
         self.semantics = {
             "schema_ver": "v1.0",
@@ -124,13 +156,7 @@ class CexSemantizer:
     def summarize(self, mock=True, tag="cex_semantize"):
         """生成 NL 摘要（附录 A 模板）：周期事件表 + 状态轨迹 + 故障锥 → M3 3-5 句。"""
         s = self.semantics
-        # 压缩状态轨迹：超过 24 周期只保留前后各 8 + 触发周期附近
-        trace = s.get("state_trace", [])
-        if len(trace) > 24:
-            head, tail = trace[:8], trace[-8:]
-            trace_view = head + [{"cycle": "... 省略 ..."}] + tail
-        else:
-            trace_view = trace
+        trace_view = s.get("state_trace", [])
         prompt = (
             "你是资深 RTL 验证工程师。基于给定的周期事件表、状态轨迹与故障锥信号，\n"
             "用 3–5 句描述：缺陷发生在哪个周期、哪些信号先异常、与断言违例的因果链。\n"
@@ -167,13 +193,16 @@ def main(argv=None):
     sample_dir = argv[0]
     out_path = None
     mock = True
+    window = 8
     if "--out" in argv:
         i = argv.index("--out")
         out_path = argv[i + 1] if i + 1 < len(argv) else None
     if "--real" in argv:
         mock = False
+    if "--window" in argv:
+        window = int(argv[argv.index("--window") + 1])
     cs = CexSemantizer(sample_dir)
-    cs.build()
+    cs.build(window=window)
     cs.summarize(mock=mock)
     text = json.dumps(cs.semantics, ensure_ascii=False, indent=2)
     if out_path:

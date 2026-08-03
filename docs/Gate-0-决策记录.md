@@ -73,8 +73,10 @@ C 作为主设置（可解释性最好），B 作为消融对照，A 为基线�
 
 ## 5. 已知问题与后续（Gate-0 之后）
 
-- s03 的 C 证据 tokens 过高（160K）到 状态轨迹压缩（仅保留触发窗口加减 8 拍 + 故障锥信号）
-  为 M1 必做优化；
+- s03 的 C 证据 tokens 过高（160K）——**已优化（2026-08-03 同日）**：
+  CexSemantizer 增加 window 压缩（触发窗口 ±8 拍 + 周期事件降采样 + 故障锥过滤内部信号），
+  重建后 s03 摘要调用 85K → 32K input tokens（-62%），s03/C 评测 160K → 56K tokens（-65%）、
+  费用 0.1024 → 0.0460 USD（-55%），修复三通过保持 PASS；
 - s03 golden prove（depth 270）超时到 golden 对照改 BMC depth 270（已 PASS）或
   prove depth 更小 + 分段归纳；
 - diff 应用器对 LLM 输出格式鲁棒性已显著提升（剥离 think 块/CRLF 归一化/行尾容错），
