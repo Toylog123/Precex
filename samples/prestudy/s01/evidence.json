@@ -1,0 +1,33 @@
+{
+  "schema_ver": "v1.0",
+  "evidence_source": "sby_bmc",
+  "sample_id": "s01",
+  "error_type": "fifo_count",
+  "inject_line": 71,
+  "inject_desc": "count 更新逻辑改为写优先（if (can_wr) count<=count+1 置于同拍读写守恒分支之前并删去守恒分支），同拍读写 (can_wr&&can_rd) 时 count 错误 +1（黄金实现保持守恒），跨周期后 count 与真实存储元素数失配，full/empty/half_full 错乱",
+  "module": "fifo_sync",
+  "file": "s01/buggy.sv",
+  "line": 132,
+  "code_slice": " 128:             assert (head < DEPTH);\n 129:             assert (tail < DEPTH);\n 130:             // A4 count 增量守恒：count 变化量必须恰好等于 (can_wr - can_rd)\n 131:             // —— 击穿点：buggy 写优先计数在 delta==0（同拍读写）时 count 仍 +1，违反 count == count_d\n 132:             if (delta_d == 2'b00) begin\n 133:                 assert (count == count_d);          // 同拍读写或不动作：count 不变\n 134:             end else if (delta_d == 2'b01) begin\n 135:                 assert (count == count_d + 1'b1);   // 仅写：count +1\n 136:             end else if (delta_d == 2'b11) begin    // -1 的补码",
+  "signals": {
+    "clk": "input",
+    "rst_n": "input",
+    "wr_en": "input",
+    "rd_en": "input",
+    "din": "input",
+    "dout": "output",
+    "full": "output",
+    "empty": "output",
+    "half_full": "output"
+  },
+  "trigger_condition": "count == count_d",
+  "fail_stage": "bmc_depth_3",
+  "fail_step": 3,
+  "failed_assert_id": "82",
+  "x_state_warn": false,
+  "x_state": {
+    "count": 0,
+    "signals": []
+  },
+  "raw_trace_ref": "samples/prestudy/s01/cex.vcd"
+}

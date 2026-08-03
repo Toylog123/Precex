@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="468" viewBox="0 0 960 468" font-family="Consolas,monospace" font-size="12">
+<rect width="960" height="468" fill="#ffffff"/>
+<text x="10" y="18" font-size="14" font-weight="bold">VCD waveform: cex.vcd</text>
+<line x1="150.0" y1="26" x2="150.0" y2="28" stroke="#888"/>
+<text x="152.0" y="42" fill="#666">c0</text>
+<line x1="150.0" y1="26" x2="150.0" y2="28" stroke="#888"/>
+<text x="152.0" y="42" fill="#666">c1</text>
+<line x1="342.7" y1="26" x2="342.7" y2="28" stroke="#888"/>
+<text x="344.7" y="42" fill="#666">c2</text>
+<line x1="535.4" y1="26" x2="535.4" y2="28" stroke="#888"/>
+<text x="537.4" y="42" fill="#666">c3</text>
+<line x1="728.0" y1="26" x2="728.0" y2="28" stroke="#888"/>
+<text x="730.0" y="42" fill="#666">c4</text>
+<line x1="920.7" y1="26" x2="920.7" y2="28" stroke="#888"/>
+<text x="922.7" y="42" fill="#666">c5</text>
+<text x="10" y="66.0" fill="#222">clk</text>
+<line x1="150.0" y1="64.0" x2="150.0" y2="64.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="63.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="56.0" x2="342.7" y2="56.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="246.3" y1="64.0" x2="246.3" y2="56.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="342.7" y1="56.0" x2="535.4" y2="56.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="535.4" y1="56.0" x2="728.0" y2="56.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="728.0" y1="56.0" x2="920.7" y2="56.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="920.7" y1="72.0" x2="950.0" y2="72.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="935.4" y1="56.0" x2="935.4" y2="72.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<text x="10" y="100.0" fill="#222">rst_n</text>
+<line x1="150.0" y1="98.0" x2="150.0" y2="98.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="97.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="106.0" x2="342.7" y2="106.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="246.3" y1="98.0" x2="246.3" y2="106.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="342.7" y1="106.0" x2="535.4" y2="106.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="535.4" y1="106.0" x2="728.0" y2="106.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="728.0" y1="90.0" x2="920.7" y2="90.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="824.4" y1="106.0" x2="824.4" y2="90.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="920.7" y1="98.0" x2="950.0" y2="98.0" stroke="#cc6600" stroke-width="2"/>
+<text x="922.7" y="97.0" fill="#cc6600">?</text>
+<text x="10" y="134.0" fill="#222">count</text>
+<line x1="150.0" y1="132.0" x2="150.0" y2="132.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="131.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="132.0" x2="342.7" y2="132.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="131.0" fill="#cc6600">0000(0)</text>
+<line x1="342.7" y1="132.0" x2="535.4" y2="132.0" stroke="#cc6600" stroke-width="2"/>
+<text x="344.7" y="131.0" fill="#cc6600">0001(1)</text>
+<line x1="535.4" y1="132.0" x2="728.0" y2="132.0" stroke="#cc6600" stroke-width="2"/>
+<text x="537.4" y="131.0" fill="#cc6600">0010(2)</text>
+<line x1="728.0" y1="132.0" x2="920.7" y2="132.0" stroke="#cc6600" stroke-width="2"/>
+<text x="730.0" y="131.0" fill="#cc6600">0000(0)</text>
+<line x1="920.7" y1="132.0" x2="950.0" y2="132.0" stroke="#cc6600" stroke-width="2"/>
+<text x="922.7" y="131.0" fill="#cc6600">?</text>
+<text x="10" y="168.0" fill="#222">count_d</text>
+<line x1="150.0" y1="166.0" x2="150.0" y2="166.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="165.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="166.0" x2="342.7" y2="166.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="165.0" fill="#cc6600">0000(0)</text>
+<line x1="342.7" y1="166.0" x2="535.4" y2="166.0" stroke="#cc6600" stroke-width="2"/>
+<text x="344.7" y="165.0" fill="#cc6600">0000(0)</text>
+<line x1="535.4" y1="166.0" x2="728.0" y2="166.0" stroke="#cc6600" stroke-width="2"/>
+<text x="537.4" y="165.0" fill="#cc6600">0001(1)</text>
+<line x1="728.0" y1="166.0" x2="920.7" y2="166.0" stroke="#cc6600" stroke-width="2"/>
+<text x="730.0" y="165.0" fill="#cc6600">0010(2)</text>
+<line x1="920.7" y1="166.0" x2="950.0" y2="166.0" stroke="#cc6600" stroke-width="2"/>
+<text x="922.7" y="165.0" fill="#cc6600">?</text>
+<text x="10" y="202.0" fill="#222">head</text>
+<line x1="150.0" y1="200.0" x2="150.0" y2="200.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="199.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="200.0" x2="342.7" y2="200.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="199.0" fill="#cc6600">000(0)</text>
+<line x1="342.7" y1="200.0" x2="535.4" y2="200.0" stroke="#cc6600" stroke-width="2"/>
+<text x="344.7" y="199.0" fill="#cc6600">000(0)</text>
+<line x1="535.4" y1="200.0" x2="728.0" y2="200.0" stroke="#cc6600" stroke-width="2"/>
+<text x="537.4" y="199.0" fill="#cc6600">001(1)</text>
+<line x1="728.0" y1="200.0" x2="920.7" y2="200.0" stroke="#cc6600" stroke-width="2"/>
+<text x="730.0" y="199.0" fill="#cc6600">000(0)</text>
+<line x1="920.7" y1="200.0" x2="950.0" y2="200.0" stroke="#cc6600" stroke-width="2"/>
+<text x="922.7" y="199.0" fill="#cc6600">?</text>
+<text x="10" y="236.0" fill="#222">tail</text>
+<line x1="150.0" y1="234.0" x2="150.0" y2="234.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="233.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="234.0" x2="342.7" y2="234.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="233.0" fill="#cc6600">000(0)</text>
+<line x1="342.7" y1="234.0" x2="535.4" y2="234.0" stroke="#cc6600" stroke-width="2"/>
+<text x="344.7" y="233.0" fill="#cc6600">001(1)</text>
+<line x1="535.4" y1="234.0" x2="728.0" y2="234.0" stroke="#cc6600" stroke-width="2"/>
+<text x="537.4" y="233.0" fill="#cc6600">010(2)</text>
+<line x1="728.0" y1="234.0" x2="920.7" y2="234.0" stroke="#cc6600" stroke-width="2"/>
+<text x="730.0" y="233.0" fill="#cc6600">000(0)</text>
+<line x1="920.7" y1="234.0" x2="950.0" y2="234.0" stroke="#cc6600" stroke-width="2"/>
+<text x="922.7" y="233.0" fill="#cc6600">?</text>
+<text x="10" y="270.0" fill="#222">full</text>
+<line x1="150.0" y1="268.0" x2="150.0" y2="268.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="267.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="260.0" x2="342.7" y2="260.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="246.3" y1="268.0" x2="246.3" y2="260.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="342.7" y1="260.0" x2="535.4" y2="260.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="535.4" y1="260.0" x2="728.0" y2="260.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="728.0" y1="260.0" x2="920.7" y2="260.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="920.7" y1="268.0" x2="950.0" y2="268.0" stroke="#cc6600" stroke-width="2"/>
+<text x="922.7" y="267.0" fill="#cc6600">?</text>
+<text x="10" y="304.0" fill="#222">empty</text>
+<line x1="150.0" y1="302.0" x2="150.0" y2="302.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="301.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="310.0" x2="342.7" y2="310.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="246.3" y1="302.0" x2="246.3" y2="310.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="342.7" y1="294.0" x2="535.4" y2="294.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="439.0" y1="310.0" x2="439.0" y2="294.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="535.4" y1="294.0" x2="728.0" y2="294.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="728.0" y1="310.0" x2="920.7" y2="310.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="824.4" y1="294.0" x2="824.4" y2="310.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="920.7" y1="302.0" x2="950.0" y2="302.0" stroke="#cc6600" stroke-width="2"/>
+<text x="922.7" y="301.0" fill="#cc6600">?</text>
+<text x="10" y="338.0" fill="#222">half_full</text>
+<line x1="150.0" y1="336.0" x2="150.0" y2="336.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="335.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="328.0" x2="342.7" y2="328.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="246.3" y1="336.0" x2="246.3" y2="328.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="342.7" y1="328.0" x2="535.4" y2="328.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="535.4" y1="328.0" x2="728.0" y2="328.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="728.0" y1="328.0" x2="920.7" y2="328.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="920.7" y1="336.0" x2="950.0" y2="336.0" stroke="#cc6600" stroke-width="2"/>
+<text x="922.7" y="335.0" fill="#cc6600">?</text>
+<text x="10" y="372.0" fill="#222">wr_en</text>
+<line x1="150.0" y1="370.0" x2="150.0" y2="370.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="369.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="378.0" x2="342.7" y2="378.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="246.3" y1="370.0" x2="246.3" y2="378.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="342.7" y1="378.0" x2="535.4" y2="378.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="535.4" y1="378.0" x2="728.0" y2="378.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="728.0" y1="362.0" x2="920.7" y2="362.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="824.4" y1="378.0" x2="824.4" y2="362.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="920.7" y1="370.0" x2="950.0" y2="370.0" stroke="#cc6600" stroke-width="2"/>
+<text x="922.7" y="369.0" fill="#cc6600">?</text>
+<text x="10" y="406.0" fill="#222">rd_en</text>
+<line x1="150.0" y1="404.0" x2="150.0" y2="404.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="403.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="396.0" x2="342.7" y2="396.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="246.3" y1="404.0" x2="246.3" y2="396.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="342.7" y1="412.0" x2="535.4" y2="412.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="439.0" y1="396.0" x2="439.0" y2="412.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="535.4" y1="412.0" x2="728.0" y2="412.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="728.0" y1="396.0" x2="920.7" y2="396.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="824.4" y1="412.0" x2="824.4" y2="396.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="920.7" y1="404.0" x2="950.0" y2="404.0" stroke="#cc6600" stroke-width="2"/>
+<text x="922.7" y="403.0" fill="#cc6600">?</text>
+<text x="10" y="440.0" fill="#222">can_rd</text>
+<line x1="150.0" y1="438.0" x2="150.0" y2="438.0" stroke="#cc6600" stroke-width="2"/>
+<text x="152.0" y="437.0" fill="#cc6600">?</text>
+<line x1="150.0" y1="430.0" x2="342.7" y2="430.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="246.3" y1="438.0" x2="246.3" y2="430.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="342.7" y1="446.0" x2="535.4" y2="446.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="439.0" y1="430.0" x2="439.0" y2="446.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="535.4" y1="446.0" x2="728.0" y2="446.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="728.0" y1="430.0" x2="920.7" y2="430.0" stroke="#1a6fd4" stroke-width="2"/>
+<line x1="824.4" y1="446.0" x2="824.4" y2="430.0" stroke="#1a6fd4" stroke-width="1.5"/>
+<line x1="920.7" y1="438.0" x2="950.0" y2="438.0" stroke="#cc6600" stroke-width="2"/>
+<text x="922.7" y="437.0" fill="#cc6600">?</text>
+</svg>

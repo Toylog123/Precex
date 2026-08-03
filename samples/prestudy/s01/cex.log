@@ -1,0 +1,35 @@
+SBY 18:51:57 [sby_work_buggy] Removing directory '/mnt/d/BaiduSyncdisk/02_Precex/samples/prestudy/s01/sby_work_buggy'.
+SBY 18:51:57 [sby_work_buggy] Copy '/mnt/d/BaiduSyncdisk/02_Precex/samples/prestudy/s01/buggy.sv' to '/mnt/d/BaiduSyncdisk/02_Precex/samples/prestudy/s01/sby_work_buggy/src/buggy.sv'.
+SBY 18:51:57 [sby_work_buggy] engine_0: smtbmc
+SBY 18:51:57 [sby_work_buggy] base: starting process "cd sby_work_buggy/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY 18:51:57 [sby_work_buggy] base: Warning: Replacing memory \mem with list of registers. See buggy.sv:58
+SBY 18:51:57 [sby_work_buggy] base: finished (returncode=0)
+SBY 18:51:57 [sby_work_buggy] prep: starting process "cd sby_work_buggy/model; yosys -ql design_prep.log design_prep.ys"
+SBY 18:51:58 [sby_work_buggy] prep: finished (returncode=0)
+SBY 18:51:58 [sby_work_buggy] smt2: starting process "cd sby_work_buggy/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY 18:51:58 [sby_work_buggy] smt2: finished (returncode=0)
+SBY 18:51:58 [sby_work_buggy] engine_0: starting process "cd sby_work_buggy; /mnt/d/BaiduSyncdisk/02_Precex/smoke/yosys-smtbmc-z3.sh --presat --unroll --noprogress -t 12  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Solver: z3
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Checking assumptions in step 3..
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Checking assertions in step 3..
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  BMC failed!
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Assert failed in fifo_sync: buggy.sv:132.40-133.42 ($assert$buggy.sv:132$82)
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace.vcd
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace_tb.v
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace.smtc
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace.yw
+SBY 18:51:58 [sby_work_buggy] engine_0: ##   0:00:00  Status: failed
+SBY 18:51:58 [sby_work_buggy] engine_0: finished (returncode=1)
+SBY 18:51:58 [sby_work_buggy] engine_0: Status returned by engine: FAIL
+SBY 18:51:58 [sby_work_buggy] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 18:51:58 [sby_work_buggy] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 18:51:58 [sby_work_buggy] summary: engine_0 (smtbmc) returned FAIL
+SBY 18:51:58 [sby_work_buggy] summary: counterexample trace: sby_work_buggy/engine_0/trace.vcd
+SBY 18:51:58 [sby_work_buggy] summary:   failed assertion fifo_sync.$assert$buggy.sv:132$82 at buggy.sv:132.40-133.42 step 3
+SBY 18:51:58 [sby_work_buggy] DONE (FAIL, rc=2)

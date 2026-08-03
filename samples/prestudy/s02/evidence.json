@@ -1,0 +1,31 @@
+{
+  "schema_ver": "v1.0",
+  "evidence_source": "sby_bmc",
+  "sample_id": "s02",
+  "error_type": "state_jump",
+  "inject_line": 100,
+  "inject_desc": "删除 S3 分支首行 step_cnt 递增语句（黄金实现 step_cnt <= step_cnt + 1'b1 与 S1/S2 一致），进入 S3 后全局步数计数停止增长，跨周期违反 A6 步进计数单调性（非空闲阶段 step_cnt 每拍必须 +1）",
+  "module": "fsm_ctrl",
+  "file": "s02/buggy.sv",
+  "line": 194,
+  "code_slice": " 190:             // A6 步进计数单调性：非空闲阶段 step_cnt 每拍 +1；空闲阶段清零\n 191:             // —— 击穿点：buggy 在 S3 停留时 step_cnt 不再 +1，违反 step_cnt == step_cnt_d + 6'd1\n 192:             if (state_d == S_IDLE) begin\n 193:                 assert (step_cnt == 6'd0);\n 194:             end else begin\n 195:                 assert (step_cnt == step_cnt_d + 6'd1);\n 196:             end\n 197:         end\n 198:     end",
+  "signals": {
+    "clk": "input",
+    "rst_n": "input",
+    "start": "input",
+    "data_in": "input",
+    "done": "output",
+    "timeout_irq": "output",
+    "state": "output"
+  },
+  "trigger_condition": "step_cnt == step_cnt_d + 6'd1",
+  "fail_stage": "bmc_depth_8",
+  "fail_step": 8,
+  "failed_assert_id": "118",
+  "x_state_warn": false,
+  "x_state": {
+    "count": 0,
+    "signals": []
+  },
+  "raw_trace_ref": "samples/prestudy/s02/cex.vcd"
+}

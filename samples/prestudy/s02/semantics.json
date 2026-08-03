@@ -1,0 +1,1359 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "s02",
+  "module": "fsm_ctrl",
+  "error_type": "state_jump",
+  "fail_stage": "bmc_depth_8",
+  "fail_step": 8,
+  "failed_line": 194,
+  "trigger_condition": "step_cnt == step_cnt_d + 6'd1",
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_459",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_461",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_463",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_465",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_467",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_469",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_471",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_473",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_475",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_477",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_479",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_481",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_483",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_485",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_487",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_489",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_491",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_524",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_526",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_528",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_532",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_534",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_536",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_538",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_540",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_542",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_544",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_546",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_548",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_550",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_552",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_554",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_556",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_558",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_560",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_562",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_564",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_566",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_568",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_570",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_572",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_574",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_576",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_578",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_580",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_582",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_584",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_586",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_588",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_590",
+          "val": "0"
+        },
+        {
+          "sig": "clk",
+          "val": "0"
+        },
+        {
+          "sig": "data_in",
+          "val": "00000000"
+        },
+        {
+          "sig": "done",
+          "val": "0"
+        },
+        {
+          "sig": "done_d",
+          "val": "0"
+        },
+        {
+          "sig": "hold_cnt",
+          "val": "0000"
+        },
+        {
+          "sig": "hold_cnt_d",
+          "val": "0000"
+        },
+        {
+          "sig": "rst_n",
+          "val": "1"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "start",
+          "val": "1"
+        },
+        {
+          "sig": "start_d",
+          "val": "0"
+        },
+        {
+          "sig": "state",
+          "val": "00"
+        },
+        {
+          "sig": "state_d",
+          "val": "00"
+        },
+        {
+          "sig": "step_cnt",
+          "val": "000000"
+        },
+        {
+          "sig": "step_cnt_d",
+          "val": "000000"
+        },
+        {
+          "sig": "timeout_irq",
+          "val": "0"
+        },
+        {
+          "sig": "tirq_d",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_459",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_469",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_477",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_479",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_481",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_489",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_526",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_534",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_542",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_548",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_552",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_554",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_560",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_564",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_568",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_570",
+          "val": "1"
+        },
+        {
+          "sig": "hold_cnt",
+          "val": "0001"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        },
+        {
+          "sig": "start",
+          "val": "0"
+        },
+        {
+          "sig": "start_d",
+          "val": "1"
+        },
+        {
+          "sig": "state",
+          "val": "01"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_471",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_473",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_477",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_479",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_487",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_532",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_542",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_548",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_578",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_582",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_584",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_588",
+          "val": "1"
+        },
+        {
+          "sig": "data_in",
+          "val": "11111111"
+        },
+        {
+          "sig": "hold_cnt",
+          "val": "0010"
+        },
+        {
+          "sig": "hold_cnt_d",
+          "val": "0001"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "start_d",
+          "val": "0"
+        },
+        {
+          "sig": "state_d",
+          "val": "01"
+        },
+        {
+          "sig": "step_cnt",
+          "val": "000001"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_459",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_461",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_463",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_471",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_487",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_491",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_524",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_532",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_536",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_538",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_540",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_544",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_546",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_552",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_556",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_560",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_562",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_566",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_588",
+          "val": "0"
+        },
+        {
+          "sig": "data_in",
+          "val": "10101010"
+        },
+        {
+          "sig": "hold_cnt",
+          "val": "0001"
+        },
+        {
+          "sig": "hold_cnt_d",
+          "val": "0010"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        },
+        {
+          "sig": "start",
+          "val": "1"
+        },
+        {
+          "sig": "state",
+          "val": "10"
+        },
+        {
+          "sig": "step_cnt",
+          "val": "000010"
+        },
+        {
+          "sig": "step_cnt_d",
+          "val": "000001"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_459",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_463",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_465",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_467",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_469",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_473",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_475",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_477",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_481",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_483",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_526",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_534",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_542",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_544",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_560",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_570",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_578",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_580",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_582",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_588",
+          "val": "1"
+        },
+        {
+          "sig": "data_in",
+          "val": "10111111"
+        },
+        {
+          "sig": "hold_cnt",
+          "val": "0010"
+        },
+        {
+          "sig": "hold_cnt_d",
+          "val": "0001"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        },
+        {
+          "sig": "start_d",
+          "val": "1"
+        },
+        {
+          "sig": "state_d",
+          "val": "10"
+        },
+        {
+          "sig": "step_cnt",
+          "val": "000011"
+        },
+        {
+          "sig": "step_cnt_d",
+          "val": "000010"
+        }
+      ]
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_461",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_463",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_469",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_477",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_487",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_524",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_538",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_542",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_544",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_546",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_550",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_554",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_562",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_566",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_568",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_576",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_578",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_580",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_582",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_584",
+          "val": "0"
+        },
+        {
+          "sig": "data_in",
+          "val": "11111101"
+        },
+        {
+          "sig": "hold_cnt",
+          "val": "0011"
+        },
+        {
+          "sig": "hold_cnt_d",
+          "val": "0010"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000101"
+        },
+        {
+          "sig": "start",
+          "val": "0"
+        },
+        {
+          "sig": "step_cnt",
+          "val": "000100"
+        },
+        {
+          "sig": "step_cnt_d",
+          "val": "000011"
+        }
+      ]
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_459",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_469",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_481",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_485",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_487",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_489",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_528",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_532",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_536",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_538",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_544",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_562",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_568",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_574",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_576",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_580",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_588",
+          "val": "0"
+        },
+        {
+          "sig": "data_in",
+          "val": "10101010"
+        },
+        {
+          "sig": "hold_cnt",
+          "val": "0001"
+        },
+        {
+          "sig": "hold_cnt_d",
+          "val": "0011"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000110"
+        },
+        {
+          "sig": "start_d",
+          "val": "0"
+        },
+        {
+          "sig": "state",
+          "val": "11"
+        },
+        {
+          "sig": "step_cnt",
+          "val": "000101"
+        },
+        {
+          "sig": "step_cnt_d",
+          "val": "000100"
+        }
+      ]
+    },
+    {
+      "cycle": 8,
+      "time": 70,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_461",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_465",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_469",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_481",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_483",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_487",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_528",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_532",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_536",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_538",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_540",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_542",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_570",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_574",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_582",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_584",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_588",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_590",
+          "val": "1"
+        },
+        {
+          "sig": "data_in",
+          "val": "00000000"
+        },
+        {
+          "sig": "hold_cnt",
+          "val": "0010"
+        },
+        {
+          "sig": "hold_cnt_d",
+          "val": "0001"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000111"
+        },
+        {
+          "sig": "start",
+          "val": "1"
+        },
+        {
+          "sig": "state_d",
+          "val": "11"
+        },
+        {
+          "sig": "step_cnt_d",
+          "val": "000101"
+        }
+      ]
+    },
+    {
+      "cycle": 9,
+      "time": 80,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_461",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_463",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_465",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_467",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_489",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_491",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_526",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_536",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_542",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_544",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_550",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_554",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_556",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_566",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_570",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_578",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_580",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_584",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_588",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_590",
+          "val": "0"
+        },
+        {
+          "sig": "hold_cnt",
+          "val": "0000"
+        },
+        {
+          "sig": "hold_cnt_d",
+          "val": "0010"
+        },
+        {
+          "sig": "rst_n",
+          "val": "0"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001000"
+        },
+        {
+          "sig": "start",
+          "val": "0"
+        },
+        {
+          "sig": "start_d",
+          "val": "1"
+        },
+        {
+          "sig": "state",
+          "val": "00"
+        },
+        {
+          "sig": "step_cnt",
+          "val": "000000"
+        }
+      ]
+    },
+    {
+      "cycle": 10,
+      "time": 90,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001001"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "start": null,
+      "state": null,
+      "state_d": null,
+      "step_cnt": null,
+      "step_cnt_d": null,
+      "done": null,
+      "timeout_irq": null,
+      "data_in": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "rst_n": "1",
+      "start": "1",
+      "state": "00",
+      "state_d": "00",
+      "step_cnt": "000000",
+      "step_cnt_d": "000000",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "00000000"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "rst_n": "1",
+      "start": "0",
+      "state": "01",
+      "state_d": "00",
+      "step_cnt": "000000",
+      "step_cnt_d": "000000",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "00000000"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": "1",
+      "start": "0",
+      "state": "01",
+      "state_d": "01",
+      "step_cnt": "000001",
+      "step_cnt_d": "000000",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "11111111"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "rst_n": "1",
+      "start": "1",
+      "state": "10",
+      "state_d": "01",
+      "step_cnt": "000010",
+      "step_cnt_d": "000001",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "10101010"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "rst_n": "1",
+      "start": "1",
+      "state": "10",
+      "state_d": "10",
+      "step_cnt": "000011",
+      "step_cnt_d": "000010",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "10111111"
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "rst_n": "1",
+      "start": "0",
+      "state": "10",
+      "state_d": "10",
+      "step_cnt": "000100",
+      "step_cnt_d": "000011",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "11111101"
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "rst_n": "1",
+      "start": "0",
+      "state": "11",
+      "state_d": "10",
+      "step_cnt": "000101",
+      "step_cnt_d": "000100",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "10101010"
+    },
+    {
+      "cycle": 8,
+      "time": 70,
+      "rst_n": "1",
+      "start": "1",
+      "state": "11",
+      "state_d": "11",
+      "step_cnt": "000101",
+      "step_cnt_d": "000101",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "00000000"
+    },
+    {
+      "cycle": 9,
+      "time": 80,
+      "rst_n": "0",
+      "start": "0",
+      "state": "00",
+      "state_d": "11",
+      "step_cnt": "000000",
+      "step_cnt_d": "000101",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "00000000"
+    },
+    {
+      "cycle": 10,
+      "time": 90,
+      "rst_n": null,
+      "start": null,
+      "state": null,
+      "state_d": null,
+      "step_cnt": null,
+      "step_cnt_d": null,
+      "done": null,
+      "timeout_irq": null,
+      "data_in": null
+    }
+  ],
+  "fault_cone": [
+    "S3",
+    "buggy",
+    "d0",
+    "d1",
+    "data_in",
+    "done",
+    "rst_n",
+    "start",
+    "state",
+    "state_d",
+    "step_cnt",
+    "step_cnt_d",
+    "timeout_irq"
+  ],
+  "key_signals": [
+    "rst_n",
+    "start",
+    "state",
+    "state_d",
+    "step_cnt",
+    "step_cnt_d",
+    "done",
+    "timeout_irq",
+    "data_in"
+  ],
+  "text_summary": "<think>Let me analyze this fault information carefully.\n\n**Fault info:**\n- module: fsm_ctrl\n- error_type: state_jump\n- fail_stage: bmc_depth_8\n- fail_step: 8\n- trigger_condition: step_cnt == step_cnt_d + 6'd1 (assertion violation)\n- failed_line: 194\n- fault_cone: S3, buggy, d0, d1, data_in, done, rst_n, start, state, state_d, step_cnt, step_cnt_d, timeout_irq\n\n**State trajectory analysis:**\n\nLet me track the step_cnt and step_cnt_d relationship:\n- cycle 1: step_cnt=000000, step_cnt_d=000000\n- cycle 2: step_cnt=000000, step_cnt_d=000000\n- cycle 3: step_cnt=000001, step_cnt_d=000000 → diff=+1 ✓\n- cycle 4: step_cnt=000010, step_cnt_d=000001 → diff=+1 ✓\n- cycle 5: step_cnt=000011, step_cnt_d=000010 → diff=+1 ✓\n- cycle 6: step_cnt=000100, step_cnt_d=000011 → diff=+1 ✓\n- cycle 7: step_cnt=000101, step_cnt_d=000100 → diff=+1 ✓\n- cycle 8: step_cnt=000101, step_cnt_d=000101 → diff=0 ✗ (FAIL! step_cnt should equal step_cnt_d + 1)\n- cycle 9: step_cnt=000000 (reset due to rst_n=0)\n\nSo the assertion `step_cnt == step_cnt_d + 6'd1` fails at cycle 8 because step_cnt doesn't increment from step_cnt_d. step_cnt stays at 000101 (=5) instead of going to 000110 (=6).\n\n**State trajectory analysis:**\n- cycle 1: state=00 (idle)\n- cycle 2: state=01 \n- cycle 3: state=01\n- cycle 4: state=10\n- cycle 5: state=10\n- cycle 6: state=10\n- cycle 7: state=11\n- cycle 8: state=11 (state jumped from 10 to 11 at cycle 7 - this might be expected as state_d=10 → state=11)\n- cycle 9: state=00 (reset)\n\nThe state transitions: 00 → 01 → 10 → 11. That's a normal sequential progression.\n\nWait, the error_type says \"state_jump\". Let me check the state sequence:\n- cycle 1→2: 00→01 (one step)\n- cycle 2→3: 01→01 (stays - actually this is a problem because state_d=00 and state=01 means we did transition)\n- cycle 3→4: 01→10 (one step)\n- cycle 4→5: 10→10 (stays)\n- cycle 5→6: 10→10 (stays)\n- cycle 6→7: 10→11 (one step)\n- cycle 7→8: 11→11 (stays)\n- cycle 8→9: 11→00 (reset)\n\nHmm, this is normal state progression actually. Each state is reached one at a time.\n\nLet me focus on the trigger condition: `step_cnt == step_cnt_d + 6'd1` fails at step 8 (cycle 8).\n\nAt cycle 8:\n- step_cnt = 000101 (5)\n- step_cnt_d = 000101 (5) \n- Expected: step_cnt = step_cnt_d + 1 = 000110 (6)\n- Actual: step_cnt = step_cnt_d = 000101\n\nSo step_cnt failed to increment. This is the assertion violation.\n\nNow what signals changed at cycle 8?\nLooking at cycle 8 changes:\n- state_d: 11 (was 11 at cycle 7... actually state_d at cycle 7 was 10, now at cycle 8 it's 11)\n- step_cnt_d: 000101 (same as step_cnt was at cycle 7)\n\nWait, let me re-read cycle 8 changes:\n- data_in: 00000000 (changed)\n- hold_cnt_d: 0001\n- smt_step incremented\n- start: 1\n- state_d: 11\n- step_cnt_d: 000101\n\nNote: step_cnt is NOT in the changes list at cycle 8, meaning it didn't change. step_cnt stays at 000101 from cycle 7.\n\nSo the issue is that step_cnt did not increment at cycle 8. Normally step_cnt should go from 000101 (5) to 000110 (6).\n\nWhy didn't step_cnt increment? Looking at the state at cycle 8: state=11. Looking at state_d at cycle 7 was 10. State jumped from 10 (at cycle 6) to 11 (at cycle 7). \n\nWait, looking more carefully:\n- cycle 6: state=10, state_d=10\n- cycle 7: state=11, state_d=10 → state incremented from 10 to 11\n- cycle 8: state=11, state_d=11 → state stayed at 11\n\nAt cycle 8, state_d=11, which means state will be 11 at cycle 9 (but then rst_n=0 at cycle 9 resets it).\n\nThe state transition 10→11 happened at cycle 7. After state=11 at cycle 8, normally step_cnt should still increment unless there's a condition tied to state.\n\nLet me check if there might be a condition where step_cnt doesn't increment when state=11. The state trajectory shows step_cnt DID stop incrementing when state reached 11. This suggests that the FSM in state 11 might be using a different counter, or there's a bug where step_cnt doesn't increment.\n\nActually looking again at cycle 8: step_cnt is NOT in the changes list, confirming step_cnt didn't change at this cycle. At cycle 9 (with rst_n=0), step_cnt resets to 000000.\n\nNow, the key observation:\n- At cycle 7: state went 10→11, step_cnt went 4→5 (increment by 1) ✓\n- At cycle 8: state stayed 11, step_cnt stayed 5 (should be 6) ✗\n\nSo the bug appears to be that step_cnt does not increment when state=11 (or in some condition related to state=11).\n\n**Causal chain:**\n1. At cycle 6→7: state transitions 10→11 (this transition is normal, but maybe triggered by some signal)\n2. At cycle 8: in state=11, step_cnt fails to increment, violating the assertion `step_cnt == step_cnt_d + 1`\n\nLooking at the fault_cone: S3, buggy, d0, d1, data_in, done, rst_n, start, state, state_d, step_cnt, step_cnt_d, timeout_irq\n\nThe \"S3\" in the fault cone likely refers to state value 3 (binary 11). The \"buggy\" signal is interesting - this might be a dedicated buggy signal in the design.\n\nThe failed line 194 corresponds to a specific line in the code. The trigger condition is the assertion that step_cnt should always equal step_cnt_d + 1.\n\n**Most suspicious code location:**\nThe bug is likely in the step_cnt increment logic when state=11 (S3). There might be a missing increment condition or a wrong gating signal. The line 194 likely contains the assertion or the step_cnt increment logic.\n\nLet me also check the data_in pattern:\n- cycle 1: 00000000\n- cycle 2: 00000000\n- cycle 3: 11111111\n- cycle 4: 10101010\n- cycle 5: 10111111\n- cycle 6: 11111101\n- cycle 7: 10101010\n- cycle 8: 00000000\n- cycle 9: 00000000\n\ndata_in is changing throughout, this is normal input data.\n\nLet me also look at the start signal:\n- cycle 1: start=1\n- cycle 2: start=0\n- cycle 3: start=0\n- cycle 4: start=1\n- cycle 5: start=1\n- cycle 6: start=0\n- cycle 7: start=0\n- cycle 8: start=1\n- cycle 9: start=0 (reset)\n\nstart toggles - it's an input.\n\n**Summary of analysis:**\n\nThe defect occurs at cycle 8 (bmc_depth_8 / fail_step=8) in module fsm_ctrl. The state has transitioned from 10 (binary) to 11 (binary) at cycle 7, and is now in state=11 at cycle 8. At this cycle, step_cnt fails to increment from 5 (000101) to 6 (000110), violating the assertion `step_cnt == step_cnt_d + 6'd1` at line 194.\n\nThe most likely cause is a bug in the step_cnt increment logic that's gated on state=11 (or related condition), where the increment is incorrectly suppressed. The \"S3\" in the fault cone refers to state 3 (binary 11).\n\nLooking at state_d at cycle 8 being 11, the FSM is \"stuck\" in this state without properly incrementing step_cnt. The buggy signal in the fault cone suggests there's a specific signal labeled \"buggy\" that's involved.\n\nThe most suspicious code location is around line 194 of fsm_ctrl, where the step_cnt increment logic likely has an incorrect condition that prevents step_cnt from incrementing when state=11 (S3).\n\nLet me write a concise 3-5 sentence description.</think>\n\n# 缺陷语义化分析报告\n\n**缺陷定位**：模块 `fsm_ctrl`，违例断言位于 line 194：`step_cnt == step_cnt_d + 6'd1`，触发于 cycle 8 / BMC step 8。\n\n**因果链**：\n1. 在 cycle 7，FSM 完成从 `state=10` 到 `state=11` 的正常迁移（`state_d=10→11`），与此同时 `step_cnt` 正确由 4 递增到 5（000100→000101）。\n2. 进入 cycle 8 时 `state` 保持 11、`step_cnt_d` 已锁存为 000101，但 `step_cnt` **未出现在 cycle 8 的 changes 列表中**，实际值仍为 000101，未按断言期望递增到 000110（6）。\n3. 故障锥中的 `S3`（即 state=3'b011，即二进制 11）以及 `buggy` 信号与 `step_cnt` 的失增长高度相关，说明在 state=S3 分支下，`step_cnt` 的使能/递增条件被错误地抑制，导致 `step_cnt` 在该状态下停滞在 000101。\n\n**最可疑代码位置**：`fsm_ctrl` 中 line 194 附近的 `step_cnt` 增量逻辑，疑似对 `state==11`（S3）缺少 `step_cnt <= step_cnt_d + 1'b1` 的赋值，或使能门控错误地把 `step_cnt` 在 S3 状态下被旁路，建议优先核查该处状态机分支下 `step_cnt` 的 next-state 赋值与 `buggy` 信号的连接关系。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 6699,
+    "output_tokens": 2435,
+    "cost": 0.0098634
+  }
+}

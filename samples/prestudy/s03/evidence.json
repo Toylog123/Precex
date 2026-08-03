@@ -1,0 +1,34 @@
+{
+  "schema_ver": "v1.0",
+  "evidence_source": "sby_bmc",
+  "sample_id": "s03",
+  "error_type": "wrap_around",
+  "inject_line": 51,
+  "inject_desc": "计数器满值回绕逻辑改为回绕到 1（cnt 达全 1 时下一拍回 1 而非 0，黄金实现为模 2^DATA_W 自然回绕 cnt<=cnt+1'b1），计数序列 254->255->1 错失 0，边界回绕错误，跨周期破坏 8-bit 计数循环（A6 击穿）",
+  "module": "counter_alu",
+  "file": "s03/buggy.sv",
+  "line": 138,
+  "code_slice": " 134:             // A5 运算选择不越界\n 135:             assert (op < OP_NUM);\n 136:             // A6 计数器满值回绕：上周期 cnt 为全 1 且使能 → 本周期 cnt 必须回绕为 0\n 137:             // —— 击穿点：buggy 满值回绕到 1，违反 cnt == {DATA_W{1'b0}}\n 138:             if (cnt_en_d && (cnt_d == {DATA_W{1'b1}})) begin\n 139:                 assert (cnt == {DATA_W{1'b0}});\n 140:             end\n 141:         end\n 142:     end",
+  "signals": {
+    "clk": "input",
+    "rst_n": "input",
+    "cnt_en": "input",
+    "op": "input",
+    "a": "input",
+    "b": "input",
+    "cnt": "output",
+    "alu_out": "output",
+    "f_a": "input",
+    "f_b": "input"
+  },
+  "trigger_condition": "cnt == {DATA_W{1'b0}}",
+  "fail_stage": "bmc_depth_257",
+  "fail_step": 257,
+  "failed_assert_id": "75",
+  "x_state_warn": false,
+  "x_state": {
+    "count": 0,
+    "signals": []
+  },
+  "raw_trace_ref": "samples/prestudy/s03/cex.vcd"
+}
