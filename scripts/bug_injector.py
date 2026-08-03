@@ -605,6 +605,8 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
         "sample_id": sample_id, "module": module,
         "error_type": verify["err_name"], "error_type_code": verify["code"],
         "level": "L3", "inject_line": line_no,
+        "buggy_inject_line": line_no + BUGGY_HEADER_OFFSET,
+
         "inject_desc": variant["desc"], "diff": diff,
         "hit_assertion": variant["hit"],
         "golden_source": "rtl/%s/%s.sv" % (module, module),

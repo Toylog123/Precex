@@ -33,6 +33,8 @@ import evaluator  # noqa: E402
 
 SAMPLES_BUGS = os.path.join(REPO_ROOT, "samples", "bugs")
 DEFAULT_OUT = os.path.join(REPO_ROOT, "experiments", "runs", "experiments_results.json")
+BUGGY_HEADER_OFFSET = 4  # buggy.v 头注释偏移（与 bug_injector 一致）：缺陷行号 = inject_line + 4
+
 
 
 def expand_samples(spec):
@@ -113,7 +115,11 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
         result["signals"] = loc["signals"]
         result["reason"] = loc["reason"]
         result["diff_text"] = (diff_text or "")[:4000]
-        result["loc_top1"] = (loc["line"] == meta.get("inject_line"))
+        # loc_top1 判据：LLM 看到的是带头注释的 buggy.v，行号须对 buggy_inject_line；
+        # 旧样本无该字段时回退 inject_line（golden 行号，仅近似）
+        golden_line = meta.get("inject_line")
+        buggy_line = meta.get("buggy_inject_line", (golden_line + BUGGY_HEADER_OFFSET) if golden_line else None)
+        result["loc_top1"] = (loc["line"] == buggy_line)
         if not diff_text:
             result["errors"].append("attempt %d: no diff" % attempt)
             continue

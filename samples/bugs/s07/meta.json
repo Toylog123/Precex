@@ -18,5 +18,6 @@
     "formal_result": "fail",
     "verdict": "L3_VALID",
     "golden_formal_result": "pass"
-  }
+  },
+  "buggy_inject_line": 47
 }
