@@ -1,7 +1,33 @@
 {
-  "_doc": "PreCex 结构化证据（由 EvidenceEngine 管线生成）| 作者：Toylog | 版本：v0.1",
+  "schema_ver": "v1.0",
+  "evidence_source": "sby_bmc",
   "sample_id": "s13",
-  "date": "2026-08-03",
-  "entries": [],
-  "note": "占位骨架：由证据管线填充反例周期事件/故障锥等结构化证据"
+  "error_type": "边界回绕",
+  "inject_line": 48,
+  "inject_desc": "写指针不回绕推进：tail <= tail+1 改 tail 保持（同址覆写，数据顺序错乱）",
+  "module": "fifo_sync",
+  "file": "s13\\buggy.v",
+  "line": 161,
+  "code_slice": " 157:         if (rst_n) begin\n 158:             assert (half_full == (count >= (DEPTH >> 1)));\n 159:         end\n 160:     end\n 161: \n 162:     // A6 写指针推进：can_wr 写成功拍后，下一拍 tail 必须 +1（抓写指针不回绕/同址覆写）\n 163:     always @(posedge clk) begin\n 164:         if (rst_n) begin\n 165:             if (can_wr_d) begin",
+  "signals": {
+    "clk": "input",
+    "rst_n": "input",
+    "wr_en": "input",
+    "rd_en": "input",
+    "din": "input",
+    "dout": "output",
+    "full": "output",
+    "empty": "output",
+    "half_full": "output"
+  },
+  "trigger_condition": "half_full == (count >= (DEPTH >> 1))",
+  "fail_stage": "bmc_depth_3",
+  "fail_step": 3,
+  "failed_assert_id": "122",
+  "x_state_warn": false,
+  "x_state": {
+    "count": 0,
+    "signals": []
+  },
+  "raw_trace_ref": "samples\\bugs\\s13\\cex.vcd"
 }

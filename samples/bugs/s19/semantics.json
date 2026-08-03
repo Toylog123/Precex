@@ -1,0 +1,943 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "s19",
+  "module": "fifo_sync",
+  "error_type": "FIFO 满空",
+  "fail_stage": "bmc_depth_4",
+  "fail_step": 4,
+  "failed_line": 139,
+  "trigger_condition": "head == {ADDR_W{1'b0}}",
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_400",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_402",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_404",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_406",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_408",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_410",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_412",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_414",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_416",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_418",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_420",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_430",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyinit_procdff_431",
+          "val": "000"
+        },
+        {
+          "sig": "anyinit_procdff_432",
+          "val": "010"
+        },
+        {
+          "sig": "anyinit_procdff_433",
+          "val": "0001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_481",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_483",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_485",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_487",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_489",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_491",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_493",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_495",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_497",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_499",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_501",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_503",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_505",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_509",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_511",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_513",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_515",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_517",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_519",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_521",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_523",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_525",
+          "val": "00010001"
+        },
+        {
+          "sig": "can_rd",
+          "val": "0"
+        },
+        {
+          "sig": "can_wr",
+          "val": "0"
+        },
+        {
+          "sig": "can_wr_d",
+          "val": "1"
+        },
+        {
+          "sig": "clk",
+          "val": "0"
+        },
+        {
+          "sig": "count",
+          "val": "0000"
+        },
+        {
+          "sig": "count_d",
+          "val": "0000"
+        },
+        {
+          "sig": "delta",
+          "val": "00"
+        },
+        {
+          "sig": "delta_d",
+          "val": "00"
+        },
+        {
+          "sig": "din",
+          "val": "00000000"
+        },
+        {
+          "sig": "dout",
+          "val": "00000000"
+        },
+        {
+          "sig": "empty",
+          "val": "1"
+        },
+        {
+          "sig": "empty_d",
+          "val": "0"
+        },
+        {
+          "sig": "full",
+          "val": "0"
+        },
+        {
+          "sig": "full_d",
+          "val": "0"
+        },
+        {
+          "sig": "half_full",
+          "val": "0"
+        },
+        {
+          "sig": "head",
+          "val": "000"
+        },
+        {
+          "sig": "mem<0>",
+          "val": "10000000"
+        },
+        {
+          "sig": "mem<1>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<2>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<3>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<4>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<5>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<6>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<7>",
+          "val": "00000000"
+        },
+        {
+          "sig": "rd_en",
+          "val": "0"
+        },
+        {
+          "sig": "rd_en_d",
+          "val": "0"
+        },
+        {
+          "sig": "rst_n",
+          "val": "0"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "tail",
+          "val": "000"
+        },
+        {
+          "sig": "tail_d",
+          "val": "000"
+        },
+        {
+          "sig": "wr_en",
+          "val": "0"
+        },
+        {
+          "sig": "wr_en_d",
+          "val": "1"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_402",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_406",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_414",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_416",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_418",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_432",
+          "val": "000"
+        },
+        {
+          "sig": "anyinit_procdff_433",
+          "val": "0000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_483",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_489",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_493",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_499",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_509",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_513",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_519",
+          "val": "1"
+        },
+        {
+          "sig": "can_wr",
+          "val": "1"
+        },
+        {
+          "sig": "can_wr_d",
+          "val": "0"
+        },
+        {
+          "sig": "delta",
+          "val": "01"
+        },
+        {
+          "sig": "rst_n",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        },
+        {
+          "sig": "wr_en",
+          "val": "1"
+        },
+        {
+          "sig": "wr_en_d",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_402",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_404",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_406",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_414",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_416",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_418",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_432",
+          "val": "001"
+        },
+        {
+          "sig": "anyinit_procdff_433",
+          "val": "0001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_481",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_483",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_489",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_497",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_499",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_505",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_509",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_513",
+          "val": "0"
+        },
+        {
+          "sig": "can_rd",
+          "val": "1"
+        },
+        {
+          "sig": "can_wr_d",
+          "val": "1"
+        },
+        {
+          "sig": "count",
+          "val": "0001"
+        },
+        {
+          "sig": "delta",
+          "val": "00"
+        },
+        {
+          "sig": "delta_d",
+          "val": "01"
+        },
+        {
+          "sig": "din",
+          "val": "00000001"
+        },
+        {
+          "sig": "empty",
+          "val": "0"
+        },
+        {
+          "sig": "empty_d",
+          "val": "1"
+        },
+        {
+          "sig": "mem<0>",
+          "val": "00000000"
+        },
+        {
+          "sig": "rd_en",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "tail",
+          "val": "001"
+        },
+        {
+          "sig": "wr_en_d",
+          "val": "1"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_400",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_404",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_410",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_431",
+          "val": "001"
+        },
+        {
+          "sig": "anyinit_procdff_432",
+          "val": "010"
+        },
+        {
+          "sig": "anyinit_procdff_433",
+          "val": "0010"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_481",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_491",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_495",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_497",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_501",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_505",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_511",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_517",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_523",
+          "val": "1"
+        },
+        {
+          "sig": "can_wr",
+          "val": "0"
+        },
+        {
+          "sig": "count",
+          "val": "0010"
+        },
+        {
+          "sig": "count_d",
+          "val": "0001"
+        },
+        {
+          "sig": "delta",
+          "val": "11"
+        },
+        {
+          "sig": "delta_d",
+          "val": "00"
+        },
+        {
+          "sig": "din",
+          "val": "10000001"
+        },
+        {
+          "sig": "empty_d",
+          "val": "0"
+        },
+        {
+          "sig": "head",
+          "val": "001"
+        },
+        {
+          "sig": "mem<1>",
+          "val": "00000001"
+        },
+        {
+          "sig": "rd_en_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        },
+        {
+          "sig": "tail",
+          "val": "010"
+        },
+        {
+          "sig": "tail_d",
+          "val": "001"
+        },
+        {
+          "sig": "wr_en",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_412",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_418",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_430",
+          "val": "00000001"
+        },
+        {
+          "sig": "anyinit_procdff_431",
+          "val": "010"
+        },
+        {
+          "sig": "anyinit_procdff_433",
+          "val": "0001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_481",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_491",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_495",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_501",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_511",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_517",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_523",
+          "val": "0"
+        },
+        {
+          "sig": "can_rd",
+          "val": "0"
+        },
+        {
+          "sig": "can_wr_d",
+          "val": "0"
+        },
+        {
+          "sig": "count",
+          "val": "0001"
+        },
+        {
+          "sig": "count_d",
+          "val": "0010"
+        },
+        {
+          "sig": "delta",
+          "val": "00"
+        },
+        {
+          "sig": "delta_d",
+          "val": "11"
+        },
+        {
+          "sig": "din",
+          "val": "00000000"
+        },
+        {
+          "sig": "dout",
+          "val": "00000001"
+        },
+        {
+          "sig": "head",
+          "val": "010"
+        },
+        {
+          "sig": "rd_en",
+          "val": "0"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        },
+        {
+          "sig": "tail_d",
+          "val": "010"
+        },
+        {
+          "sig": "wr_en_d",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000101"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "wr_en": null,
+      "rd_en": null,
+      "count": null,
+      "count_d": null,
+      "head": null,
+      "tail": null,
+      "full": null,
+      "empty": null,
+      "half_full": null,
+      "full_d": null,
+      "empty_d": null,
+      "din": null,
+      "dout": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "rst_n": "0",
+      "wr_en": "0",
+      "rd_en": "0",
+      "count": "0000",
+      "count_d": "0000",
+      "head": "000",
+      "tail": "000",
+      "full": "0",
+      "empty": "1",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00000000",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "0000",
+      "count_d": "0000",
+      "head": "000",
+      "tail": "000",
+      "full": "0",
+      "empty": "1",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00000000",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "1",
+      "count": "0001",
+      "count_d": "0000",
+      "head": "000",
+      "tail": "001",
+      "full": "0",
+      "empty": "0",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "1",
+      "din": "00000001",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "rst_n": "1",
+      "wr_en": "0",
+      "rd_en": "1",
+      "count": "0010",
+      "count_d": "0001",
+      "head": "001",
+      "tail": "010",
+      "full": "0",
+      "empty": "0",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "10000001",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "rst_n": "1",
+      "wr_en": "0",
+      "rd_en": "0",
+      "count": "0001",
+      "count_d": "0010",
+      "head": "010",
+      "tail": "010",
+      "full": "0",
+      "empty": "0",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00000000",
+      "dout": "00000001"
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "rst_n": null,
+      "wr_en": null,
+      "rd_en": null,
+      "count": null,
+      "count_d": null,
+      "head": null,
+      "tail": null,
+      "full": null,
+      "empty": null,
+      "half_full": null,
+      "full_d": null,
+      "empty_d": null,
+      "din": null,
+      "dout": null
+    }
+  ],
+  "fault_cone": [
+    "DEPTH",
+    "b0",
+    "b00",
+    "can_rd",
+    "can_wr",
+    "clk",
+    "count",
+    "count_d",
+    "delta_d",
+    "din",
+    "dout",
+    "empty",
+    "empty_d",
+    "full",
+    "full_d",
+    "half_full",
+    "head",
+    "rd_en",
+    "rst_n",
+    "tail",
+    "wr_en"
+  ],
+  "key_signals": [
+    "rst_n",
+    "wr_en",
+    "rd_en",
+    "count",
+    "count_d",
+    "head",
+    "tail",
+    "full",
+    "empty",
+    "half_full",
+    "full_d",
+    "empty_d",
+    "din",
+    "dout"
+  ],
+  "text_summary": "[mock] 收到 2 条消息；最后 user 摘要：你是资深 RTL 验证工程师。基于给定的周期事件表、状态轨迹与故障锥信号，\n用 3–5 句描述：缺陷发生在哪个周期、哪些信号先异常、与断言违例的因果链。\n要求：不猜测证据之外的原因；指出最可疑的代码位置（模块+信号+周期）。\n\n【故障信息】",
+  "summary_meta": {
+    "mode": "mock",
+    "input_tokens": 2681,
+    "output_tokens": 36,
+    "cost": 0.001695
+  }
+}

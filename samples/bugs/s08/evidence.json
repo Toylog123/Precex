@@ -1,7 +1,31 @@
 {
-  "_doc": "PreCex 结构化证据（由 EvidenceEngine 管线生成）| 作者：Toylog | 版本：v0.1",
+  "schema_ver": "v1.0",
+  "evidence_source": "sby_bmc",
   "sample_id": "s08",
-  "date": "2026-08-03",
-  "entries": [],
-  "note": "占位骨架：由证据管线填充反例周期事件/故障锥等结构化证据"
+  "error_type": "状态跳转",
+  "inject_line": 58,
+  "inject_desc": "S1 正常完成分支跳转目标 S2 改 S3（跳过 S2，击穿状态跳转合法性）",
+  "module": "fsm_ctrl",
+  "file": "s08\\buggy.v",
+  "line": 137,
+  "code_slice": " 133: \n 134:     // A1 状态跳转合法性（打拍检查）：(state_d, state) 必须属于合法跳转集合（含自环）\n 135:     // 合法集合：IDLE->{IDLE,S1}；S1->{S1,S2,IDLE}（0xAA 停留/正常推进/超时）；\n 136:     //          S2->{S2,S3,IDLE}（正常推进/0xFF 异常/超时）；S3->{S3,IDLE}（停留/完成/超时）\n 137:     always @(posedge clk) begin\n 138:         if (rst_n) begin\n 139:             case (state_d)\n 140:                 S_IDLE: assert ((state == S_IDLE) || (state == S1));     // 空闲保持或启动\n 141:                 S1:     assert ((state == S1) || (state == S2) || (state == S_IDLE));",
+  "signals": {
+    "clk": "input",
+    "rst_n": "input",
+    "start": "input",
+    "data_in": "input",
+    "done": "output",
+    "timeout_irq": "output",
+    "state": "output"
+  },
+  "trigger_condition": null,
+  "fail_stage": "bmc_depth_5",
+  "fail_step": 5,
+  "failed_assert_id": "131",
+  "x_state_warn": false,
+  "x_state": {
+    "count": 0,
+    "signals": []
+  },
+  "raw_trace_ref": "samples\\bugs\\s08\\cex.vcd"
 }

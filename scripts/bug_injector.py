@@ -378,6 +378,20 @@ def _gen_sby(module, top_mod, depth, design_file='buggy.v'):
     ) % (module, depth, os.path.join(REPO_ROOT, "smoke", "yosys-smtbmc-z3.sh"), depth, design_file, top_mod, design_file)
 
 
+def _gen_repair_sby(module, top_mod, depth, design_file='buggy.v'):
+    """生成 verify_repair.sby（prove 模式，k-induction）：修复后三通过判定第 ③ 步用证明而非 BMC，
+    避免 BMC 只查有限深度。golden 对照已验证 PASS（bmc），此处 prove 验证修复充分性。"""
+    return (
+        "# PreCex - L3 样本 (module=%s) 修复验证配置（prove 模式，k-induction）\n"
+        "# 作者：Toylog | 版本：v0.1 | 功能概述：修复后三通过判定第 ③ 步用 k-induction 证明充分性\n"
+        "# 运行方式（WSL）：export PATH=$HOME/.local/bin:$PATH; export SMTBMC=%s;\n"
+        "#   sby -f verify_repair.sby -d <workdir>   # 期望 DONE PASS / 归纳证明成功\n"
+        "\n[tasks]\nprove\n\n[options]\nprove: mode prove\nprove: depth %d\n"
+        "prove: timeout 600\n\n[engines]\nprove: smtbmc\n\n[script]\nread -sv -formal %s\n"
+        "prep -top %s\n\n[files]\n%s\n"
+    ) % (module, os.path.join(REPO_ROOT, "smoke", "yosys-smtbmc-z3.sh"), depth, design_file, top_mod, design_file)
+
+
 def _with_init(src):
     """在 endmodule 前插入 initial 初值约束块（formal 友好：避免任意初始状态空洞反例；
     收敛文档 2.1-5 推荐；iverilog 仿真中与复位时序兼容）。只初始化体内标量 reg（数组/端口 reg 自然排除）。"""
@@ -542,6 +556,9 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
     # golden 对照 sby（可复现证据：golden 版同配置 BMC 期望 PASS，证明断言非空洞）
     with open(os.path.join(sample_dir, "verify_golden.sby"), "w", encoding="utf-8") as f:
         f.write(_gen_sby(module, top_mod, depth, design_file="golden.v"))
+    # 修复验证 sby（prove 模式，k-induction）：修复后三通过判定第 ③ 步用证明而非 BMC
+    with open(os.path.join(sample_dir, "verify_repair.sby"), "w", encoding="utf-8") as f:
+        f.write(_gen_repair_sby(module, top_mod, depth))
     # meta.json（可复现：记录注入命令与参数）
     meta = {
         "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",

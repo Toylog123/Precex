@@ -196,11 +196,19 @@ def build_evidence(sample_dir, verbose=False):
     cex_log = _load_text(os.path.join(sample_dir, "cex.log"))
     cex_vcd = _load_text(os.path.join(sample_dir, "cex.vcd"))
     meta = _load_json(os.path.join(sample_dir, "meta.json"))
-    # 设计文件：buggy.sv 优先（预研样本约定），否则取非 tb/golden/assertions 的 .sv
+    # 设计文件：buggy.sv 优先（预研样本约定），其次 buggy.v（M1 样本约定），
+    # 否则取非 tb/golden/assertions/uart_tx 的 .sv/.v
     design_file = os.path.join(sample_dir, "buggy.sv")
     if not os.path.isfile(design_file):
         for f in sorted(os.listdir(sample_dir)):
-            if f.endswith(".sv") and not f.startswith(("tb_", "golden")) and f != "assertions.sv":
+            if f in ("buggy.v",):
+                design_file = os.path.join(sample_dir, f)
+                break
+    if not os.path.isfile(design_file):
+        for f in sorted(os.listdir(sample_dir)):
+            if (f.endswith(".sv") or f.endswith(".v")) \
+                    and not f.startswith(("tb_", "golden")) \
+                    and f not in ("assertions.sv", "uart_tx.sv", "formal_top.sv"):
                 design_file = os.path.join(sample_dir, f)
                 break
     design_text = _load_text(design_file)
@@ -229,7 +237,10 @@ def build_evidence(sample_dir, verbose=False):
         "failed_assert_id": sby["failed_assert_id"],
         "x_state_warn": xstate["count"] > 0,
         "x_state": xstate,
-        "raw_trace_ref": os.path.join("samples", "prestudy", sample_id, "cex.vcd"),
+        # 相对仓库根路径：兼容 samples/prestudy（预研）与 samples/bugs（M1）两种布局
+        "raw_trace_ref": os.path.relpath(
+            os.path.join(sample_dir, "cex.vcd"),
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
     }
     if verbose:
         print("[evidence:%s] module=%s line=%s step=%s result=%s x_warn=%s" % (

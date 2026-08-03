@@ -29,14 +29,30 @@ from vcd_parser import VcdParser
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# 状态轨迹关注信号（按模块类型通用：控制/状态/计数/指针/标志）
+# 状态轨迹关注信号（按模块类型通用：控制/状态/计数/指针/标志；含 UART 与 AXI 协议信号）
 KEY_SIGS = [
     "rst_n", "wr_en", "rd_en", "cnt_en", "en", "start", "valid", "ready",
     "state", "state_d", "cnt", "cnt_d", "count", "count_d", "step_cnt", "step_cnt_d",
     "head", "tail", "full", "empty", "half_full", "full_d", "empty_d",
     "done", "timeout_irq", "op", "op_d", "a", "b", "a_d", "b_d", "alu_out", "alu_out_d",
     "data_in", "din", "dout",
+    # UART 发送/接收
+    "tx_start", "tx_data", "txd", "tx_busy", "bit_cnt", "baud_cnt", "baud_tick",
+    "rxd", "rx_busy", "rx_data", "rx_valid", "rx_ready",
+    # AXI4-Lite 从机
+    "ACLK", "ARESETN", "S_AXI_AWADDR", "S_AXI_AWVALID", "S_AXI_AWREADY",
+    "S_AXI_WDATA", "S_AXI_WSTRB", "S_AXI_WVALID", "S_AXI_WREADY",
+    "S_AXI_BRESP", "S_AXI_BVALID", "S_AXI_BREADY",
+    "S_AXI_ARADDR", "S_AXI_ARVALID", "S_AXI_ARREADY",
+    "S_AXI_RDATA", "S_AXI_RRESP", "S_AXI_RVALID", "S_AXI_RREADY",
+    "reg0", "reg1", "reg2", "reg3", "aw_done", "w_done",
 ]
+
+# 模块 → 时钟信号名（axi_lite_slave 用 ACLK，其余用 clk）
+MODULE_CLK = {
+    "fifo_sync": "clk", "fsm_ctrl": "clk", "uart_tx": "clk",
+    "uart_rx": "clk", "axi_lite_slave": "ACLK", "counter_alu": "clk",
+}
 
 
 def _load_json(path):
@@ -68,8 +84,12 @@ def _extract_sig_names(text):
 class CexSemantizer:
     """反例语义化主类。"""
 
-    def __init__(self, sample_dir, clk_sig="clk", llm=None):
+    def __init__(self, sample_dir, clk_sig=None, llm=None):
         self.sample_dir = os.path.abspath(sample_dir)
+        # 时钟信号：显式参数优先，否则按 meta.json 模块推断（axi 用 ACLK）
+        if clk_sig is None:
+            meta = _load_json(os.path.join(self.sample_dir, "meta.json"))
+            clk_sig = MODULE_CLK.get(meta.get("module"), "clk")
         self.clk_sig = clk_sig
         self.llm = llm
         self.evidence = _load_json(os.path.join(self.sample_dir, "evidence.json"))

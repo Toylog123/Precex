@@ -1,7 +1,30 @@
 {
-  "_doc": "PreCex 结构化证据（由 EvidenceEngine 管线生成）| 作者：Toylog | 版本：v0.1",
-  "sample_id": "s28",
-  "date": "2026-08-03",
-  "entries": [],
-  "note": "占位骨架：由证据管线填充反例周期事件/故障锥等结构化证据"
+  "schema_ver": "v1.0",
+  "evidence_source": "sby_bmc",
+  "sample_id": "s26",
+  "error_type": "复位",
+  "inject_line": 44,
+  "inject_desc": "uart_rx 复位后忙标志错误：复位时 rx_busy 改为 1（复位后误报忙，击穿 A5）",
+  "module": "uart_rx",
+  "file": "s26\\buggy.v",
+  "line": 160,
+  "code_slice": " 156:                 S_DATA:  assert ((state == S_DATA)  || (state == S_STOP));\n 157:                 S_STOP:  assert ((state == S_STOP)  || (state == S_IDLE));\n 158:             endcase\n 159:         end\n 160:     end\n 161: \n 162:     // A5 忙标志一致：rx_busy 有效期间不得处于 IDLE\n 163:     always @(posedge clk) begin\n 164:         if (rst_n && rx_busy) begin",
+  "signals": {
+    "clk": "input",
+    "rst_n": "input",
+    "rxd": "input",
+    "rx_valid": "output",
+    "rx_data": "output",
+    "rx_busy": "output"
+  },
+  "trigger_condition": "(state == S_IDLE)  || (state == S_START)",
+  "fail_stage": "bmc_depth_2",
+  "fail_step": 2,
+  "failed_assert_id": "105",
+  "x_state_warn": false,
+  "x_state": {
+    "count": 0,
+    "signals": []
+  },
+  "raw_trace_ref": "samples\\bugs\\s26\\cex.vcd"
 }

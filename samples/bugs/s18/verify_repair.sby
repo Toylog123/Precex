@@ -1,0 +1,22 @@
+# PreCex - L3 样本 (module=uart_rx) 修复验证配置（prove 模式，k-induction）
+# 作者：Toylog | 版本：v0.1 | 功能概述：修复后三通过判定第 ③ 步用 k-induction 证明充分性
+# 运行方式（WSL）：export PATH=$HOME/.local/bin:$PATH; export SMTBMC=D:\BaiduSyncdisk\02_Precex\smoke\yosys-smtbmc-z3.sh;
+#   sby -f verify_repair.sby -d <workdir>   # 期望 DONE PASS / 归纳证明成功
+
+[tasks]
+prove
+
+[options]
+prove: mode prove
+prove: depth 24
+prove: timeout 600
+
+[engines]
+prove: smtbmc
+
+[script]
+read -sv -formal buggy.v
+prep -top uart_rx
+
+[files]
+buggy.v

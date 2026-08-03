@@ -56,9 +56,12 @@
 | axi_lite_slave | s33 | s17 | - | s27,s34 | s25 | s28 | - | 6 |
 | counter_alu | s31 | - | - | s32 | s10 | s11 | - | 4 |
 
-## 4. 件套定义（每样本 10 文件）
+## 4. 件套定义（每样本 11 文件）
 
-- buggy.v / golden.v / tb_weak.sv / verify.sby / verify_golden.sby / cex.vcd / cex.log / meta.json / evidence.json / notes.md
+- buggy.v / golden.v / tb_weak.sv / verify.sby / verify_golden.sby / verify_repair.sby /
+  cex.vcd / cex.log / meta.json / evidence.json / notes.md
+- verify_repair.sby：修复验证配置（prove 模式，k-induction）——修复后三通过判定第 ③ 步用
+  证明而非 BMC，避免只查有限深度；golden 对照已 PASS（bmc），此处证明修复充分性
 - uart_rx 样本额外含 uart_tx.sv（回环联测依赖，编译时同目录提供）
 - 断言已内联于 buggy.v/golden.v（不再生成独立 assertions.sv/formal_top.sv）
 

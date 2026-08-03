@@ -1,0 +1,464 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "s30",
+  "module": "fsm_ctrl",
+  "error_type": "复位",
+  "fail_stage": "bmc_depth_2",
+  "fail_step": 2,
+  "failed_line": 204,
+  "trigger_condition": "state == S1",
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_436",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_438",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_440",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_442",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_444",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_446",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_448",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_450",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_452",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_454",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_456",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_458",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_460",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_462",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_464",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_466",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_468",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_476",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_477",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_478",
+          "val": "00"
+        },
+        {
+          "sig": "anyinit_procdff_479",
+          "val": "0000"
+        },
+        {
+          "sig": "anyinit_procdff_480",
+          "val": "000001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_509",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_511",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_513",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_515",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_517",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_519",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_521",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_523",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_525",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_527",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_529",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_531",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_533",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_535",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_537",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_539",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_541",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_543",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_545",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_547",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_549",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_551",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_553",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_555",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_557",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_559",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_561",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_563",
+          "val": "000000"
+        },
+        {
+          "sig": "clk",
+          "val": "0"
+        },
+        {
+          "sig": "data_in",
+          "val": "00000000"
+        },
+        {
+          "sig": "done",
+          "val": "0"
+        },
+        {
+          "sig": "done_d",
+          "val": "0"
+        },
+        {
+          "sig": "hold_cnt",
+          "val": "0000"
+        },
+        {
+          "sig": "hold_cnt_d",
+          "val": "0000"
+        },
+        {
+          "sig": "rst_n",
+          "val": "0"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "start",
+          "val": "0"
+        },
+        {
+          "sig": "start_d",
+          "val": "0"
+        },
+        {
+          "sig": "state",
+          "val": "00"
+        },
+        {
+          "sig": "state_d",
+          "val": "00"
+        },
+        {
+          "sig": "step_cnt",
+          "val": "000001"
+        },
+        {
+          "sig": "step_cnt_d",
+          "val": "000000"
+        },
+        {
+          "sig": "timeout_irq",
+          "val": "0"
+        },
+        {
+          "sig": "tirq_d",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_549",
+          "val": "1"
+        },
+        {
+          "sig": "rst_n",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_462",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_468",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_480",
+          "val": "000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_549",
+          "val": "0"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "step_cnt",
+          "val": "000000"
+        },
+        {
+          "sig": "step_cnt_d",
+          "val": "000001"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "start": null,
+      "state": null,
+      "state_d": null,
+      "step_cnt": null,
+      "step_cnt_d": null,
+      "done": null,
+      "timeout_irq": null,
+      "data_in": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "rst_n": "0",
+      "start": "0",
+      "state": "00",
+      "state_d": "00",
+      "step_cnt": "000001",
+      "step_cnt_d": "000000",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "00000000"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "rst_n": "1",
+      "start": "0",
+      "state": "00",
+      "state_d": "00",
+      "step_cnt": "000001",
+      "step_cnt_d": "000000",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "00000000"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": "1",
+      "start": "0",
+      "state": "00",
+      "state_d": "00",
+      "step_cnt": "000000",
+      "step_cnt_d": "000001",
+      "done": "0",
+      "timeout_irq": "0",
+      "data_in": "00000000"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "rst_n": null,
+      "start": null,
+      "state": null,
+      "state_d": null,
+      "step_cnt": null,
+      "step_cnt_d": null,
+      "done": null,
+      "timeout_irq": null,
+      "data_in": null
+    }
+  ],
+  "fault_cone": [
+    "S1",
+    "clk",
+    "data_in",
+    "done",
+    "rst_n",
+    "start",
+    "start_d",
+    "state",
+    "state_d",
+    "step_cnt",
+    "step_cnt_d",
+    "timeout_irq"
+  ],
+  "key_signals": [
+    "rst_n",
+    "start",
+    "state",
+    "state_d",
+    "step_cnt",
+    "step_cnt_d",
+    "done",
+    "timeout_irq",
+    "data_in"
+  ],
+  "text_summary": "[mock] 收到 2 条消息；最后 user 摘要：你是资深 RTL 验证工程师。基于给定的周期事件表、状态轨迹与故障锥信号，\n用 3–5 句描述：缺陷发生在哪个周期、哪些信号先异常、与断言违例的因果链。\n要求：不猜测证据之外的原因；指出最可疑的代码位置（模块+信号+周期）。\n\n【故障信息】",
+  "summary_meta": {
+    "mode": "mock",
+    "input_tokens": 1396,
+    "output_tokens": 36,
+    "cost": 0.000924
+  }
+}

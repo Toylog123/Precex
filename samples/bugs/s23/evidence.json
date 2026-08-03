@@ -1,7 +1,33 @@
 {
-  "_doc": "PreCex 结构化证据（由 EvidenceEngine 管线生成）| 作者：Toylog | 版本：v0.1",
+  "schema_ver": "v1.0",
+  "evidence_source": "sby_bmc",
   "sample_id": "s23",
-  "date": "2026-08-03",
-  "entries": [],
-  "note": "占位骨架：由证据管线填充反例周期事件/故障锥等结构化证据"
+  "error_type": "握手",
+  "inject_line": 30,
+  "inject_desc": "满时仍写：can_wr 去掉 !full 门控（满时写入覆盖，击穿 A1）",
+  "module": "fifo_sync",
+  "file": "s23\\buggy.v",
+  "line": 112,
+  "code_slice": " 108:         end\n 109:     end\n 110: \n 111:     // A1 满时不写：上周期满且上周期请求写 → 写被拒绝，本周期 count 必须保持满值（防溢出/回绕）\n 112:     // （使能排除 rd_en_d：满时写拒但同拍读合法，count -1，避免误报）\n 113:     always @(posedge clk) begin\n 114:         if (!rst_n) begin\n 115:             // 复位期不检查\n 116:         end else if (full_d && wr_en_d && !rd_en_d) begin",
+  "signals": {
+    "clk": "input",
+    "rst_n": "input",
+    "wr_en": "input",
+    "rd_en": "input",
+    "din": "input",
+    "dout": "output",
+    "full": "output",
+    "empty": "output",
+    "half_full": "output"
+  },
+  "trigger_condition": null,
+  "fail_stage": "bmc_depth_11",
+  "fail_step": 11,
+  "failed_assert_id": "111",
+  "x_state_warn": false,
+  "x_state": {
+    "count": 0,
+    "signals": []
+  },
+  "raw_trace_ref": "samples\\bugs\\s23\\cex.vcd"
 }

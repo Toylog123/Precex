@@ -40,8 +40,11 @@
   - EvidenceEngine / CexSemantizer（含轨迹压缩）/ A-B-C prompt 模板族 / T1 视觉快测 / run_prestudy 一键评测 全部落地；
     3 样本 × A/B/C × 真实 MiniMax M3 评测 9/9 修复三通过，主叙事定案（详见 docs/Gate-0-决策记录.md 与 docs/进度.md）
 - **进行中（M1 数据集，W4–7）**：
-  - BugBench-PS 当前 31 个 L3 样本（s04–s34 连续编号，6 模块 × 7 错误类型矩阵，10 件套 + golden 双对照）；
+  - BugBench-PS 当前 31 个 L3 样本（s04–s34 连续编号，6 模块 × 7 错误类型矩阵，11 件套 + golden 双对照 + prove 修复验证）；
     samples/README.md 为数据集规范；注入器 --variant 选择器与变体池见 scripts/bug_injector.py
+  - **主实验管线就绪（2026-08-04）**：A/B/C 证据链全量生成（evidence.json + semantics.json，
+    axi 时钟自动识别）；scripts/run_experiments.py 批量评测（A/B/C × 3 种子，prove 修复验证，
+    k-induction 充分性）；s04 端到端实测 buggy FAIL → 修复 PASS
   - 待办：按矩阵缺口（uart_tx/uart_rx/handshake/edge）补齐至 30–40 → **Gate-2 逐样本校验**
 
 ### Gate 状态表
@@ -66,9 +69,9 @@
 ## 5. 下一步执行清单（M1 数据集 → Gate-2）
 
 1. 按 samples/README.md 矩阵缺口扩展样本：重点 uart_tx/uart_rx/handshake/edge 新变体（uart_rx 深时序可参数化小 DIV；counter 满值回绕可接受长 BMC）
-2. 新增样本逐一过注入器三通过校验 + golden 双对照（verify_golden.sby）
+2. 新增样本逐一过注入器三通过校验 + golden 双对照（verify_golden.sby）+ verify_repair.sby（注入器已自动生成）
 3. 唯一性 + 结构审计：模块×类型矩阵、件套完整、sample_id 一致、cex.vcd/cex.log 存在
-4. 主实验 n≥20：A/B/C × 样本 × 种子批量评测（scripts/run_experiments.py + run_prestudy.py 管线）
+4. **主实验正式跑**：scripts/build_evidence.py --real 生成真实 M3 摘要 → scripts/run_experiments.py A/B/C × 3 种子（31 × 3 × 3 = 279 次调用，token 记账）
 5. Verifier 充分性量化：mutation/非空洞/假阳性率 + T2 验证 agent
 6. **Gate-2 数据集定案**（30–40 样本逐样本校验）→ **更新 docs/进度.md** → git commit + push
 
