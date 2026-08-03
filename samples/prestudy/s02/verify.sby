@@ -1,0 +1,25 @@
+# PreCex - L3 样本 s02 (fsm_ctrl) SymbiYosys 配置：对 buggy 版运行 BMC，期望 Assert failed（A6 击穿）
+# 作者：Toylog | 版本：v0.2 | 功能概述：read -sv -formal 单文件（断言已内联于 buggy.sv，参照 smoke/counter.sby 模式）
+#        + prep -top fsm_ctrl + smtbmc(z3) BMC，depth 15
+# 运行方式（WSL）：
+#   export PATH=/home/toylog/.local/bin:/usr/local/bin:/usr/bin:/bin
+#   export SMTBMC=/mnt/d/BaiduSyncdisk/02_Precex/smoke/yosys-smtbmc-z3.sh
+#   sby -f verify.sby -d <workdir>
+# 预期：DONE FAIL（counterexample），反例约在第 8 拍 A6 断言失败（进入 S3 后 step_cnt 停止递增）
+
+[tasks]
+bmc
+
+[options]
+bmc: mode bmc
+bmc: depth 15
+
+[engines]
+bmc: smtbmc
+
+[script]
+read -sv -formal buggy.sv
+prep -top fsm_ctrl
+
+[files]
+buggy.sv

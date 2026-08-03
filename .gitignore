@@ -43,3 +43,10 @@ Thumbs.db
 .env
 *.key
 *.pem
+
+# 预研缺陷样本（samples/prestudy）反例证据例外——全局忽略 *.vcd/*.log，但允许入库 cex 证据
+!samples/**/cex.vcd
+!samples/**/cex.log
+
+# 实验运行产物（不入库，复现靠脚本重建）
+experiments/runs/

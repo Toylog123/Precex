@@ -1,0 +1,12 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识、注入缺陷与复现命令",
+  "sample_id": "s03",
+  "module": "counter_alu",
+  "error_type": "wrap_around",
+  "level": "L3",
+  "inject_line": 51,
+  "inject_desc": "计数器满值回绕逻辑改为回绕到 1（cnt 达全 1 时下一拍回 1 而非 0，黄金实现为模 2^DATA_W 自然回绕 cnt<=cnt+1'b1），计数序列 254->255->1 错失 0，边界回绕错误，跨周期破坏 8-bit 计数循环（A6 击穿）",
+  "golden_source": "rtl/counter_alu/counter_alu.sv",
+  "date": "2026-08-03",
+  "repro_cmd": "iverilog -g2012 buggy.sv assertions.sv tb_weak.sv -o tb_out && vvp tb_out   # 弱 tb PASS；sby -f verify.sby -d sby_work   # BMC FAIL（A6 击穿，约第 256 拍）"
+}

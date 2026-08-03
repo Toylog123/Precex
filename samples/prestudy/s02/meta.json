@@ -1,0 +1,12 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识、注入缺陷与复现命令",
+  "sample_id": "s02",
+  "module": "fsm_ctrl",
+  "error_type": "state_jump",
+  "level": "L3",
+  "inject_line": 100,
+  "inject_desc": "删除 S3 分支首行 step_cnt 递增语句（黄金实现 step_cnt <= step_cnt + 1'b1 与 S1/S2 一致），进入 S3 后全局步数计数停止增长，跨周期违反 A6 步进计数单调性（非空闲阶段 step_cnt 每拍必须 +1）",
+  "golden_source": "rtl/fsm_ctrl/fsm_ctrl.sv",
+  "date": "2026-08-03",
+  "repro_cmd": "iverilog -g2012 buggy.sv assertions.sv tb_weak.sv -o tb_out && vvp tb_out   # 弱 tb PASS；sby -f verify.sby -d sby_work   # BMC FAIL（A6 击穿）"
+}

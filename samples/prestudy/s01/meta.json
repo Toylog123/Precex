@@ -1,0 +1,12 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识、注入缺陷与复现命令",
+  "sample_id": "s01",
+  "module": "fifo_sync",
+  "error_type": "fifo_count",
+  "level": "L3",
+  "inject_line": 71,
+  "inject_desc": "count 更新逻辑改为写优先（if (can_wr) count<=count+1 置于同拍读写守恒分支之前并删去守恒分支），同拍读写 (can_wr&&can_rd) 时 count 错误 +1（黄金实现保持守恒），跨周期后 count 与真实存储元素数失配，full/empty/half_full 错乱",
+  "golden_source": "rtl/fifo_sync/fifo_sync.sv",
+  "date": "2026-08-03",
+  "repro_cmd": "iverilog -g2012 buggy.sv assertions.sv tb_weak.sv -o tb_out && vvp tb_out   # 弱 tb PASS；sby -f verify.sby -d sby_work   # BMC FAIL（A4 击穿）"
+}

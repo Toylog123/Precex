@@ -1,0 +1,25 @@
+# PreCex - L3 样本 s01 (fifo_sync) SymbiYosys 配置：对 buggy 版运行 BMC，期望 Assert failed（A4 击穿）
+# 作者：Toylog | 版本：v0.2 | 功能概述：read -sv -formal 单文件（断言已内联于 golden.sv，参照 smoke/counter.sby 模式）
+#        + prep -top fifo_sync + smtbmc(z3) BMC，depth 12
+# 运行方式（WSL）：
+#   export PATH=/home/toylog/.local/bin:/usr/local/bin:/usr/bin:/bin
+#   export SMTBMC=/mnt/d/BaiduSyncdisk/02_Precex/smoke/yosys-smtbmc-z3.sh
+#   sby -f verify.sby -d <workdir>
+# 预期：DONE FAIL（counterexample），反例约在第 3 拍 A4 断言失败（同拍读写后 count 错误 +1）
+
+[tasks]
+bmc
+
+[options]
+bmc: mode bmc
+bmc: depth 12
+
+[engines]
+bmc: smtbmc
+
+[script]
+read -sv -formal golden.sv
+prep -top fifo_sync
+
+[files]
+golden.sv
