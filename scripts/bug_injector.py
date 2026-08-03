@@ -36,25 +36,68 @@ MODULE_DEPTH = {
     "axi_lite_slave": 16, "counter_alu": 12,
 }
 
+# 复位静默环境约束：{模块: (clk 名, rst_n 名, 复位期需静默的输入列表)}
+# 避免复位拍组合逻辑置位导致打拍断言在复位后第一拍空洞失败（与弱 tb 复位行为一致）
+RESET_SILENCE = {
+    "fifo_sync": ("clk", "rst_n", ["wr_en", "rd_en"]),
+    "fsm_ctrl": ("clk", "rst_n", ["start", "data_in"]),
+    "uart_tx": ("clk", "rst_n", ["tx_start", "tx_data"]),
+    "uart_rx": ("clk", "rst_n", ["rxd"]),
+    "axi_lite_slave": ("ACLK", "ARESETN", [
+        "S_AXI_AWADDR", "S_AXI_AWVALID", "S_AXI_WDATA", "S_AXI_WSTRB",
+        "S_AXI_WVALID", "S_AXI_BREADY", "S_AXI_ARADDR", "S_AXI_ARVALID",
+        "S_AXI_RREADY"]),
+    "counter_alu": ("clk", "rst_n", ["cnt_en", "op", "a", "b"]),
+}
+
+# 全局输入约束：{模块: [(clk 名, "assume 表达式"), ...]}（非仅复位期，始终成立）
+# 用于断言依赖的环境假设（如 counter_alu 的 op 必须为有效运算，否则 golden 也会 FAIL）
+GLOBAL_ASSUME = {
+    "counter_alu": [("clk", "op < OP_NUM")],
+}
+
 
 # ---- 弱 tb 清洗规则：按 error_type 剥离会击穿该缺陷的仿真检查行 ----
 # 弱 tb 要求“放过缺陷”：黄金 tb 若显式断言 full/empty/half_full/count 等被注入缺陷直接影响的信号，
 # 会在 sim 阶段击穿 buggy，导致 L3 校验失败。清洗即删除含这些关键字的 $fatal 检查行（保留数据通路检查）。
-WEAK_TB_STRIP = {"fifo_full": ["full", "empty", "half_full", "count", "dout"]}
+WEAK_TB_STRIP = {
+    "fifo_full": ["full", "empty", "half_full", "count", "dout"],
+    "state_trans": ["state", "done", "timeout_irq"],
+    "reset": ["cnt", "dout"],
+    "width_trunc": ["cnt", "count", "full", "empty", "half_full", "dout"],
+    "boundary_wrap": ["cnt", "count", "dout"],
+    "edge": ["txd", "tx_busy"],
+    "handshake": ["txd", "tx_busy", "BVALID"],
+}
 
 
 def _weaken_tb(tb_src, error_type):
     # 按错误类型清洗弱 tb：删除会击穿该缺陷的仿真检查行，返回清洗后源码
+    # 支持单行 if(cond) $fatal 与两行式 if(cond) + 下一行 $fatal（避免裸 if 残留语法错误）
     keys = WEAK_TB_STRIP.get(error_type)
     if not keys:
         return tb_src
+    lines = tb_src.splitlines()
     out = []
     removed = 0
-    for line in tb_src.splitlines():
-        # 命中 $fatal 且包含任一关键字的行：整行剥离（弱 tb 不再检查该信号）
+    pending_if = None
+    for line in lines:
+        s = line.strip()
+        hit = any(k in line for k in keys)
         if "$fatal" in line and any(k in line for k in keys):
             removed += 1
+            if pending_if is not None:
+                out.pop()
+                removed += 1
+            pending_if = None
             continue
+        # 两行式 if(cond) + 下一行 $fatal：先暂存 if 行，若下一行是命中 $fatal 则一并剥离
+        if hit and s.startswith("if (") and not s.endswith((";", "begin")) \
+                and "$fatal" not in line and "$display" not in line and " begin" not in s:
+            pending_if = len(out)
+            out.append(line)
+            continue
+        pending_if = None
         out.append(line)
     new = "\n".join(out)
     if removed:
@@ -88,10 +131,10 @@ INJECTORS = {
             {"desc": "起始位握手失效：删 S_IDLE 中『起始位立即输出低电平』（txd 保持高，击穿 uart A1 起始位为低）",
              "pat": re.compile(r"txd\s*<=\s*1'b0;\s*//\s*起始位立即输出低电平\n"),
              "repl": None, "hit": "uart_tx A1（START 时 txd==0）", "expect": "uart_tx"},
-            {"desc": "写地址应答不释放：aw_done 完成分支删除（AWREADY 持续应答，重复握手）",
-             "pat": re.compile(r"(\s*else\s+if\s+\(S_AXI_BVALID\s*&&\s*S_AXI_BREADY\)\s*begin\s*\n)(\s*)S_AXI_AWREADY\s*<=\s*1'b0;\s*\n(\s*)aw_done\s*<=\s*1'b0;\n"),
-             "repl": r"\1\2// BUG: AWREADY 应答释放被删除（握手状态不释放）\n\3// aw_done <= 1'b0;\n",
-             "hit": "axi 写通道握手断言", "expect": "axi_lite_slave"},
+            {"desc": "写响应不释放：BVALID 释放分支删除（写响应持续有效，重复握手）",
+             "pat": re.compile(r"(\s*end\s+else\s+if\s+\(S_AXI_BVALID\s*&&\s*S_AXI_BREADY\)\s*begin\s*\n)(\s*)S_AXI_BVALID\s*<=\s*1'b0;\s*\n(\s*)end\n"),
+             "repl": r"\1\2// BUG: BVALID 释放分支被删除（写响应不释放）\n\2// S_AXI_BVALID <= 1'b0;\n\3end\n",
+             "hit": "axi 写通道握手断言（BVALID 不释放）", "expect": "axi_lite_slave"},
         ],
     },
     "fifo_full": {
@@ -254,13 +297,13 @@ def _gen_sby(module, top_mod, depth):
     """生成 verify.sby（bmc + smtbmc/z3，read -formal 与断言矩阵收敛路径一致）。"""
     return (
         "# PreCex - L3 样本 (module=%s) SymbiYosys 配置：对 buggy 版运行 BMC，期望 Assert failed\n"
-        "# 作者：Toylog | 版本：v0.1 | 功能概述：read -sv -formal 三文件 + prep -top wrapper + smtbmc(z3) BMC，depth %d\n"
+        "# 作者：Toylog | 版本：v0.2 | 功能概述：read -sv -formal 单文件（断言已内联于 buggy.v）+ prep -top 设计模块 + smtbmc(z3) BMC，depth %d\n"
         "# 运行方式（WSL）：export PATH=$HOME/.local/bin:$PATH; export SMTBMC=%s;\n"
         "#   sby -f verify.sby -d <workdir>    # 期望 DONE FAIL（counterexample）\n"
-        "\n[tasks]\nbmc\n\n[options]\nbmc: mode bmc\nbmc: depth %d\n\n[engines]\nbmc: smtbmc\n\n"
-        "[script]\nread -sv -formal buggy.v\nread -sv -formal assertions.sv\nread -sv -formal formal_top.sv\n"
-        "prep -top %s\n\n[files]\nbuggy.v\nassertions.sv\nformal_top.sv\n"
-    ) % (module, depth, os.path.join(REPO_ROOT, "smoke", "yosys-smtbmc-z3.sh"), depth, top_mod + "_formal_top")
+        "\n[tasks]\nbmc\n\n[options]\nbmc: mode bmc\nbmc: depth %d\n\n[engines]\nbmc: smtbmc z3\n\n"
+        "[script]\nread -sv -formal buggy.v\n"
+        "prep -top %s\n\n[files]\nbuggy.v\n"
+    ) % (module, depth, os.path.join(REPO_ROOT, "smoke", "yosys-smtbmc-z3.sh"), depth, top_mod)
 
 
 def _with_init(src):
@@ -278,18 +321,74 @@ def _with_init(src):
     return re.sub(r"\n(endmodule)\s*$", "\n" + block + "\\1\n", src)
 
 
+def _strip_tb_assert(tb_src):
+    """从弱 tb 剥离显式断言模块实例化段（内联断言后独立断言模块不再存在）。
+    匹配 rtl/tb_<mod>.sv 中 <mod>_assert 例化整段（含注释头）。"""
+    m = re.search(r"\n\s*//\s*断言实例[^\n]*\n\s*\w+_assert\b", tb_src)
+    if not m:
+        m = re.search(r"\n\s*\w+_assert\b", tb_src)
+    if not m:
+        return tb_src
+    start = m.start()
+    rest = tb_src[start:]
+    depth = 0
+    i = 0
+    end = None
+    for line in rest.splitlines(keepends=True):
+        depth += line.count("(") - line.count(")")
+        i += len(line)
+        if depth <= 0 and ");" in line:
+            end = start + i
+            break
+    if end is None:
+        m2 = re.search(r"\n\s*(?:endmodule|initial|always|\w+\s*[=(])", tb_src[start:])
+        end = start + (m2.start() if m2 else len(tb_src))
+    return tb_src[:start] + "\n" + tb_src[end:]
+
+
+def _inline_assert(design_src, assert_src, module):
+    """把独立断言模块（rtl/<mod>/assertions.sv）转为内联块插入设计 endmodule 前。
+    - 去掉 module 头/端口列表/端口方向声明/endmodule
+    - 异步复位 always（or negedge rst_n）统一改同步（posedge clk）——yosys PROC_DFF 兼容
+    - 去掉 localparam 声明（设计体内已有相同参数）
+    - 端口信号名须与设计内部同名（rtl 断言端口均引用设计内部信号，如 count/head/tail/can_wr）
+    返回内联后的设计源码。"""
+    body = re.sub(r"^.*?module\s+\w+_assert\b.*?\);\s*", "", assert_src, flags=re.S, count=1)
+    # 端口方向/宽度体内声明行删除（支持单行多信号：input wire [..] a, b, c;）
+    body = re.sub(r"^\s*(?:input|output)\s+(?:wire\s+)?(?:\[[^\]]*\]\s*)?[\w,\s\[\]:-]+;\s*(?://.*)?$", "", body, flags=re.M)
+    # 仅删除与设计同名的 localparam（如 ADDR_W/CNT_W 设计已有；保留断言独有如 OP_NUM）
+    design_params = set(re.findall(r"\bparameter\s+(\w+)\s*=", design_src)) | \
+        set(re.findall(r"\blocalparam\s+(\w+)\s*=", design_src))
+    body_lines = []
+    for ln in body.splitlines():
+        pm = re.match(r"\s*localparam\s+(\w+)\s*=", ln)
+        if pm and pm.group(1) in design_params:
+            continue
+        body_lines.append(ln)
+    body = "\n".join(body_lines)
+    body = body.replace("endmodule", "")
+    body = re.sub(r"always\s*@\(posedge\s+clk\s+or\s+negedge\s+rst_n\)", "always @(posedge clk)", body)
+    body = re.sub(r"always\s*@\(posedge\s+ACLK\s+or\s+negedge\s+ARESETN\)", "always @(posedge ACLK)", body)
+    body = re.sub(r"\n{3,}", "\n\n", body)
+    body = body.strip("\n")
+    inline = (
+        "\n    // ------------------------------------------------------------------\n"
+        "    // 内联强断言（安全子集：immediate assert + 单边沿打拍；源自 rtl/%s/assertions.sv）\n"
+        "    // ------------------------------------------------------------------\n%s\n" % (module, body))
+    return design_src.replace("endmodule", inline + "endmodule\n")
+
+
 # ---- 三通过校验（复用 evaluator 三函数）----
 def _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir):
     """对临时样本目录跑三通过判定。返回 (ok, 明细 dict)。"""
     buggy = os.path.join(tmp_dir, "buggy.v")
-    asser = os.path.join(tmp_dir, "assertions.sv")
     tb = os.path.join(tmp_dir, "tb_weak.sv")
-    # ① 编译：buggy 设计 + 断言，0 error
-    comp = compile_check([buggy, asser], cwd=tmp_dir, out="a.out")
+    # ① 编译：buggy 设计（含内联断言），0 error
+    comp = compile_check([buggy], cwd=tmp_dir, out="a.out")
     if not comp["ok"]:
         return False, {"stage": "compile", "detail": (comp["stdout"] + comp["stderr"])[-800:]}
     # ② 弱 tb 仿真：必须放过 buggy（exit 0 且无 FAIL/$fatal 且含 $finish）
-    sim = sim_check([buggy, asser, tb], top=tb_top, cwd=tmp_dir,
+    sim = sim_check([buggy, tb], top=tb_top, cwd=tmp_dir,
                     out_bin="sim.out", sim_timeout=SIM_TIMEOUT)
     if not sim["ok"]:
         out = sim["stdout"] + sim["stderr"]
@@ -311,8 +410,19 @@ def _copy_cex(sby_work, sample_dir):
             p = os.path.join(root, f)
             if f.endswith(".vcd") and vcd is None:
                 vcd = p
-            if f.endswith(".log") and ("engine" in root.replace("\\", "/") or log is None):
-                log = p   # 优先引擎日志（engine_0/logfile.txt）
+            # 引擎日志：engine_0/logfile.txt（.txt），model/design.log（.log）为模型构建日志
+            norm = root.replace("\\", "/")
+            if "engine" in norm and f == "logfile.txt" and log is None:
+                log = p
+    # 兜底：无引擎日志时用 model/design.log
+    if log is None:
+        for root, _dirs, files in os.walk(sby_work):
+            for f in files:
+                if f.endswith(".log"):
+                    log = os.path.join(root, f)
+                    break
+            if log:
+                break
     copied = []
     for src, dst in ((vcd, "cex.vcd"), (log, "cex.log")):
         if src:
@@ -324,27 +434,21 @@ def _copy_cex(sby_work, sample_dir):
 # ---- 样本落盘 ----
 def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertions_src,
                   tb_src, top_mod, tb_top, depth, variant, line_no, diff, verify, cmd_line):
-    """生成 7 件套（buggy/golden/断言/弱tb/cex.vcd/cex.log/meta.json/evidence.json/notes.md）+ verify.sby + formal_top.sv。"""
+    """生成 7 件套（buggy/golden/弱tb/cex.vcd/cex.log/meta.json/evidence.json/notes.md）+ verify.sby。
+    断言已内联于 buggy.v/golden.v（不再生成独立 assertions.sv / formal_top.sv）。"""
     os.makedirs(sample_dir, exist_ok=True)
-    _, params, ports = _module_info(golden_src)
-    assert_ports = _ASSERT_PORT.findall(assertions_src)
-    # 设计/断言/弱 tb（设计/断言加 initial 初值约束，避免 formal 空洞反例）
+    # 设计/弱 tb（设计含内联断言 + initial 初值约束，避免 formal 空洞反例）
     with open(os.path.join(sample_dir, "golden.v"), "w", encoding="utf-8") as f:
-        f.write(_with_init(golden_src))
+        f.write(golden_src)
     head = (
         "// PreCex - %s L3 缺陷样本 %s（buggy 版）\n"
         "// 作者：Toylog | 版本：v0.1 | 功能概述：注入『%s』类缺陷——%s\n"
         "// 来源：rtl/%s/%s.sv 单点注入（行 %d）| 击穿断言：%s\n\n" % (
             module, sample_id, verify["err_name"], variant["desc"], module, module, line_no, variant["hit"]))
     with open(os.path.join(sample_dir, "buggy.v"), "w", encoding="utf-8") as f:
-        f.write(head + _with_init(buggy_src))
-    with open(os.path.join(sample_dir, "assertions.sv"), "w", encoding="utf-8") as f:
-        f.write(_with_init(assertions_src))
+        f.write(head + buggy_src)
     with open(os.path.join(sample_dir, "tb_weak.sv"), "w", encoding="utf-8") as f:
         f.write(tb_src)
-    # formal 附件
-    with open(os.path.join(sample_dir, "formal_top.sv"), "w", encoding="utf-8") as f:
-        f.write(_gen_formal_top(module, params, ports, assert_ports))
     with open(os.path.join(sample_dir, "verify.sby"), "w", encoding="utf-8") as f:
         f.write(_gen_sby(module, top_mod, depth))
     # meta.json（可复现：记录注入命令与参数）
@@ -443,6 +547,33 @@ def main(argv=None):
     assertions = open(assert_path, encoding="utf-8").read()
     tb = open(tb_path, encoding="utf-8").read()
     tb = _weaken_tb(tb, args.error_type)   # 弱 tb 清洗：剥离会击穿本类缺陷的仿真检查行
+    tb = _strip_tb_assert(tb)              # 剥离断言模块实例化（断言已内联）
+    # 内联断言到设计（golden/buggy 均含内联断言块 + initial 初值 + 复位静默环境约束）
+    def _finalize(design_src):
+        src = _inline_assert(design_src, assertions, args.module)
+        # 复位期间输入静默环境约束（与弱 tb 复位行为一致）
+        clk_name, rst_name, quiet_inputs = RESET_SILENCE.get(
+            args.module, ("clk", "rst_n", []))
+        if quiet_inputs:
+            lines = [
+                "\n    // 环境约束：初始拍处于复位（%s==0），复位释放沿（0->1）输入静默，"
+                "与弱 tb 复位行为一致；设计内部状态由复位分支初始化（避免 initial 覆盖注入缺陷）" % rst_name,
+                "    initial assume (!%s);" % rst_name,
+                "    always @(posedge %s) begin" % clk_name,
+                "        if (!%s) begin" % rst_name,
+            ]
+            for sig in quiet_inputs:
+                lines.append("            assume (!%s);" % sig)
+            lines += ["        end", "    end", ""]
+            src = src.replace("endmodule", "\n".join(lines) + "\nendmodule\n")
+        # 全局输入约束（非仅复位期，断言依赖的环境假设）
+        for gclk, gexpr in GLOBAL_ASSUME.get(args.module, []):
+            ga = (
+                "\n    // 环境约束：%s（断言依赖的环境假设，避免与缺陷无关的假反例）\n"
+                "    always @(posedge %s) assume (%s);\n" % (gexpr, gclk, gexpr))
+            src = src.replace("endmodule", ga + "\nendmodule\n")
+        return src
+    golden_inline = _finalize(golden)
     top_mod, _params, _ports = _module_info(golden)
     tb_top = _TB_MODULE.search(tb)
     tb_top = tb_top.group(1) if tb_top else None
@@ -469,16 +600,14 @@ def main(argv=None):
         print(diff)
         if args.dry_run:
             continue  # 仅审计 diff，不落盘不校验
+        buggy_inline = _finalize(buggy_src)
         # 临时样本目录做校验，成功才落盘正式目录
         tmp_dir = tempfile.mkdtemp(prefix="inject_")
         work_dir = tempfile.mkdtemp(prefix="sby_work_")
         try:
-            _, params, ports = _module_info(golden)
-            assert_ports = _ASSERT_PORT.findall(assertions)
             for name, data in (
-                    ("buggy.v", _with_init(buggy_src)), ("golden.v", golden),
-                    ("assertions.sv", _with_init(assertions)), ("tb_weak.sv", tb),
-                    ("formal_top.sv", _gen_formal_top(args.module, params, ports, assert_ports))):
+                    ("buggy.v", buggy_inline), ("golden.v", golden_inline),
+                    ("tb_weak.sv", tb)):
                 with open(os.path.join(tmp_dir, name), "w", encoding="utf-8") as f:
                     f.write(data)
             sby_file = os.path.join(tmp_dir, "verify.sby")
@@ -490,7 +619,7 @@ def main(argv=None):
                 print("  校验失败（%s），尝试下一变体…" % detail["stage"])
                 continue
             # 三通过成立 → 落盘样本 + 拷贝 cex 证据
-            _write_sample(sample_dir, args.module, args.sample_id, golden, buggy_src, assertions,
+            _write_sample(sample_dir, args.module, args.sample_id, golden_inline, buggy_inline, assertions,
                           tb, top_mod, tb_top, depth, v, line_no, diff,
                           {"err_name": err["name"], "code": args.error_type}, cmd_line)
             copied = _copy_cex(detail["sby_work"], sample_dir)

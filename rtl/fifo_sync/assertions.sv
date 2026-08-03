@@ -35,6 +35,8 @@ module fifo_sync_assert #(
     reg        rd_en_d;              // 上周期读请求
     reg [CNT_W-1:0] count_d;         // 上周期 count
     reg [1:0]       delta_d;         // 上周期实际净增减量（打拍后的 2 位补码）
+    reg [ADDR_W-1:0] tail_d;         // 上周期写指针（A6 写指针推进检查）
+    reg             can_wr_d;        // 上周期写有效（A6 用）
 
     // 组合：本周期实际净增减量 = can_wr - can_rd（2 位补码表示）
     wire [1:0] delta = (can_wr ? 2'b01 : 2'b00) - (can_rd ? 2'b01 : 2'b00);
@@ -48,6 +50,8 @@ module fifo_sync_assert #(
             rd_en_d <= 1'b0;
             count_d <= {CNT_W{1'b0}};
             delta_d <= 2'b00;
+            tail_d  <= {ADDR_W{1'b0}};
+            can_wr_d <= 1'b0;
         end else begin
             full_d  <= full;
             empty_d <= empty;
@@ -55,30 +59,37 @@ module fifo_sync_assert #(
             rd_en_d <= rd_en;
             count_d <= count;
             delta_d <= delta;
+            tail_d  <= tail;
+            can_wr_d <= can_wr;
         end
     end
 
     // A1 满时不写：上周期满且上周期请求写 → 写被拒绝，本周期 count 必须保持满值（防溢出/回绕）
+    // （使能排除 rd_en_d：满时写拒但同拍读合法，count -1，避免误报）
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             // 复位期不检查
-        end else if (full_d && wr_en_d) begin
+        end else if (full_d && wr_en_d && !rd_en_d) begin
             assert (count == DEPTH);
         end
     end
 
     // A2 空时不读：上周期已空且上周期请求读 → 读被拒绝，本周期 count 必须保持 0（防下溢）
+    // （使能排除 wr_en_d：空时读拒但同拍写合法，count +1，避免误报）
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             // 复位期不检查
-        end else if (empty_d && rd_en_d) begin
+        end else if (empty_d && rd_en_d && !wr_en_d) begin
             assert (count == 0);
         end
     end
 
-    // A3 指针永不越界：head/tail 始终 < DEPTH（防回绕错）
+    // A3 指针永不越界 + 复位值正确：head/tail 始终 < DEPTH（防回绕错）；复位期必须归 0（抓复位值缺陷）
     always @(posedge clk or negedge rst_n) begin
-        if (rst_n) begin
+        if (!rst_n) begin
+            assert (head == {ADDR_W{1'b0}});
+            assert (tail == {ADDR_W{1'b0}});
+        end else begin
             assert (head < DEPTH);
             assert (tail < DEPTH);
         end
@@ -101,6 +112,15 @@ module fifo_sync_assert #(
     always @(posedge clk or negedge rst_n) begin
         if (rst_n) begin
             assert (half_full == (count >= (DEPTH >> 1)));
+        end
+    end
+
+    // A6 写指针推进：can_wr 写成功拍后，下一拍 tail 必须 +1（抓写指针不回绕/同址覆写）
+    always @(posedge clk or negedge rst_n) begin
+        if (rst_n) begin
+            if (can_wr_d) begin
+                assert (tail == tail_d + 1'b1);
+            end
         end
     end
 

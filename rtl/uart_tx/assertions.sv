@@ -32,27 +32,27 @@ module uart_tx_assert #(
     // 打拍寄存器：用于跨周期跳转合法性检查
     reg [1:0] state_d;            // 上周期状态
 
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (!rst_n) state_d <= S_IDLE;
         else        state_d <= state;
     end
 
     // A1 起始位为低：处于 START 状态时 txd 必须为 0
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && (state == S_START)) begin
             assert (txd == 1'b0);
         end
     end
 
     // A2 停止位为高：处于 STOP 状态时 txd 必须为 1
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && (state == S_STOP)) begin
             assert (txd == 1'b1);
         end
     end
 
     // A3 空闲电平与忙标志：处于 IDLE 时 txd 为高且 tx_busy 为低
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && (state == S_IDLE)) begin
             assert (txd == 1'b1);
             assert (tx_busy == 1'b0);
@@ -61,7 +61,7 @@ module uart_tx_assert #(
 
     // A4 状态机跳转合法性（打拍检查）：(state_d, state) 必须属于合法跳转集合（含自环）
     // 合法跳转对：IDLE->{IDLE,START}, START->{START,DATA}, DATA->{DATA,STOP}, STOP->{STOP,IDLE}
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n) begin
             case (state_d)
                 S_IDLE:  assert ((state == S_IDLE)  || (state == S_START)); // 空闲保持或启动
@@ -73,9 +73,18 @@ module uart_tx_assert #(
     end
 
     // A5 忙标志与状态一致：tx_busy 有效期间不得处于 IDLE
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && tx_busy) begin
             assert (state != S_IDLE);
+        end
+    end
+
+    // A6 位周期节奏：START/DATA/STOP 之间切换必须发生在 baud_tick 拍（位节奏正确）
+    // 排除 IDLE->START（启动检测拍不在 tick 拍）；抓波特率脉冲取反/缺失类缺陷（切换拍 baud_tick 应为 1）
+    always @(posedge clk) begin
+        if (rst_n && (state_d != state) &&
+            !(state_d == S_IDLE && state == S_START)) begin
+            assert (baud_tick);
         end
     end
 

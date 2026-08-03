@@ -1,0 +1,21 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s12",
+  "module": "fifo_sync",
+  "error_type": "复位",
+  "error_type_code": "reset",
+  "level": "L3",
+  "inject_line": 40,
+  "inject_desc": "读指针复位值 0 改全 1（head 越界，击穿 A3 指针不越界）",
+  "diff": "- head  <= {ADDR_W{1'b0}};\n+ head  <= {ADDR_W{1'b1}};",
+  "hit_assertion": "fifo_sync A3（head<DEPTH）",
+  "golden_source": "rtl/fifo_sync/fifo_sync.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module fifo_sync --error-type reset --sample-id s12 --line 40",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "verdict": "L3_VALID"
+  }
+}

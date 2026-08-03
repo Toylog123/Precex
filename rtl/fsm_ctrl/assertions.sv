@@ -38,7 +38,7 @@ module fsm_ctrl_assert #(
     reg [3:0] hold_cnt_d;     // 上周期停留计数
     reg [5:0] step_cnt_d;     // 上周期步数
 
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (!rst_n) begin
             state_d    <= S_IDLE;
             start_d    <= 1'b0;
@@ -59,7 +59,7 @@ module fsm_ctrl_assert #(
     // A1 状态跳转合法性（打拍检查）：(state_d, state) 必须属于合法跳转集合（含自环）
     // 合法集合：IDLE->{IDLE,S1}；S1->{S1,S2,IDLE}（0xAA 停留/正常推进/超时）；
     //          S2->{S2,S3,IDLE}（正常推进/0xFF 异常/超时）；S3->{S3,IDLE}（停留/完成/超时）
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n) begin
             case (state_d)
                 S_IDLE: assert ((state == S_IDLE) || (state == S1));     // 空闲保持或启动
@@ -72,7 +72,7 @@ module fsm_ctrl_assert #(
 
     // A2 done 前置条件与单拍脉冲：done 仅在 S3 停留满 S3_HOLD 拍时产生，且为单拍
     // 注意：done 与 S3->IDLE 转换同拍置位（done==1 时 state 已为 IDLE），须用上一拍状态/计数校验
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && done) begin
             assert (state_d == S3);               // 上一拍状态必须为 S3
             assert (hold_cnt_d == S3_HOLD);       // 且上一拍停留满
@@ -80,7 +80,7 @@ module fsm_ctrl_assert #(
     end
 
     // done 单拍脉冲：上一拍有效则本拍必须已清除（设计默认清零保证）
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && done_d) begin
             assert (!done);
         end
@@ -88,7 +88,7 @@ module fsm_ctrl_assert #(
 
     // A3 timeout_irq 前置条件：仅在非空闲且步数达超时阈值时产生
     // 注意：timeout_irq 与返回 IDLE 同拍置位，须用上一拍状态/步数校验
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && timeout_irq) begin
             assert (state_d != S_IDLE);
             assert (step_cnt_d >= TIMEOUT);
@@ -96,21 +96,21 @@ module fsm_ctrl_assert #(
     end
 
     // timeout_irq 单拍脉冲：上一拍有效则本拍必须已清除
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && tirq_d) begin
             assert (!timeout_irq);
         end
     end
 
     // done 与 timeout_irq 互斥：完成与超时不得同拍（设计分支互斥，此处留痕）
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && done) begin
             assert (!timeout_irq);
         end
     end
 
     // A4 停留拍数上界：各阶段停留计数不得超过对应 HOLD（0xAA 卡 S1 时 hold 保持不越界）
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n) begin
             case (state)
                 S1: assert (hold_cnt <= S1_HOLD);
@@ -121,14 +121,14 @@ module fsm_ctrl_assert #(
     end
 
     // A5 启动语义：空闲时 start 生效必须进入 S1（非空闲时 start 被忽略，由 A1 合法跳转覆盖）
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && start_d && (state_d == S_IDLE)) begin
             assert (state == S1);
         end
     end
 
     // A6 步进计数单调性：非空闲阶段 step_cnt 每拍 +1；空闲阶段清零
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n) begin
             if (state_d == S_IDLE) begin
                 assert (step_cnt == 6'd0);        // 空闲清零

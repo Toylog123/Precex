@@ -34,7 +34,7 @@ module uart_rx_assert #(
     reg [1:0]        state_d;
     reg [DIV_W-1:0]  baud_cnt_d;
 
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (!rst_n) begin
             state_d   <= S_IDLE;
             baud_cnt_d <= {DIV_W{1'b0}};
@@ -45,21 +45,21 @@ module uart_rx_assert #(
     end
 
     // A1 起始位中点确认：中点在 rxd 为高（毛刺误触发）时，下一状态必须回 IDLE
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && (state_d == S_START) && (baud_cnt_d == (HALF - 1)) && rxd) begin
             assert (state == S_IDLE);
         end
     end
 
     // A2 起始位中点确认：中点在 rxd 为低（真起始位）时，下一状态必须进入 DATA
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && (state_d == S_START) && (baud_cnt_d == (HALF - 1)) && !rxd) begin
             assert (state == S_DATA);
         end
     end
 
     // A3 停止位中点校验：STOP 状态中点采样时 rxd 必须为 1（正常帧）
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && (state == S_STOP) && (baud_cnt == (DIV - 1))) begin
             assert (rxd == 1'b1);
         end
@@ -67,7 +67,7 @@ module uart_rx_assert #(
 
     // A4 状态机跳转合法性（打拍对，含自环）：
     // IDLE->{IDLE,START}, START->{START,DATA,IDLE}, DATA->{DATA,STOP}, STOP->{STOP,IDLE}
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n) begin
             case (state_d)
                 S_IDLE:  assert ((state == S_IDLE)  || (state == S_START));
@@ -79,21 +79,21 @@ module uart_rx_assert #(
     end
 
     // A5 忙标志一致：rx_busy 有效期间不得处于 IDLE
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && rx_busy) begin
             assert (state != S_IDLE);
         end
     end
 
     // A6 帧完成脉冲关联：rx_valid 置位时，上一拍必须处于 STOP（帧刚结束）
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && rx_valid) begin
             assert (state_d == S_STOP);
         end
     end
 
     // A7 数据位计数不越界：DATA 状态内 bit_cnt 恒 < DATA_W
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && (state == S_DATA)) begin
             assert (bit_cnt < DATA_W);
         end

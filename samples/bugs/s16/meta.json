@@ -1,0 +1,21 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s16",
+  "module": "uart_tx",
+  "error_type": "边沿",
+  "error_type_code": "edge",
+  "level": "L3",
+  "inject_line": 65,
+  "inject_desc": "波特率脉冲取反：baud_tick 改 !baud_tick（位节奏错误）",
+  "diff": "- if (baud_tick) begin\n                        baud_cnt <= DIV - 1'b1;\n+ if (!baud_tick) begin\n                        baud_cnt <= DIV - 1'b1;",
+  "hit_assertion": "uart_tx 位周期性质",
+  "golden_source": "rtl/uart_tx/uart_tx.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module uart_tx --error-type edge --sample-id s16",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "verdict": "L3_VALID"
+  }
+}

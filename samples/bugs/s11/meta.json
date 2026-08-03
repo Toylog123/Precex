@@ -1,0 +1,21 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s11",
+  "module": "counter_alu",
+  "error_type": "位宽截断",
+  "error_type_code": "width_trunc",
+  "level": "L3",
+  "inject_line": 39,
+  "inject_desc": "计数器增量 1 改 2（cnt_en 时 +2，击穿 A1 仅使能 +1）",
+  "diff": "- cnt <= cnt + 1'b1;\n+ cnt <= cnt + 2'd2;",
+  "hit_assertion": "counter_alu A1（仅使能自增 1）",
+  "golden_source": "rtl/counter_alu/counter_alu.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module counter_alu --error-type width_trunc --sample-id s11",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "verdict": "L3_VALID"
+  }
+}

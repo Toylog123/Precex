@@ -1,0 +1,21 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s10",
+  "module": "counter_alu",
+  "error_type": "复位",
+  "error_type_code": "reset",
+  "level": "L3",
+  "inject_line": 37,
+  "inject_desc": "计数器复位值 0 改全 1（复位释放后 cnt 非 0，击穿 A3 复位归 0）",
+  "diff": "- cnt <= {DATA_W{1'b0}};\n+ cnt <= {DATA_W{1'b1}};",
+  "hit_assertion": "counter_alu A3（复位释放归 0）",
+  "golden_source": "rtl/counter_alu/counter_alu.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module counter_alu --error-type reset --sample-id s10",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "verdict": "L3_VALID"
+  }
+}

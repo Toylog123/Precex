@@ -50,3 +50,6 @@ Thumbs.db
 
 # 实验运行产物（不入库，复现靠脚本重建）
 experiments/runs/
+
+# sby work dirs (non-sby_ prefix, e.g. gc/)
+samples/**/gc/

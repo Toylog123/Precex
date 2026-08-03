@@ -46,7 +46,7 @@ module counter_alu_assert #(
     endfunction
 
     // 打拍逻辑
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (!rst_n) begin
             rst_n_d   <= 1'b0;
             cnt_en_d  <= 1'b0;
@@ -67,42 +67,42 @@ module counter_alu_assert #(
     end
 
     // A1 计数器仅在使能时自增：上周期使能 → 本周期 cnt 必须等于上周期 cnt + 1（模 2^DATA_W）
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && cnt_en_d) begin
             assert (cnt == cnt_d + 1'b1);
         end
     end
 
     // A2 计数器未使能时保持：上周期未使能 → 本周期 cnt 必须不变（防漏计/多计）
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && !cnt_en_d) begin
             assert (cnt == cnt_d);
         end
     end
 
     // A3 复位释放后归 0：上周期处于复位（rst_n_d==0）且本周期复位释放 → cnt 必须为 0
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && !rst_n_d) begin
             assert (cnt == {DATA_W{1'b0}});
         end
     end
 
     // A4 ALU 输出正确性（打拍比较）：上周期 ALU 组合输出必须等于上周期输入 (op,a,b) 的参考计算结果
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n) begin
             assert (alu_out_d == alu_ref(op_d, a_d, b_d));
         end
     end
 
     // A5 运算选择不越界：op 恒为有效运算（0..OP_NUM-1），非法值由 tb 环境约束不得驱动
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n) begin
             assert (op < OP_NUM);
         end
     end
 
     // A6 计数器满值回绕：上周期 cnt 为全 1 且使能 → 本周期 cnt 必须回绕为 0（模 2^DATA_W）
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin
         if (rst_n && cnt_en_d && (cnt_d == {DATA_W{1'b1}})) begin
             assert (cnt == {DATA_W{1'b0}});
         end

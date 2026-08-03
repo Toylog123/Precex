@@ -1,0 +1,21 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s14",
+  "module": "fifo_sync",
+  "error_type": "位宽截断",
+  "error_type_code": "width_trunc",
+  "level": "L3",
+  "inject_line": 27,
+  "inject_desc": "count 位宽收窄 1 位（count 存满值时截断回绕，击穿 A1/A4 满值与守恒）",
+  "diff": "- reg [CNT_W-1:0]  count;\n+ reg [CNT_W-2:0] count;",
+  "hit_assertion": "fifo_sync A1/A4",
+  "golden_source": "rtl/fifo_sync/fifo_sync.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module fifo_sync --error-type width_trunc --sample-id s14",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "verdict": "L3_VALID"
+  }
+}

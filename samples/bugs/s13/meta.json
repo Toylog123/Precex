@@ -1,0 +1,21 @@
+{
+  "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "s13",
+  "module": "fifo_sync",
+  "error_type": "边界回绕",
+  "error_type_code": "boundary_wrap",
+  "level": "L3",
+  "inject_line": 48,
+  "inject_desc": "写指针不回绕推进：tail <= tail+1 改 tail 保持（同址覆写，数据顺序错乱）",
+  "diff": "- tail      <= tail + 1'b1;\n+ tail      <= tail;",
+  "hit_assertion": "fifo_sync A4/A3 类指针性质",
+  "golden_source": "rtl/fifo_sync/fifo_sync.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module fifo_sync --error-type boundary_wrap --sample-id s13 --line 48",
+  "verification": {
+    "compile_ok": true,
+    "sim_ok": true,
+    "formal_result": "fail",
+    "verdict": "L3_VALID"
+  }
+}

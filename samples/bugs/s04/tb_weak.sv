@@ -35,27 +35,6 @@ module tb_fifo_sync;
         .half_full(half_full)
     );
 
-    // 断言实例：内部信号通过分层引用接入（注意实例名必须为 uut）
-    fifo_sync_assert #(
-        .DATA_W(DATA_W),
-        .DEPTH (DEPTH)
-    ) u_assert (
-        .clk      (clk),
-        .rst_n    (rst_n),
-        .wr_en    (wr_en),
-        .rd_en    (rd_en),
-        .din      (din),
-        .dout     (dout),
-        .full     (full),
-        .empty    (empty),
-        .half_full(half_full),
-        .count    (uut.count),
-        .head     (uut.head),
-        .tail     (uut.tail),
-        .can_wr   (uut.can_wr),
-        .can_rd   (uut.can_rd)
-    );
-
     // 时钟 10ns
     always #5 clk = ~clk;
 
