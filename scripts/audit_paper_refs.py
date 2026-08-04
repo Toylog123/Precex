@@ -3,7 +3,14 @@
 import os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEFAULT_TEX = os.path.join(ROOT, "paper", "manuscript", "precex_paper.tex")
+def _find_tex():
+    for rel in ("paper/manuscript/precex_paper.tex", "manuscript/precex_paper.tex"):
+        p = os.path.join(ROOT, rel)
+        if os.path.isfile(p):
+            return p
+    return os.path.join(ROOT, "paper", "manuscript", "precex_paper.tex")
+
+DEFAULT_TEX = _find_tex()
 
 def check(name, cond, detail=""):
     print(("PASS" if cond else "FAIL") + ": " + name + (" | " + detail if detail else ""))
@@ -30,9 +37,16 @@ def main():
     fails += not check("cites resolve", not missing_c, "missing=%s" % missing_c)
     fails += not check("bibitems cited", not unused, "uncited=%s" % unused)
 
-    imgs = re.findall(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}", tex)
-    bad_imgs = [i for i in imgs if not (os.path.isfile(os.path.join(ROOT, "paper", "manuscript", i))
-                                        or os.path.isfile(os.path.join(ROOT, "paper", "figures", os.path.basename(i))))]
+    imgs = re.findall(r"\\includegraphics(?:\\[[^\\]]*\\])?\\{([^}]+)\\}", tex)
+    def _img_ok(i):
+        cands = [
+            os.path.join(ROOT, "paper", "manuscript", i),
+            os.path.join(ROOT, "paper", "figures", os.path.basename(i)),
+            os.path.join(ROOT, "manuscript", i),
+            os.path.join(ROOT, "figures", os.path.basename(i)),
+        ]
+        return any(os.path.isfile(c) for c in cands)
+    bad_imgs = [i for i in imgs if not _img_ok(i)]
     fails += not check("figures exist", not bad_imgs, "missing=%s" % bad_imgs)
 
     floats = re.findall(r"\\begin\{(figure|table)\*?\}(.*?)\\end\{\1\*?\}", tex, re.S)

@@ -23,6 +23,17 @@ ITEMS = [
     ('scripts/audit_paper_numbers.py', 'verification/audit_paper_numbers.py'),
     ('scripts/audit_paper_refs.py', 'verification/audit_paper_refs.py'),
     ('docs/bmc_depth_spotcheck_slim.json', 'verification/bmc_depth_spotcheck_slim.json'),
+    ('experiments/runs/experiments_results_corrected.json', 'verification/data/experiments_results_corrected.json'),
+    ('experiments/runs/experiments_results_D_clean.json', 'verification/data/experiments_results_D_clean.json'),
+    ('experiments/runs/cross_model_3seeds.json', 'verification/data/cross_model_3seeds.json'),
+    ('experiments/runs/l2_false_positive_analysis.json', 'verification/data/l2_false_positive_analysis.json'),
+    ('experiments/runs/llm_scores/summary.json', 'verification/data/llm_scores/summary.json'),
+    ('experiments/runs/sufficiency_all_strong_d16.json', 'verification/data/sufficiency_all_strong_d16.json'),
+    ('experiments/runs/sufficiency_const_all.json', 'verification/data/sufficiency_const_all.json'),
+    ('experiments/runs/t2_audit_abc.json', 'verification/data/t2_audit_abc.json'),
+    ('experiments/runs/t2_audit_D.json', 'verification/data/t2_audit_D.json'),
+    ('experiments/runs/token_ledger.jsonl', 'verification/data/token_ledger.jsonl'),
+    ('experiments/runs/verify_timing.json', 'verification/data/verify_timing.json'),
 ]
 
 
@@ -65,7 +76,7 @@ def main():
             f.write('| cover_letter.md | 投稿信草稿 |\n')
             f.write('| submission_checklist.md | 投稿包清单 |\n')
             f.write('| review_risk_response.md | 评审风险预案 |\n')
-            f.write('| verification/ | 数字终审 + 引用审计 + BMC 深度抽查 |\n\n')
+            f.write('| verification/ | 数字终审 + 引用审计 + BMC 深度抽查 + 数据 |\n\n')
             f.write('## 冻结前置条件（需用户确认）\n\n1. 作者单位\n2. 目标期刊\n3. 人工可解释性评分（可选）\n\n确认后运行重新生成即完成冻结。\n')
         print('README.md written')
 

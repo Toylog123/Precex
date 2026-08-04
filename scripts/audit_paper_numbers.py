@@ -1,10 +1,29 @@
 # -*- coding: utf-8 -*-
 import json, collections, os, sys
 
-os.chdir("D:/BaiduSyncdisk/02_Precex")
+import argparse
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_PKG_DATA = os.path.join(_SCRIPT_DIR, "data")
+_DEFAULT_ROOT = _PKG_DATA if os.path.isdir(_PKG_DATA) else os.path.dirname(_SCRIPT_DIR)
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--data-root", default=_DEFAULT_ROOT)
+_args = _ap.parse_args()
+os.chdir(_args.data_root)
 
 def load(p):
-    with open(p, encoding="utf-8") as f:
+    # p 形如 experiments/runs/xxx；兼容两种 data-root：
+    #   仓库根（data-root/experiments/runs/xxx 存在）与投稿包 data 目录（data-root/xxx 存在）
+    cands = [p]
+    if p.startswith("experiments/runs/"):
+        cands.insert(0, p[len("experiments/runs/"):])
+    last = None
+    for c in cands:
+        if os.path.isfile(c):
+            last = c
+            break
+    if last is None:
+        raise FileNotFoundError(cands[0])
+    with open(last, encoding="utf-8") as f:
         return json.load(f)
 
 fails = []
@@ -69,7 +88,10 @@ check("t2 abc 306 pass", t2a["n"] == 306 and t2a["t2_pass"] == 306 and t2a["t2_f
 check("t2 D pass", t2d["t2_pass"] == 102 and t2d["t2_fail"] == 0)
 
 # 6. ledger
-rows = [json.loads(l) for l in open("experiments/runs/token_ledger.jsonl", encoding="utf-8") if l.strip()]
+_ledger_path = "experiments/runs/token_ledger.jsonl"
+if not os.path.isfile(_ledger_path):
+    _ledger_path = "token_ledger.jsonl"
+rows = [json.loads(l) for l in open(_ledger_path, encoding="utf-8") if l.strip()]
 led_cost = sum(float(r.get("cost_usd", r.get("cost")) or 0) for r in rows)
 check("ledger n=1519", len(rows) == 1519, "got %d" % len(rows))
 check("ledger cost 18.48", abs(led_cost-18.48) < 0.01, "got %.3f" % led_cost)
