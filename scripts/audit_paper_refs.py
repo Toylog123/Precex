@@ -10,7 +10,15 @@ def _find_tex():
             return p
     return os.path.join(ROOT, "paper", "manuscript", "precex_paper.tex")
 
+def _find_abstract_en():
+    for rel in ("paper/manuscript/abstract_en.tex", "manuscript/abstract_en.tex"):
+        p = os.path.join(ROOT, rel)
+        if os.path.isfile(p):
+            return p
+    return os.path.join(ROOT, "paper", "manuscript", "abstract_en.tex")
+
 DEFAULT_TEX = _find_tex()
+DEFAULT_EN = _find_abstract_en()
 
 def check(name, cond, detail=""):
     print(("PASS" if cond else "FAIL") + ": " + name + (" | " + detail if detail else ""))
@@ -18,7 +26,9 @@ def check(name, cond, detail=""):
 
 def main():
     tex_path = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_TEX
+    en_path = sys.argv[2] if len(sys.argv) > 2 else DEFAULT_EN
     tex = open(os.path.abspath(tex_path), encoding="utf-8").read()
+    en = open(os.path.abspath(en_path), encoding="utf-8").read()
     fails = 0
 
     labels = re.findall(r"\\label\{([^}]+)\}", tex)
@@ -37,7 +47,7 @@ def main():
     fails += not check("cites resolve", not missing_c, "missing=%s" % missing_c)
     fails += not check("bibitems cited", not unused, "uncited=%s" % unused)
 
-    imgs = re.findall(r"\\includegraphics(?:\\[[^\\]]*\\])?\\{([^}]+)\\}", tex)
+    imgs = re.findall(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}", tex)
     def _img_ok(i):
         cands = [
             os.path.join(ROOT, "paper", "manuscript", i),
@@ -73,13 +83,32 @@ def main():
             bare_pct.append(i)
     fails += not check("no bare % in body", not bare_pct, "lines=%s" % bare_pct)
 
+    # 6) abstract cn/en key numbers consistent
+    pairs = [
+        ("408", "408"),
+        ("61\\.8", "61\\.8"),
+        ("47\\.1", "47\\.1"),
+        ("49\\.0", "49\\.0"),
+        ("88\\.5", "88\\.5"),
+        ("81\\.8", "81\\.8"),
+        ("91\\.7", "91\\.7"),
+        ("306", "306"),
+        ("78", "78"),
+        ("43", "43"),
+    ]
+    mism = []
+    for cn, e in pairs:
+        has_c = re.search(cn, tex) is not None
+        has_e = re.search(e, en) is not None
+        if has_c != has_e:
+            mism.append(cn + " cn=" + str(has_c) + " en=" + str(has_e))
+    fails += not check("abstract cn/en key numbers consistent", not mism, "mism=%s" % mism)
 
     print()
-    print("summary: labels=%d refs=%d cites=%d figures=%d floats=%d" % (
+    print("summary: labels=%d refs=%d cites=%d figures=%d floats=%d + abstract_en sync" % (
         len(labels), len(set(refs)), len(set(cite_keys)), len(imgs), len(floats)))
     print("TOTAL FAILS:", fails)
     sys.exit(1 if fails else 0)
 
 if __name__ == "__main__":
     main()
-
