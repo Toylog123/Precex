@@ -1,0 +1,2189 @@
+{
+ "n": 105,
+ "with_diff": 102,
+ "t2_pass": 102,
+ "t2_fail": 0,
+ "results": [
+  {
+   "sample": "s04",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    39
+   ],
+   "loc_line": 39,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DEPTH",
+    "count",
+    "half_full"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s04",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    39
+   ],
+   "loc_line": 39,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DEPTH",
+    "count",
+    "half_full"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s04",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    39
+   ],
+   "loc_line": 39,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DEPTH",
+    "count",
+    "half_full"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s05",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    30
+   ],
+   "loc_line": 30,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "can_wr",
+    "full",
+    "wr_en"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s05",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    30
+   ],
+   "loc_line": 30,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "can_wr",
+    "full",
+    "wr_en"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s05",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    34
+   ],
+   "loc_line": 34,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "can_wr",
+    "full",
+    "wr_en"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s06",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    38
+   ],
+   "loc_line": 38,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b1",
+    "count",
+    "empty"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s06",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    38
+   ],
+   "loc_line": 38,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "CNT_W",
+    "b0",
+    "b1",
+    "count",
+    "empty"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s06",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    38
+   ],
+   "loc_line": 38,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "CNT_W",
+    "b0",
+    "b1",
+    "count",
+    "empty"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s07",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    48
+   ],
+   "loc_line": 48,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "A6",
+    "d0",
+    "step_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s07",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    43
+   ],
+   "loc_line": 43,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "d0",
+    "step_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s07",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    47
+   ],
+   "loc_line": 47,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "d0",
+    "step_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s08",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    62
+   ],
+   "loc_line": 63,
+   "loc_dev": 1,
+   "changed_sigs": [
+    "S2",
+    "S3",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s08",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    58
+   ],
+   "loc_line": 58,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "S2",
+    "S3",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s08",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    60
+   ],
+   "loc_line": 63,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "S2",
+    "S3",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s09",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    47
+   ],
+   "loc_line": 50,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "S1",
+    "S2",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s09",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    50
+   ],
+   "loc_line": 50,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "S1",
+    "S2",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s09",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    47
+   ],
+   "loc_line": 50,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "S1",
+    "S2",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s10",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    37
+   ],
+   "loc_line": 37,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DATA_W",
+    "b0",
+    "b1",
+    "cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s10",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    40
+   ],
+   "loc_line": 40,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DATA_W",
+    "b0",
+    "b1",
+    "cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s10",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    37
+   ],
+   "loc_line": 37,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DATA_W",
+    "b0",
+    "b1",
+    "cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s11",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    43
+   ],
+   "loc_line": 43,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "cnt",
+    "d1",
+    "d2"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s11",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    43
+   ],
+   "loc_line": 43,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b1",
+    "cnt",
+    "d2"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s11",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    43
+   ],
+   "loc_line": 43,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b1",
+    "cnt",
+    "d2"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s12",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    41
+   ],
+   "loc_line": 44,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "ADDR_W",
+    "b0",
+    "b1",
+    "head"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s12",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    41
+   ],
+   "loc_line": 44,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "ADDR_W",
+    "b0",
+    "b1",
+    "head"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s12",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    40
+   ],
+   "loc_line": 40,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "ADDR_W",
+    "b0",
+    "b1",
+    "head"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s13",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    50
+   ],
+   "loc_line": 52,
+   "loc_dev": 2,
+   "changed_sigs": [
+    "b1",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s13",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    48
+   ],
+   "loc_line": 48,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b1",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s13",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    49
+   ],
+   "loc_line": 52,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "b1",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s14",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    31
+   ],
+   "loc_line": 31,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "CNT_W",
+    "count"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s14",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    31
+   ],
+   "loc_line": 31,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "CNT_W",
+    "count"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s14",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    31
+   ],
+   "loc_line": 31,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "CNT_W",
+    "count"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s15",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    54
+   ],
+   "loc_line": 54,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b0",
+    "txd"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s15",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    54
+   ],
+   "loc_line": 57,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "START",
+    "b0",
+    "txd"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s15",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    57
+   ],
+   "loc_line": 57,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b0",
+    "txd"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s16",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    69
+   ],
+   "loc_line": 69,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "baud_tick"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s16",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    69
+   ],
+   "loc_line": 69,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "baud_tick"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s16",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    69
+   ],
+   "loc_line": 69,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "baud_tick"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s17",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    116
+   ],
+   "loc_line": 116,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "BUG",
+    "BVALID",
+    "S_AXI_BVALID",
+    "b0"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s17",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    122
+   ],
+   "loc_line": 123,
+   "loc_dev": 1,
+   "changed_sigs": [
+    "BUG",
+    "BVALID",
+    "S_AXI_BVALID",
+    "b0"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s17",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    121
+   ],
+   "loc_line": 116,
+   "loc_dev": 5,
+   "changed_sigs": [
+    "BUG",
+    "BVALID",
+    "S_AXI_BVALID",
+    "b0"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s18",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    47
+   ],
+   "loc_line": 50,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "S_DATA",
+    "S_START",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s18",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    58
+   ],
+   "loc_line": 58,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "S_DATA",
+    "S_START",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s18",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    50
+   ],
+   "loc_line": 53,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "S_DATA",
+    "S_START",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s19",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    59
+   ],
+   "loc_line": 60,
+   "loc_dev": 1,
+   "changed_sigs": [
+    "can_rd",
+    "can_wr",
+    "count"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s19",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    59
+   ],
+   "loc_line": 60,
+   "loc_dev": 1,
+   "changed_sigs": [
+    "can_rd",
+    "can_wr",
+    "count"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s19",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    60
+   ],
+   "loc_line": 60,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "can_rd",
+    "can_wr"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s20",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    52
+   ],
+   "loc_line": 52,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b1",
+    "d2",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s20",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    49
+   ],
+   "loc_line": 52,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "b1",
+    "d2",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s20",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    52
+   ],
+   "loc_line": 52,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b1",
+    "d2",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s21",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    30
+   ],
+   "loc_line": 31,
+   "loc_dev": 1,
+   "changed_sigs": [
+    "can_rd",
+    "empty",
+    "rd_en"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s21",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    35
+   ],
+   "loc_line": 35,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "can_rd",
+    "empty",
+    "rd_en"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s21",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    35
+   ],
+   "loc_line": 35,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "can_rd",
+    "empty",
+    "rd_en"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s22",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    39
+   ],
+   "loc_line": 39,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "ADDR_W",
+    "b0",
+    "b1",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s22",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    45
+   ],
+   "loc_line": 45,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "ADDR_W",
+    "b0",
+    "b1",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s22",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    45
+   ],
+   "loc_line": 45,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "ADDR_W",
+    "b0",
+    "b1",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s23",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    34
+   ],
+   "loc_line": 34,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "can_wr",
+    "full",
+    "wr_en"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s23",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    34
+   ],
+   "loc_line": 34,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "can_wr",
+    "full",
+    "wr_en"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s23",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    34
+   ],
+   "loc_line": 34,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "can_wr",
+    "full",
+    "wr_en"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s24",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    57
+   ],
+   "loc_line": 57,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "TIMEOUT",
+    "b1",
+    "step_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s24",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    53
+   ],
+   "loc_line": 53,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "TIMEOUT",
+    "b1",
+    "step_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s24",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    54
+   ],
+   "loc_line": 57,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "TIMEOUT",
+    "b1",
+    "step_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s25",
+   "setting": "D",
+   "seed": 0,
+   "no_diff": true,
+   "t2_pass": null,
+   "issues": []
+  },
+  {
+   "sample": "s25",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    136
+   ],
+   "loc_line": 138,
+   "loc_dev": 2,
+   "changed_sigs": [
+    "S_AXI_RVALID",
+    "b0",
+    "b1"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s25",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    135
+   ],
+   "loc_line": 138,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "S_AXI_RVALID",
+    "b0",
+    "b1"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s25",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    138
+   ],
+   "loc_line": 138,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "S_AXI_RVALID",
+    "b0",
+    "b1"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s26",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    44
+   ],
+   "loc_line": 47,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "b0",
+    "b1",
+    "rx_busy"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s26",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    48
+   ],
+   "loc_line": 48,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b0",
+    "b1",
+    "rx_busy"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s26",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    48
+   ],
+   "loc_line": 48,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b0",
+    "b1",
+    "rx_busy"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s27",
+   "setting": "D",
+   "seed": 0,
+   "no_diff": true,
+   "t2_pass": null,
+   "issues": []
+  },
+  {
+   "sample": "s27",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    100
+   ],
+   "loc_line": 103,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "ADDR_W",
+    "S_AXI_AWADDR",
+    "case"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s27",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    104
+   ],
+   "loc_line": 104,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "ADDR_W",
+    "S_AXI_AWADDR",
+    "case"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s27",
+   "setting": "D",
+   "seed": 2,
+   "no_diff": true,
+   "t2_pass": null,
+   "issues": []
+  },
+  {
+   "sample": "s27",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    104
+   ],
+   "loc_line": 104,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "ADDR_W",
+    "S_AXI_AWADDR",
+    "case"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s28",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    47
+   ],
+   "loc_line": 47,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DATA_W",
+    "reg0",
+    "reg1",
+    "reg2",
+    "reg3"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s28",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    47
+   ],
+   "loc_line": 47,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DATA_W",
+    "reg0",
+    "reg1",
+    "reg2",
+    "reg3"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s28",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    47
+   ],
+   "loc_line": 47,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DATA_W",
+    "reg0",
+    "reg1",
+    "reg2",
+    "reg3"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s29",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    49
+   ],
+   "loc_line": 49,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b1",
+    "can_wr",
+    "din",
+    "mem",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s29",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    49
+   ],
+   "loc_line": 50,
+   "loc_dev": 1,
+   "changed_sigs": [
+    "b1",
+    "can_wr",
+    "din",
+    "head",
+    "mem",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s29",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    46
+   ],
+   "loc_line": 50,
+   "loc_dev": 4,
+   "changed_sigs": [
+    "b1",
+    "can_wr",
+    "din",
+    "mem",
+    "tail"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s30",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    40
+   ],
+   "loc_line": 40,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "d0",
+    "d1",
+    "step_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s30",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    36
+   ],
+   "loc_line": 36,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "d0",
+    "d1",
+    "step_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s30",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    40
+   ],
+   "loc_line": 40,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "d0",
+    "d1",
+    "step_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s31",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    32
+   ],
+   "loc_line": 32,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DATA_W",
+    "OP_ADD",
+    "alu_out",
+    "op"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s31",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    32
+   ],
+   "loc_line": 32,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DATA_W",
+    "OP_ADD",
+    "alu_out",
+    "op"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s31",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    32
+   ],
+   "loc_line": 32,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "DATA_W",
+    "OP_ADD",
+    "alu_out",
+    "op"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s32",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    43
+   ],
+   "loc_line": 43,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b1",
+    "cnt",
+    "d0",
+    "d8"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s32",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    42
+   ],
+   "loc_line": 43,
+   "loc_dev": 1,
+   "changed_sigs": [
+    "b1",
+    "cnt",
+    "d0",
+    "d8"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s32",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    43
+   ],
+   "loc_line": 43,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "b1",
+    "cnt",
+    "d0",
+    "d8"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s33",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    114
+   ],
+   "loc_line": 118,
+   "loc_dev": 4,
+   "changed_sigs": [
+    "S_AXI_BVALID",
+    "aw_done",
+    "w_done"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s33",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    118
+   ],
+   "loc_line": 118,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "S_AXI_BVALID",
+    "aw_done",
+    "w_done"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s33",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    115
+   ],
+   "loc_line": 117,
+   "loc_dev": 2,
+   "changed_sigs": [
+    "S_AXI_BVALID",
+    "aw_done",
+    "w_done"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s34",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    148
+   ],
+   "loc_line": 148,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "ADDR_W",
+    "S_AXI_ARADDR",
+    "case"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s34",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    148
+   ],
+   "loc_line": 148,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "ADDR_W",
+    "S_AXI_ARADDR",
+    "case"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s34",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    144
+   ],
+   "loc_line": 144,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "ADDR_W",
+    "S_AXI_ARADDR",
+    "case"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s35",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    78
+   ],
+   "loc_line": 78,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "S_IDLE",
+    "S_STOP",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s35",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    83
+   ],
+   "loc_line": 83,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "S_IDLE",
+    "S_STOP",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s35",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    77
+   ],
+   "loc_line": 83,
+   "loc_dev": 6,
+   "changed_sigs": [
+    "S_IDLE",
+    "S_STOP",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s36",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    67
+   ],
+   "loc_line": 67,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "S_DATA",
+    "S_STOP",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s36",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    69
+   ],
+   "loc_line": 72,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "S_DATA",
+    "S_STOP",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s36",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    65
+   ],
+   "loc_line": 67,
+   "loc_dev": 2,
+   "changed_sigs": [
+    "S_DATA",
+    "S_STOP",
+    "state"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s37",
+   "setting": "D",
+   "seed": 0,
+   "hunks": 1,
+   "hunk_locs": [
+    60
+   ],
+   "loc_line": 60,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "HALF",
+    "baud_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s37",
+   "setting": "D",
+   "seed": 1,
+   "hunks": 1,
+   "hunk_locs": [
+    64
+   ],
+   "loc_line": 64,
+   "loc_dev": 0,
+   "changed_sigs": [
+    "HALF",
+    "baud_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  },
+  {
+   "sample": "s37",
+   "setting": "D",
+   "seed": 2,
+   "hunks": 1,
+   "hunk_locs": [
+    63
+   ],
+   "loc_line": 66,
+   "loc_dev": 3,
+   "changed_sigs": [
+    "HALF",
+    "baud_cnt"
+   ],
+   "interface_ok": true,
+   "assertion_ok": true,
+   "loop_ok": true,
+   "t2_pass": true,
+   "issues": []
+  }
+ ]
+}

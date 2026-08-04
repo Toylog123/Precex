@@ -1,0 +1,1093 @@
+[
+  {
+    "sample": "s28",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 4,
+      "readability": 3,
+      "causality": 3,
+      "actionability": 4,
+      "trustworthiness": 4
+    },
+    "loc_line": 43,
+    "loc_top1": false,
+    "true_line": 47,
+    "signals": [
+      "reg0",
+      "wdata_d",
+      "S_AXI_WDATA"
+    ],
+    "reason": "证据显示寄存器位宽为31位（DATA_W-1），写入32位数据时最高位被截断，导致A7断言失败，缺陷位于寄存器声明行43。",
+    "input_tokens": 15164,
+    "output_tokens": 111,
+    "cost": 0.00215404,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s28",
+    "setting": "C",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 4,
+      "readability": 2,
+      "causality": 3,
+      "actionability": 4,
+      "trustworthiness": 3
+    },
+    "loc_line": 43,
+    "loc_top1": false,
+    "true_line": 47,
+    "signals": [
+      "reg0",
+      "reg1",
+      "reg2",
+      "reg3",
+      "wdata_d",
+      "waddr_d",
+      "wstrb_d"
+    ],
+    "reason": "证据显示reg0-reg3声明为[DATA_W-2:0]（31位）位宽截断，cycle3写入0x1000地址(对应reg2)后S_AXI_RDATA高位丢失，触发A6/A7失效，故障根因在寄存器位宽声明行43。",
+    "input_tokens": 14573,
+    "output_tokens": 154,
+    "cost": 0.009113399999999999,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s28",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 43,
+    "loc_top1": false,
+    "true_line": 47,
+    "signals": [
+      "reg0",
+      "reg1",
+      "reg2",
+      "reg3",
+      "S_AXI_RDATA",
+      "S_AXI_WDATA"
+    ],
+    "reason": "证据显示寄存器位宽为31位（DATA_W-1），而数据总线为32位，导致高位截断，与A6/A7断言失败一致，缺陷位于寄存器声明行43。",
+    "input_tokens": 8868,
+    "output_tokens": 129,
+    "cost": 0.0012776400000000002,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s28",
+    "setting": "D",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 3,
+      "trustworthiness": 2
+    },
+    "loc_line": 43,
+    "loc_top1": false,
+    "true_line": 47,
+    "signals": [
+      "reg0",
+      "reg1",
+      "reg2",
+      "reg3"
+    ],
+    "reason": "证据展示了A7写数据生效断言触发（reg0与wdata_d不等），但因果链仅列出全模块信号未做剪枝，根因节点过多且无显式因果箭头，触发条件指向reg0但实际缺陷在reg0-3位宽声明（[DATA_W-2:0]）需结合代码自行定位。",
+    "input_tokens": 8488,
+    "output_tokens": 147,
+    "cost": 0.0054456,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s31",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 28,
+    "loc_top1": false,
+    "true_line": 32,
+    "signals": [
+      "alu_out",
+      "op",
+      "a",
+      "b"
+    ],
+    "reason": "证据显示A4断言在op=0时alu_out_d与参考不符，但周期表未直接展示alu_out_d值，因果链不完整；结合设计代码中op==OP_ADD分支误用减法，可推断缺陷在ALU赋值行28。",
+    "input_tokens": 6706,
+    "output_tokens": 126,
+    "cost": 0.0009741200000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s31",
+    "setting": "C",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 1,
+      "actionability": 1,
+      "trustworthiness": 1
+    },
+    "loc_line": 51,
+    "loc_top1": false,
+    "true_line": 32,
+    "signals": [
+      "op",
+      "alu_out",
+      "alu_out_d",
+      "a",
+      "b"
+    ],
+    "reason": "证据将失败归到A3复位断言（cnt==0）但实际缺陷为ALU ADD分支误写为(a-b)，证据未呈现op==ADD时alu_out错误导致的A4失效因果链，无法据此定位ALU译码行。",
+    "input_tokens": 6536,
+    "output_tokens": 128,
+    "cost": 0.0042288000000000004,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s31",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 28,
+    "loc_top1": false,
+    "true_line": 32,
+    "signals": [
+      "alu_out",
+      "op",
+      "a",
+      "b"
+    ],
+    "reason": "证据显示A4在cyc4失败，alu_out_d为0但参考应为a_d+b_d=2+2=4，且alu_out在cyc3为0，指向ALU输出错误，结合设计代码中op==OP_ADD分支误用减法，定位到第28行。",
+    "input_tokens": 4612,
+    "output_tokens": 134,
+    "cost": 0.0006832,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s31",
+    "setting": "D",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 2
+    },
+    "loc_line": 40,
+    "loc_top1": false,
+    "true_line": 32,
+    "signals": [
+      "op",
+      "alu_out"
+    ],
+    "reason": "证据中根因节点未突出 ALU 运算译码，触发条件过于泛化（cnt==0），但因果链轨迹显示 cyc2 时 op=000 应做加法而 alu_out=0 异常，结合代码可知缺陷在 OP_ADD 分支错写为减法的 assign 行。",
+    "input_tokens": 4479,
+    "output_tokens": 127,
+    "cost": 0.0029922000000000004,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s14",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 27,
+    "loc_top1": false,
+    "true_line": 31,
+    "signals": [
+      "count"
+    ],
+    "reason": "证据显示count位宽截断导致满值回绕，但因果链不完整，行号推断基于位宽截断特征。",
+    "input_tokens": 9060,
+    "output_tokens": 89,
+    "cost": 0.0012933200000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s14",
+    "setting": "C",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 2
+    },
+    "loc_line": 27,
+    "loc_top1": false,
+    "true_line": 31,
+    "signals": [
+      "count"
+    ],
+    "reason": "证据提供状态轨迹显示count从111回绕到000（满值截断），但failed_line=143对应A3指针检查而非真正根因，且缺乏对count位宽声明的指认，根因因果链需结合代码自行推断。",
+    "input_tokens": 8755,
+    "output_tokens": 113,
+    "cost": 0.0055242,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s14",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 27,
+    "loc_top1": false,
+    "true_line": 31,
+    "signals": [
+      "count"
+    ],
+    "reason": "证据显示count位宽为3位（CNT_W-1），在cyc10从111回绕到000，导致A4断言失败，根因是count位宽截断，对应设计第27行声明。",
+    "input_tokens": 5410,
+    "output_tokens": 108,
+    "cost": 0.0007876400000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s14",
+    "setting": "D",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 2
+    },
+    "loc_line": 34,
+    "loc_top1": false,
+    "true_line": 31,
+    "signals": [
+      "count",
+      "count_d",
+      "CNT_W"
+    ],
+    "reason": "证据仅列出根因节点清单和波形轨迹，但未给出明确的失效断言指认和因果链推导；波形中count仅3位且在cyc9='111'后cyc10回绕为'000'，提示count位宽截断缺陷，但证据未直接定位到行号34的count寄存器声明或位宽常量，需自行推断。",
+    "input_tokens": 5294,
+    "output_tokens": 144,
+    "cost": 0.003522,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s09",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 45,
+    "loc_top1": false,
+    "true_line": 49,
+    "signals": [
+      "state",
+      "start",
+      "S2"
+    ],
+    "reason": "证据显示启动后状态跳至S2而非S1，且A5断言失败，缺陷位于IDLE分支的state赋值，最可能行45。",
+    "input_tokens": 8563,
+    "output_tokens": 100,
+    "cost": 0.0012268200000000002,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s09",
+    "setting": "C",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": null,
+      "actionability": 2,
+      "trustworthiness": 2
+    },
+    "loc_line": 45,
+    "loc_top1": false,
+    "true_line": 49,
+    "signals": [
+      "state",
+      "start",
+      "state_d",
+      "start_d"
+    ],
+    "reason": "证据给出了IDLE收到start后state直接跳到10(S2)而非01(S1)的状态轨迹，但failed_line=196（位于A4 hold_cnt上界断言）与真实根因IDLE分支启动目标跳转不匹配，且trigger_condition/trigger_condition标注错误指向A4，故因果链断裂、可操作性差。",
+    "input_tokens": 8230,
+    "output_tokens": 138,
+    "cost": 0.0052692,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s09",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 45,
+    "loc_top1": false,
+    "true_line": 49,
+    "signals": [
+      "state",
+      "start",
+      "state_d"
+    ],
+    "reason": "因果图显示IDLE启动后进入S2而非S1，直接指向S_IDLE分支中state<=S2的赋值，即第45行。",
+    "input_tokens": 5185,
+    "output_tokens": 100,
+    "cost": 0.0007539000000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s09",
+    "setting": "D",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 3,
+      "readability": 3,
+      "causality": 3,
+      "actionability": 4,
+      "trustworthiness": 3
+    },
+    "loc_line": 45,
+    "loc_top1": false,
+    "true_line": 49,
+    "signals": [
+      "state",
+      "start",
+      "hold_cnt"
+    ],
+    "reason": "证据中cyc2→cyc3显示start在IDLE有效后state直接变为S2(10)而非S1，与A5启动语义断言一致，触发条件hold_cnt<=S1_HOLD与IDLE分支赋值矛盾，可定位到S_IDLE分支中state<=S2的注入缺陷行。",
+    "input_tokens": 5000,
+    "output_tokens": 134,
+    "cost": 0.0033216,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s26",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 44,
+    "loc_top1": false,
+    "true_line": 48,
+    "signals": [
+      "rx_busy"
+    ],
+    "reason": "证据显示复位后rx_busy为1且状态为IDLE，与A5冲突，缺陷位于复位分支中rx_busy赋值。",
+    "input_tokens": 5862,
+    "output_tokens": 95,
+    "cost": 0.0008472800000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s26",
+    "setting": "C",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 2
+    },
+    "loc_line": 44,
+    "loc_top1": false,
+    "true_line": 48,
+    "signals": [
+      "rx_busy",
+      "state",
+      "rst_n"
+    ],
+    "reason": "证据中reset分支将rx_busy初始化为1（cycle1 rx_busy=1而state=IDLE），符合A5失效，但failed_line=160指向A4断言且state_trace在cycle3显示state=S_START而rx_busy仍=1，证据自相矛盾、cycle_event含大量anyinit噪声且未呈现复位→IDLE+rx_busy=1的因果链。",
+    "input_tokens": 5663,
+    "output_tokens": 154,
+    "cost": 0.0037673999999999997,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s26",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 44,
+    "loc_top1": false,
+    "true_line": 48,
+    "signals": [
+      "rx_busy"
+    ],
+    "reason": "证据显示复位后rx_busy为1且状态为IDLE，直接指向复位分支中rx_busy赋值错误（行44）。",
+    "input_tokens": 4134,
+    "output_tokens": 94,
+    "cost": 0.0006050800000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s26",
+    "setting": "D",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 1,
+      "actionability": 2,
+      "trustworthiness": 2
+    },
+    "loc_line": 44,
+    "loc_top1": false,
+    "true_line": 48,
+    "signals": [
+      "rx_busy",
+      "state",
+      "rst_n"
+    ],
+    "reason": "证据显示复位后rx_busy=1而state=IDLE，触发A5，但causality未给出从rst_n低到rx_busy置位的复位分支，因果链不完整且含null噪声，但结合代码可定位到复位分支中rx_busy<=1'b1的注入行。",
+    "input_tokens": 3994,
+    "output_tokens": 134,
+    "cost": 0.002718,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s15",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 57,
+    "loc_top1": false,
+    "true_line": 61,
+    "signals": [
+      "txd",
+      "state",
+      "tx_start"
+    ],
+    "reason": "证据显示在START状态txd保持高电平，但未直接指出缺失的赋值语句，需结合设计推断缺陷在S_IDLE分支中未拉低txd。",
+    "input_tokens": 6617,
+    "output_tokens": 105,
+    "cost": 0.00095578,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s15",
+    "setting": "C",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 2
+    },
+    "loc_line": 71,
+    "loc_top1": false,
+    "true_line": 61,
+    "signals": [
+      "state",
+      "txd",
+      "tx_start",
+      "tx_busy"
+    ],
+    "reason": "证据显示 state 在 cycle 3 进入 S_START(01) 但 txd 仍为 1（cycle 4 才被前一周期的 state_d 路径拉低），与 S_IDLE 分支未在 tx_start 当拍立即驱动 txd<-0 的注入缺陷一致，指向 S_IDLE 分支 txd<=1 的冗余 else 路径（行 71 一带）。",
+    "input_tokens": 6377,
+    "output_tokens": 156,
+    "cost": 0.0042006,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s15",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 57,
+    "loc_top1": false,
+    "true_line": 61,
+    "signals": [
+      "txd",
+      "state",
+      "tx_start"
+    ],
+    "reason": "证据显示在START状态txd保持高，与A1冲突，根因指向S_IDLE中未在tx_start时拉低txd，即第57行附近。",
+    "input_tokens": 3858,
+    "output_tokens": 106,
+    "cost": 0.0005698,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s15",
+    "setting": "D",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 3,
+      "readability": 3,
+      "causality": 4,
+      "actionability": 4,
+      "trustworthiness": 3
+    },
+    "loc_line": 57,
+    "loc_top1": false,
+    "true_line": 61,
+    "signals": [
+      "state",
+      "txd",
+      "tx_start"
+    ],
+    "reason": "证据显示cyc3进入S_START但txd仍为1（cyc4才拉低），根因是S_IDLE→S_START跳转时未同时将txd置0，指向S_IDLE分支缺少txd<=0的赋值（行57附近）。",
+    "input_tokens": 3731,
+    "output_tokens": 126,
+    "cost": 0.002541,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s17",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 3,
+      "actionability": 3,
+      "trustworthiness": 3
+    },
+    "loc_line": 116,
+    "loc_top1": false,
+    "true_line": 120,
+    "signals": [
+      "S_AXI_BVALID",
+      "S_AXI_BREADY",
+      "aw_done",
+      "w_done"
+    ],
+    "reason": "证据显示BVALID在BREADY为高后仍保持有效，且aw_done/w_done已释放，指向写响应通道BVALID释放分支缺失（约行116）。",
+    "input_tokens": 14986,
+    "output_tokens": 121,
+    "cost": 0.0021319200000000007,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s17",
+    "setting": "C",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 3,
+      "readability": 3,
+      "causality": 4,
+      "actionability": 4,
+      "trustworthiness": 3
+    },
+    "loc_line": 134,
+    "loc_top1": false,
+    "true_line": 120,
+    "signals": [
+      "S_AXI_BVALID",
+      "S_AXI_BREADY",
+      "aw_done",
+      "w_done"
+    ],
+    "reason": "证据显示 BVALID 在 cycle5 因 BREADY 下降而未释放，符合设计注释中已删除的 BVALID<=0 分支（写响应不释放导致握手保持），对应 B 通道响应 always 块中缺失的清零分支。trigger_condition 写为 !S_AXI_WREADY 与文本说明略有出入，但故障锥、周期轨迹与状态序列清晰指向写响应释放逻辑缺失。",
+    "input_tokens": 14416,
+    "output_tokens": 164,
+    "cost": 0.009043200000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s17",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 116,
+    "loc_top1": false,
+    "true_line": 120,
+    "signals": [
+      "S_AXI_BVALID",
+      "S_AXI_BREADY"
+    ],
+    "reason": "证据显示BVALID在BREADY为高时仍保持有效，且因果链中aw_done/w_done在cyc4后清零但BVALID未释放，指向写响应通道的释放分支缺失，最可能缺陷行是BVALID释放分支被注释掉的行。",
+    "input_tokens": 9156,
+    "output_tokens": 132,
+    "cost": 0.0013188000000000002,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s17",
+    "setting": "D",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 1,
+      "actionability": 1,
+      "trustworthiness": 2
+    },
+    "loc_line": 117,
+    "loc_top1": false,
+    "true_line": 120,
+    "signals": [
+      "S_AXI_BVALID"
+    ],
+    "reason": "证据未标注具体失败断言（A1-A8），根因节点覆盖所有信号缺乏聚焦，触发条件仅写!WREADY与BVALID未释放无直接关联，无法定位到BVALID释放分支被注释的具体行。",
+    "input_tokens": 8759,
+    "output_tokens": 111,
+    "cost": 0.0055217999999999995,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s11",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 3,
+      "trustworthiness": 3
+    },
+    "loc_line": 96,
+    "loc_top1": false,
+    "true_line": 43,
+    "signals": [
+      "cnt",
+      "cnt_d",
+      "cnt_en_d"
+    ],
+    "reason": "证据显示cnt在使能后从0变为2而非1，且failed_line为96，指向计数器自增逻辑（cnt <= cnt + 2'd2）而非断言行。",
+    "input_tokens": 6849,
+    "output_tokens": 108,
+    "cost": 0.0009891000000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s11",
+    "setting": "C",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 4,
+      "readability": 3,
+      "causality": null,
+      "actionability": 4,
+      "trustworthiness": 3
+    },
+    "loc_line": 66,
+    "loc_top1": false,
+    "true_line": 43,
+    "signals": [
+      "cnt",
+      "cnt_d",
+      "cnt_en",
+      "cnt_en_d"
+    ],
+    "reason": "证据显示cycle3时cnt_en_d=1但cnt从0跳到2而非1，根因在计数器自增always块中cnt+1被改为cnt+2，对应代码行66",
+    "input_tokens": 6668,
+    "output_tokens": 115,
+    "cost": 0.004276799999999999,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s11",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 39,
+    "loc_top1": false,
+    "true_line": 43,
+    "signals": [
+      "cnt",
+      "cnt_d",
+      "cnt_en_d"
+    ],
+    "reason": "证据显示cnt在使能后从0变为2而非1，直接指向计数器增量错误，最可能缺陷行是cnt <= cnt + 2'd2。",
+    "input_tokens": 4602,
+    "output_tokens": 103,
+    "cost": 0.0006731200000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s11",
+    "setting": "D",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 2,
+      "readability": 3,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 2
+    },
+    "loc_line": 60,
+    "loc_top1": false,
+    "true_line": 43,
+    "signals": [
+      "cnt",
+      "cnt_d",
+      "cnt_en"
+    ],
+    "reason": "证据显示cyc2使能后cyc3 cnt=2而非1，直接指向计数器+2缺陷；但因果链未标注根因节点为计数器自增逻辑，触发条件缺失，根因列表全列所有信号无法定位。",
+    "input_tokens": 4470,
+    "output_tokens": 118,
+    "cost": 0.0029652,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s21",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 3,
+      "actionability": 3,
+      "trustworthiness": 3
+    },
+    "loc_line": 31,
+    "loc_top1": false,
+    "true_line": 35,
+    "signals": [
+      "can_rd",
+      "empty",
+      "count"
+    ],
+    "reason": "证据显示空时读导致count下溢，缺陷在can_rd定义缺少!empty门控，对应行31。",
+    "input_tokens": 8579,
+    "output_tokens": 94,
+    "cost": 0.0012273800000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s21",
+    "setting": "C",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 3,
+      "actionability": 3,
+      "trustworthiness": 2
+    },
+    "loc_line": 31,
+    "loc_top1": false,
+    "true_line": 35,
+    "signals": [
+      "can_rd",
+      "rd_en",
+      "empty",
+      "empty_d",
+      "count",
+      "count_d"
+    ],
+    "reason": "证据显示空时rd_en=1触发can_rd=1导致count错误下溢，与A2失效吻合，结合注入注释可定位can_rd行缺陷，但failed_line=122断言行混淆，cycle_events充斥匿名procdff噪声削弱可读性。",
+    "input_tokens": 8334,
+    "output_tokens": 133,
+    "cost": 0.0053196,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s21",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 31,
+    "loc_top1": false,
+    "true_line": 35,
+    "signals": [
+      "can_rd",
+      "empty",
+      "count"
+    ],
+    "reason": "证据显示空时读导致count下溢，根因是can_rd未门控empty，缺陷位于can_rd赋值行。",
+    "input_tokens": 4696,
+    "output_tokens": 97,
+    "cost": 0.0006846,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s21",
+    "setting": "D",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 3,
+      "trustworthiness": 2
+    },
+    "loc_line": 31,
+    "loc_top1": false,
+    "true_line": 35,
+    "signals": [
+      "can_rd",
+      "empty",
+      "rd_en"
+    ],
+    "reason": "证据给出失败断言与多周期信号轨迹，但因果链未明确指向 can_rd 缺少 !empty 门控，且触发条件写成 count==DEPTH 与 A2 失败语义不符，噪声与不一致降低可信度。",
+    "input_tokens": 4581,
+    "output_tokens": 115,
+    "cost": 0.0030246,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s08",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 58,
+    "loc_top1": false,
+    "true_line": 62,
+    "signals": [
+      "state",
+      "state_d"
+    ],
+    "reason": "证据显示S1在hold_cnt==S1_HOLD时跳转到S3而非S2，违反A1断言，缺陷位于S1分支的跳转目标赋值。",
+    "input_tokens": 10390,
+    "output_tokens": 101,
+    "cost": 0.00148288,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s08",
+    "setting": "C",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 4,
+      "readability": 2,
+      "causality": 3,
+      "actionability": 3,
+      "trustworthiness": 3
+    },
+    "loc_line": 87,
+    "loc_top1": false,
+    "true_line": 62,
+    "signals": [
+      "state",
+      "state_d",
+      "hold_cnt",
+      "hold_cnt_d",
+      "step_cnt",
+      "step_cnt_d",
+      "data_in",
+      "start"
+    ],
+    "reason": "证据显示S1停留满S1_HOLD拍后直接跳到S3(state=11)跳过S2，违反A1合法跳转集；failed_line=137指向A1断言，但根因在S1分支跳转目标的赋值处(S1->S3而非S1->S2)，对应设计S1 case分支中state<=S3的行（约第87行附近）。",
+    "input_tokens": 9968,
+    "output_tokens": 170,
+    "cost": 0.0063888,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s08",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 58,
+    "loc_top1": false,
+    "true_line": 62,
+    "signals": [
+      "state",
+      "state_d"
+    ],
+    "reason": "证据显示S1在cyc5跳转到S3而非S2，违反A1断言，缺陷位于S1分支的跳转目标赋值。",
+    "input_tokens": 5331,
+    "output_tokens": 96,
+    "cost": 0.00077322,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s08",
+    "setting": "D",
+    "provider": "minimax",
+    "model": "MiniMax-M3",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 1,
+      "trustworthiness": 1
+    },
+    "loc_line": 58,
+    "loc_top1": false,
+    "true_line": 62,
+    "signals": [
+      "state",
+      "state_d",
+      "data_in",
+      "hold_cnt",
+      "step_cnt"
+    ],
+    "reason": "证据只给出S1→S3直接跳的反例轨迹，缺少触发条件(data_in值、hold_cnt具体值)说明为何走finished分支而非stay分支，且触发条件处为问号占位，根因节点罗列所有信号无筛选，整体更像粗粒度波形回放而非因果归因；实际缺陷在S1分支的state <= S3行。",
+    "input_tokens": 5137,
+    "output_tokens": 157,
+    "cost": 0.003459,
+    "mode": "real",
+    "parse_ok": true
+  }
+]

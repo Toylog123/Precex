@@ -1,0 +1,402 @@
+{
+  "per_setting": {
+    "A": {
+      "n": 24,
+      "repair_pass": 22,
+      "repair_pass_bmc": 22,
+      "loc_top1": 11,
+      "cost": 0.11901582000000002,
+      "samples": 24,
+      "rate_bmc": 0.9167,
+      "rate_pass": 0.9167,
+      "loc_top1_rate": 0.4583
+    },
+    "B": {
+      "n": 24,
+      "repair_pass": 22,
+      "repair_pass_bmc": 22,
+      "loc_top1": 12,
+      "cost": 0.0891072,
+      "samples": 24,
+      "rate_bmc": 0.9167,
+      "rate_pass": 0.9167,
+      "loc_top1_rate": 0.5
+    },
+    "C": {
+      "n": 24,
+      "repair_pass": 22,
+      "repair_pass_bmc": 22,
+      "loc_top1": 10,
+      "cost": 0.08097390000000002,
+      "samples": 24,
+      "rate_bmc": 0.9167,
+      "rate_pass": 0.9167,
+      "loc_top1_rate": 0.4167
+    }
+  },
+  "per_sample": {
+    "l2_axi_01": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 3,
+      "cost": 0.01503026,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_axi_02": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 3,
+      "cost": 0.014813260000000002,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_axi_03": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 2,
+      "cost": 0.007862540000000001,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_axi_04": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 0,
+      "cost": 0.01591058,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_axi_06": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 3,
+      "cost": 0.011310460000000001,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_cnt_01": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 3,
+      "cost": 0.011471600000000002,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_cnt_02": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 3,
+      "cost": 0.010472,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_cnt_03": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 2,
+      "cost": 0.009497740000000001,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_cnt_04": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 2,
+      "cost": 0.00431662,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_fifo_01": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 2,
+      "cost": 0.005505360000000001,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_fifo_02": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 0,
+      "cost": 0.011793460000000002,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_fifo_03": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 2,
+      "cost": 0.007388780000000001,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_fifo_04": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 1,
+      "cost": 0.00463736,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_fifo_05": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 3,
+      "cost": 0.01552208,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_fifo_06": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 0,
+      "cost": 0.005366060000000001,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_fsm_01": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 3,
+      "cost": 0.011725840000000001,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_fsm_02": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 0,
+      "cost": 0.00982408,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_fsm_03": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 0,
+      "cost": 0.0061427800000000005,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_fsm_04": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 1,
+      "cost": 0.009766960000000002,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_uartrx_01": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 0,
+      "cost": 0.01521184,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_uartrx_02": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 0,
+      "cost": 0.01152172,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_uartrx_04": {
+      "n": 3,
+      "repair_pass": 3,
+      "repair_pass_bmc": 3,
+      "loc_top1": 0,
+      "cost": 0.0068324200000000005,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 1.0,
+      "rate_pass": 1.0
+    },
+    "l2_uarttx_01": {
+      "n": 3,
+      "repair_pass": 0,
+      "repair_pass_bmc": 0,
+      "loc_top1": 0,
+      "cost": 0.033642420000000006,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 0.0,
+      "rate_pass": 0.0
+    },
+    "l2_uarttx_02": {
+      "n": 3,
+      "repair_pass": 0,
+      "repair_pass_bmc": 0,
+      "loc_top1": 0,
+      "cost": 0.033530700000000004,
+      "settings": [
+        "A",
+        "B",
+        "C"
+      ],
+      "rate_bmc": 0.0,
+      "rate_pass": 0.0
+    }
+  },
+  "total": {
+    "n": 72,
+    "repair_pass": 66,
+    "repair_pass_bmc": 66,
+    "loc_top1": 33,
+    "attempts_sum": 84,
+    "cost": 0.28909692000000003,
+    "samples": 24,
+    "rate_bmc": 0.9167,
+    "rate_pass": 0.9167,
+    "loc_top1_rate": 0.4583,
+    "avg_attempts": 1.17
+  },
+  "l3_baseline": {
+    "n": 102,
+    "repair_pass": 102,
+    "repair_pass_bmc": 102,
+    "loc_top1": 61,
+    "attempts_sum": 102,
+    "cost": 0.34034573999999984,
+    "samples": 34,
+    "rate_bmc": 1.0,
+    "rate_pass": 1.0,
+    "loc_top1_rate": 0.598,
+    "avg_attempts": 1.0
+  },
+  "note": "L2 假阳性率 + L3 基线（方案 A 口径）"
+}

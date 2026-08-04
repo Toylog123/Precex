@@ -1,0 +1,566 @@
+{
+  "generated": "2026-08-04T22:01:29+08:00",
+  "n_rows": 23,
+  "n_modules": 6,
+  "n_errors": 7,
+  "settings": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "rows": [
+    {
+      "module": "axi_lite_slave",
+      "error_type": "位宽截断",
+      "A": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "axi_lite_slave",
+      "error_type": "复位",
+      "A": {
+        "n": 3,
+        "loc_top1": 33.3,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "axi_lite_slave",
+      "error_type": "握手",
+      "A": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "axi_lite_slave",
+      "error_type": "状态跳转",
+      "A": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "axi_lite_slave",
+      "error_type": "边界回绕",
+      "A": {
+        "n": 6,
+        "loc_top1": 16.7,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 6,
+        "loc_top1": 83.3,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 6,
+        "loc_top1": 33.3,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 6,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "counter_alu",
+      "error_type": "位宽截断",
+      "A": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "counter_alu",
+      "error_type": "复位",
+      "A": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 33.3,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "counter_alu",
+      "error_type": "状态跳转",
+      "A": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "counter_alu",
+      "error_type": "边界回绕",
+      "A": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 33.3,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "fifo_sync",
+      "error_type": "FIFO 满空",
+      "A": {
+        "n": 15,
+        "loc_top1": 53.3,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 15,
+        "loc_top1": 53.3,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 15,
+        "loc_top1": 60.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 15,
+        "loc_top1": 46.7,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "fifo_sync",
+      "error_type": "位宽截断",
+      "A": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "fifo_sync",
+      "error_type": "复位",
+      "A": {
+        "n": 6,
+        "loc_top1": 50.0,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 6,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 6,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 6,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "fifo_sync",
+      "error_type": "握手",
+      "A": {
+        "n": 6,
+        "loc_top1": 33.3,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 6,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 6,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 6,
+        "loc_top1": 83.3,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "fifo_sync",
+      "error_type": "边界回绕",
+      "A": {
+        "n": 6,
+        "loc_top1": 16.7,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 6,
+        "loc_top1": 50.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 6,
+        "loc_top1": 50.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 6,
+        "loc_top1": 33.3,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "fsm_ctrl",
+      "error_type": "复位",
+      "A": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "fsm_ctrl",
+      "error_type": "状态跳转",
+      "A": {
+        "n": 9,
+        "loc_top1": 22.2,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 9,
+        "loc_top1": 33.3,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 9,
+        "loc_top1": 33.3,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 9,
+        "loc_top1": 11.1,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "fsm_ctrl",
+      "error_type": "边界回绕",
+      "A": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "uart_rx",
+      "error_type": "复位",
+      "A": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "uart_rx",
+      "error_type": "状态跳转",
+      "A": {
+        "n": 6,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 6,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 6,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 6,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "uart_rx",
+      "error_type": "边界回绕",
+      "A": {
+        "n": 3,
+        "loc_top1": 66.7,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 33.3,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "uart_tx",
+      "error_type": "握手",
+      "A": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "uart_tx",
+      "error_type": "状态跳转",
+      "A": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 0.0,
+        "repair": 100.0
+      }
+    },
+    {
+      "module": "uart_tx",
+      "error_type": "边沿",
+      "A": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "B": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "C": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      },
+      "D": {
+        "n": 3,
+        "loc_top1": 100.0,
+        "repair": 100.0
+      }
+    }
+  ]
+}

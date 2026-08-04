@@ -1,0 +1,537 @@
+[
+  {
+    "sample": "s28",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 4,
+      "readability": 3,
+      "causality": 3,
+      "actionability": 4,
+      "trustworthiness": 4
+    },
+    "loc_line": 43,
+    "loc_top1": false,
+    "true_line": 47,
+    "signals": [
+      "reg0",
+      "wdata_d",
+      "S_AXI_WDATA"
+    ],
+    "reason": "证据显示寄存器位宽为31位（DATA_W-1），写入32位数据时最高位被截断，导致A7断言失败，缺陷位于寄存器声明行43。",
+    "input_tokens": 15164,
+    "output_tokens": 111,
+    "cost": 0.00215404,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s28",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 43,
+    "loc_top1": false,
+    "true_line": 47,
+    "signals": [
+      "reg0",
+      "reg1",
+      "reg2",
+      "reg3",
+      "S_AXI_RDATA",
+      "S_AXI_WDATA"
+    ],
+    "reason": "证据显示寄存器位宽为31位（DATA_W-1），而数据总线为32位，导致高位截断，与A6/A7断言失败一致，缺陷位于寄存器声明行43。",
+    "input_tokens": 8868,
+    "output_tokens": 129,
+    "cost": 0.0012776400000000002,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s31",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 28,
+    "loc_top1": false,
+    "true_line": 32,
+    "signals": [
+      "alu_out",
+      "op",
+      "a",
+      "b"
+    ],
+    "reason": "证据显示A4断言在op=0时alu_out_d与参考不符，但周期表未直接展示alu_out_d值，因果链不完整；结合设计代码中op==OP_ADD分支误用减法，可推断缺陷在ALU赋值行28。",
+    "input_tokens": 6706,
+    "output_tokens": 126,
+    "cost": 0.0009741200000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s31",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 28,
+    "loc_top1": false,
+    "true_line": 32,
+    "signals": [
+      "alu_out",
+      "op",
+      "a",
+      "b"
+    ],
+    "reason": "证据显示A4在cyc4失败，alu_out_d为0但参考应为a_d+b_d=2+2=4，且alu_out在cyc3为0，指向ALU输出错误，结合设计代码中op==OP_ADD分支误用减法，定位到第28行。",
+    "input_tokens": 4612,
+    "output_tokens": 134,
+    "cost": 0.0006832,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s14",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 27,
+    "loc_top1": false,
+    "true_line": 31,
+    "signals": [
+      "count"
+    ],
+    "reason": "证据显示count位宽截断导致满值回绕，但因果链不完整，行号推断基于位宽截断特征。",
+    "input_tokens": 9060,
+    "output_tokens": 89,
+    "cost": 0.0012933200000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s14",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 27,
+    "loc_top1": false,
+    "true_line": 31,
+    "signals": [
+      "count"
+    ],
+    "reason": "证据显示count位宽为3位（CNT_W-1），在cyc10从111回绕到000，导致A4断言失败，根因是count位宽截断，对应设计第27行声明。",
+    "input_tokens": 5410,
+    "output_tokens": 108,
+    "cost": 0.0007876400000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s09",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 45,
+    "loc_top1": false,
+    "true_line": 49,
+    "signals": [
+      "state",
+      "start",
+      "S2"
+    ],
+    "reason": "证据显示启动后状态跳至S2而非S1，且A5断言失败，缺陷位于IDLE分支的state赋值，最可能行45。",
+    "input_tokens": 8563,
+    "output_tokens": 100,
+    "cost": 0.0012268200000000002,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s09",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 45,
+    "loc_top1": false,
+    "true_line": 49,
+    "signals": [
+      "state",
+      "start",
+      "state_d"
+    ],
+    "reason": "因果图显示IDLE启动后进入S2而非S1，直接指向S_IDLE分支中state<=S2的赋值，即第45行。",
+    "input_tokens": 5185,
+    "output_tokens": 100,
+    "cost": 0.0007539000000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s26",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 44,
+    "loc_top1": false,
+    "true_line": 48,
+    "signals": [
+      "rx_busy"
+    ],
+    "reason": "证据显示复位后rx_busy为1且状态为IDLE，与A5冲突，缺陷位于复位分支中rx_busy赋值。",
+    "input_tokens": 5862,
+    "output_tokens": 95,
+    "cost": 0.0008472800000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s26",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 44,
+    "loc_top1": false,
+    "true_line": 48,
+    "signals": [
+      "rx_busy"
+    ],
+    "reason": "证据显示复位后rx_busy为1且状态为IDLE，直接指向复位分支中rx_busy赋值错误（行44）。",
+    "input_tokens": 4134,
+    "output_tokens": 94,
+    "cost": 0.0006050800000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s15",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 57,
+    "loc_top1": false,
+    "true_line": 61,
+    "signals": [
+      "txd",
+      "state",
+      "tx_start"
+    ],
+    "reason": "证据显示在START状态txd保持高电平，但未直接指出缺失的赋值语句，需结合设计推断缺陷在S_IDLE分支中未拉低txd。",
+    "input_tokens": 6617,
+    "output_tokens": 105,
+    "cost": 0.00095578,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s15",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 57,
+    "loc_top1": false,
+    "true_line": 61,
+    "signals": [
+      "txd",
+      "state",
+      "tx_start"
+    ],
+    "reason": "证据显示在START状态txd保持高，与A1冲突，根因指向S_IDLE中未在tx_start时拉低txd，即第57行附近。",
+    "input_tokens": 3858,
+    "output_tokens": 106,
+    "cost": 0.0005698,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s17",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 3,
+      "actionability": 3,
+      "trustworthiness": 3
+    },
+    "loc_line": 116,
+    "loc_top1": false,
+    "true_line": 120,
+    "signals": [
+      "S_AXI_BVALID",
+      "S_AXI_BREADY",
+      "aw_done",
+      "w_done"
+    ],
+    "reason": "证据显示BVALID在BREADY为高后仍保持有效，且aw_done/w_done已释放，指向写响应通道BVALID释放分支缺失（约行116）。",
+    "input_tokens": 14986,
+    "output_tokens": 121,
+    "cost": 0.0021319200000000007,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s17",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 116,
+    "loc_top1": false,
+    "true_line": 120,
+    "signals": [
+      "S_AXI_BVALID",
+      "S_AXI_BREADY"
+    ],
+    "reason": "证据显示BVALID在BREADY为高时仍保持有效，且因果链中aw_done/w_done在cyc4后清零但BVALID未释放，指向写响应通道的释放分支缺失，最可能缺陷行是BVALID释放分支被注释掉的行。",
+    "input_tokens": 9156,
+    "output_tokens": 132,
+    "cost": 0.0013188000000000002,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s11",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 3,
+      "trustworthiness": 3
+    },
+    "loc_line": 96,
+    "loc_top1": false,
+    "true_line": 43,
+    "signals": [
+      "cnt",
+      "cnt_d",
+      "cnt_en_d"
+    ],
+    "reason": "证据显示cnt在使能后从0变为2而非1，且failed_line为96，指向计数器自增逻辑（cnt <= cnt + 2'd2）而非断言行。",
+    "input_tokens": 6849,
+    "output_tokens": 108,
+    "cost": 0.0009891000000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s11",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 39,
+    "loc_top1": false,
+    "true_line": 43,
+    "signals": [
+      "cnt",
+      "cnt_d",
+      "cnt_en_d"
+    ],
+    "reason": "证据显示cnt在使能后从0变为2而非1，直接指向计数器增量错误，最可能缺陷行是cnt <= cnt + 2'd2。",
+    "input_tokens": 4602,
+    "output_tokens": 103,
+    "cost": 0.0006731200000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s21",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 3,
+      "readability": 2,
+      "causality": 3,
+      "actionability": 3,
+      "trustworthiness": 3
+    },
+    "loc_line": 31,
+    "loc_top1": false,
+    "true_line": 35,
+    "signals": [
+      "can_rd",
+      "empty",
+      "count"
+    ],
+    "reason": "证据显示空时读导致count下溢，缺陷在can_rd定义缺少!empty门控，对应行31。",
+    "input_tokens": 8579,
+    "output_tokens": 94,
+    "cost": 0.0012273800000000001,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s21",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 31,
+    "loc_top1": false,
+    "true_line": 35,
+    "signals": [
+      "can_rd",
+      "empty",
+      "count"
+    ],
+    "reason": "证据显示空时读导致count下溢，根因是can_rd未门控empty，缺陷位于can_rd赋值行。",
+    "input_tokens": 4696,
+    "output_tokens": 97,
+    "cost": 0.0006846,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s08",
+    "setting": "C",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 58,
+    "loc_top1": false,
+    "true_line": 62,
+    "signals": [
+      "state",
+      "state_d"
+    ],
+    "reason": "证据显示S1在hold_cnt==S1_HOLD时跳转到S3而非S2，违反A1断言，缺陷位于S1分支的跳转目标赋值。",
+    "input_tokens": 10390,
+    "output_tokens": 101,
+    "cost": 0.00148288,
+    "mode": "real",
+    "parse_ok": true
+  },
+  {
+    "sample": "s08",
+    "setting": "D",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "scores": {
+      "completeness": 2,
+      "readability": 2,
+      "causality": 2,
+      "actionability": 2,
+      "trustworthiness": 3
+    },
+    "loc_line": 58,
+    "loc_top1": false,
+    "true_line": 62,
+    "signals": [
+      "state",
+      "state_d"
+    ],
+    "reason": "证据显示S1在cyc5跳转到S3而非S2，违反A1断言，缺陷位于S1分支的跳转目标赋值。",
+    "input_tokens": 5331,
+    "output_tokens": 96,
+    "cost": 0.00077322,
+    "mode": "real",
+    "parse_ok": true
+  }
+]

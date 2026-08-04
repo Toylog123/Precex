@@ -48,8 +48,29 @@ Thumbs.db
 !samples/**/cex.vcd
 !samples/**/cex.log
 
-# 实验运行产物（不入库，复现靠脚本重建）
-experiments/runs/
+# 实验运行产物（不入库，复现靠脚本重建；以下为论文引用的关键结果文件白名单）
+experiments/runs/*
+!experiments/runs/experiments_results_corrected.json
+!experiments/runs/experiments_results_D_clean.json
+!experiments/runs/experiments_results_ds.json
+!experiments/runs/experiments_results_l2.json
+!experiments/runs/token_ledger.jsonl
+!experiments/runs/reverify_bmc_all.json
+!experiments/runs/t2_audit_abc.json
+!experiments/runs/t2_audit_D.json
+!experiments/runs/sufficiency_all_strong_d16.json
+!experiments/runs/sufficiency_const_all.json
+!experiments/runs/l2_false_positive_analysis.json
+!experiments/runs/cross_model_ds_vs_minimax.json
+!experiments/runs/verify_timing.json
+!experiments/runs/nonllm_baselines.json
+!experiments/runs/module_interaction.json
+!experiments/runs/settings_compare.csv
+!experiments/runs/slim_compression.json
+!experiments/runs/llm_scores/
+!experiments/runs/llm_scores/*.json
+!experiments/runs/llm_scores/summary.json
+
 
 # sby work dirs (non-sby_ prefix, e.g. gc/)
 samples/**/gc/
