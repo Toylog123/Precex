@@ -59,16 +59,16 @@ python3 scripts/llm_interpretability.py --providers deepseek,minimax --samples s
 
 | 数据 | 路径 | 说明 |
 | --- | --- | --- |
-| 主实验结果 | experiments/runs/experiments_results_parallel.json | 306 条（A/B/C×34×3） |
-| D 设置结果 | experiments/runs/_d_*.json + 合并 | 102 条 |
-| 主实验修正（BMC） | experiments/runs/experiments_results_corrected.json | 306 条，repair_pass_bmc 全部 True（论文口径） |
-| 跨模型重跑（DeepSeek） | experiments/runs/experiments_results_ds.json | 102 条（A/B/C×34×seed0） |
-| L2 假阳性率 | experiments/runs/experiments_results_l2.json | 72 条（A/B/C×24 L2 样本） |
-| token 账本 | experiments/runs/token_ledger.jsonl | 1312 条，全部调用强制记账 |
-| 充分性 | experiments/runs/reverify_bmc_all.json / t2_audit_abc.json / t2_audit_D.json | 303/303、408/408 |
-| 验证计时 | experiments/runs/verify_timing.json | 重验逐样本 verify/golden 耗时 |
-| C 压缩对比 | experiments/runs/slim_compression.json | 原始 vs slim 字符/比率 |
-| LLM 评分 | experiments/runs/llm_scores/ | 多模型可解释性评分（不入库） |
+| 主实验原始合并 | experiments/runs/experiments_results_parallel.json | 306 条（A/B/C×34×3，可由脚本重建） |
+| D 设置结果（论文口径） | experiments/runs/experiments_results_D_clean.json | 102 条；已入库（原始分片 _d_*.json 可重建） |
+| 主实验修正（BMC，论文口径） | experiments/runs/experiments_results_corrected.json | 306 条，repair_pass_bmc 全部 True；已入库 |
+| 跨模型重跑（DeepSeek） | experiments/runs/experiments_results_ds.json | 102 条（A/B/C×34×seed0）；已入库 |
+| L2 假阳性率 | experiments/runs/experiments_results_l2.json | 72 条（A/B/C×24 L2 样本）；已入库 |
+| token 账本 | experiments/runs/token_ledger.jsonl | 1312 条，全部调用强制记账；已入库 |
+| 充分性 | experiments/runs/reverify_bmc_all.json / t2_audit_abc.json / t2_audit_D.json | 303/303、408/408；均已入库 |
+| 验证计时 | experiments/runs/verify_timing.json | 重验逐样本 verify/golden 耗时；已入库 |
+| C 压缩对比 | experiments/runs/slim_compression.json | 原始 vs slim 字符/比率；已入库 |
+| LLM 评分 | experiments/runs/llm_scores/ | 多模型可解释性评分（summary/all/deepseek/minimax 已入库） |
 
 ## 5. 账本口径（成本核算）
 
