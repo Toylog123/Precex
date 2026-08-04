@@ -23,6 +23,8 @@ evidence representation does not gate *whether* the model can fix, but *how prec
 **Finding 2.** B (structured evidence) dominates on precision (61.8%); D (FVDebug-style causal graph) is cheapest ($1.56, 43% below B; 1.07M tokens) at 49.0% precision - a clear precision/cost trade-off.
 C's semanticization adds 1.7?2x cost with no repair gain (consistent with Gate-0 prestudy).
 
+**Significance (paired McNemar on 102 loc outcomes).** B vs A: p=0.0035 (significant); B vs D: p=0.0164 (significant); B vs C: p=0.404; C vs D: p=0.186. B's precision lead over raw-log (A) and causal-graph (D) is statistically significant; C's semanticization adds cost without significant precision gain.
+
 **Finding 3 (loc difficulty by error type).** Single-point semantic errors are easy to locate
 (edge 100%, width_trunc 85.2%); cross-state/handshake errors are hard (state_trans 36.1%, handshake 27.8%).
 The gap is setting-independent.
