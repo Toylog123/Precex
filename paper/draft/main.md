@@ -73,7 +73,7 @@ Core 4 components + 2 support elements (per docs/方案.md §4):
 
 Support: Controller (experiment variable), BugBench-PS (dataset assets).
 
-## Evidence settings (controlled ablation)
+### Evidence settings (controlled ablation)
 
 | Setting | Evidence | Extraction | Cost/run |
 | --- | --- | --- | --- |
@@ -84,7 +84,7 @@ Support: Controller (experiment variable), BugBench-PS (dataset assets).
 
 Same prompt family, only evidence segment replaced (anti-bias protocol).
 
-## Repair criterion (revised)
+### Repair criterion (revised)
 
 - Primary: BMC (verify.sby), consistent with golden verification (verify_golden.sby).
 - prove/k-induction (verify_repair.sby) kept as supplementary reference only — it is
@@ -92,7 +92,7 @@ Same prompt family, only evidence segment replaced (anti-bias protocol).
   (golden itself UNKNOWN, rc=4; 78 correct repairs were false-FAILed under the old criterion).
 - **Golden-first rule**: any repair criterion must first pass on golden (criterion-vs-golden consistency check).
 
-## Sufficiency audits
+### Sufficiency audits
 
 - Strong mutation (comparator inversion, d16): 400 mutants, 88.5% killed.
 - Const mutation (parameter constants DATA_W/ADDR_W/DEPTH/DIV/HALF): 484 mutants, 81.8% killed.
@@ -104,7 +104,7 @@ Same prompt family, only evidence segment replaced (anti-bias protocol).
 
 ## 3. Results
 
-### RQ1: Can counterexample-grounded evidence enable reliable repair of cross-cycle (L3) RTL defects?: Can counterexample-grounded evidence enable reliable repair of cross-cycle (L3) RTL defects?
+### RQ1: Can counterexample-grounded evidence enable reliable repair of cross-cycle (L3) RTL defects?
 
 **Setup.** 34 L3 samples (s04–s37) x 4 evidence settings x 3 seeds = 408 LLM repair runs
 (A raw log / B structured evidence / C counterexample semanticization / D FVDebug-style causal graph,
@@ -173,7 +173,7 @@ All four LLM settings (47.1%–61.8%) far exceed these baselines; structured evi
 | Const (parameter constant replacement) | 484 | 396 | 81.8% |
 | Delete (assertion removal) | sampled | all PASS | vacuity control |
 
-Module-level: axi/fifo strong=100%; uart_rx weakest (strong 55.0%, const 40.9%) ?
+Module-level: axi/fifo strong=100%; uart_rx weakest (strong 55.0%, const 40.9%) —
 structural assertions are insensitive to baud-timing constant shifts (documented limitation, future work).
 
 **T2 audit** (deterministic, 408/408 pass: A/B/C 306 + D 102): interface changes 0, assertion tampering 0,
@@ -182,7 +182,7 @@ evidence-loop failures 0; loc_dev median = 0 (62.7% exact on A/B/C, 69.6% on D).
 ### RQ3: Does the method survive a criterion-reversal audit? (Methodology lesson)
 
 The original repair criterion (prove/k-induction) misjudged 78 correct repairs on axi/uart
-(golden itself UNKNOWN under prove). BMC reverification: 303/303 pass ? repair rate 74.3% ? 100%.
+(golden itself UNKNOWN under prove). BMC reverification: 303/303 pass — repair rate 74.3% → 100%.
 **Lesson:** repair criterion must be validated against golden first (criterion-vs-golden consistency check).
 
 ### RQ4: Cost & performance
@@ -190,7 +190,7 @@ The original repair criterion (prove/k-induction) misjudged 78 correct repairs o
 - Total LLM cost: $11.22 for the four-setting main experiment (408 runs, $0.0275 avg); full ledger $14.36 (839 calls).
 - Per-setting (all n=102): A $2.78 / B $2.72 / C $4.17 / D $1.56; tokens A 1.99M / B 1.76M / C 3.50M / D 1.07M.
 - C-window compression: main dataset traces are short (median 6 cycles); window=8 yields only 4.1%
-  aggregate reduction ? semanticization cost is dominated by summary text, not trace length.
+  aggregate reduction — semanticization cost is dominated by summary text, not trace length.
 - Verification: BMC 8-concurrency Gate-2 reverify = 68 jobs / 3.4 min; axi golden ~87s, uart_rx ~151s.
 
 ### Open items before paper submission

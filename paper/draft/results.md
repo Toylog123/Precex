@@ -65,7 +65,7 @@ All four LLM settings (47.1%–61.8%) far exceed these baselines; structured evi
 | Const (parameter constant replacement) | 484 | 396 | 81.8% |
 | Delete (assertion removal) | sampled | all PASS | vacuity control |
 
-Module-level: axi/fifo strong=100%; uart_rx weakest (strong 55.0%, const 40.9%) ?
+Module-level: axi/fifo strong=100%; uart_rx weakest (strong 55.0%, const 40.9%) —
 structural assertions are insensitive to baud-timing constant shifts (documented limitation, future work).
 
 **T2 audit** (deterministic, 408/408 pass: A/B/C 306 + D 102): interface changes 0, assertion tampering 0,
@@ -74,7 +74,7 @@ evidence-loop failures 0; loc_dev median = 0 (62.7% exact on A/B/C, 69.6% on D).
 ## RQ3: Does the method survive a criterion-reversal audit? (Methodology lesson)
 
 The original repair criterion (prove/k-induction) misjudged 78 correct repairs on axi/uart
-(golden itself UNKNOWN under prove). BMC reverification: 303/303 pass ? repair rate 74.3% ? 100%.
+(golden itself UNKNOWN under prove). BMC reverification: 303/303 pass — repair rate 74.3% → 100%.
 **Lesson:** repair criterion must be validated against golden first (criterion-vs-golden consistency check).
 
 ## RQ4: Cost & performance
