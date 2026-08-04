@@ -136,12 +136,14 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
             src = os.path.join(sample_dir, fname)
             if os.path.isfile(src):
                 shutil.copy(src, os.path.join(work, fname))
-        # 修复验证优先 prove 模式（k-induction，充分性更强）；无则回退 bmc
+        # 修复验证主判据 = bmc（verify.sby），与 golden 对照 verify_golden.sby 一致；
+        # prove/k-induction（verify_repair.sby）仅作附加充分性参考，不作为失败判据。
+        # 2026-08-04 实测：prove 对 axi_lite_slave 等门控时序断言不收敛（golden 本身也 UNKNOWN），
+        # 主实验 75 个正确修复被判 FAIL（96.2% 假阴性）。保留 verify.sby 避免误杀。
         rp_src = os.path.join(sample_dir, "verify_repair.sby")
         if os.path.isfile(rp_src):
             shutil.copy(rp_src, os.path.join(work, "verify_repair.sby"))
-            if os.path.isfile(os.path.join(work, "verify.sby")):
-                os.remove(os.path.join(work, "verify.sby"))
+        # 不再删除 verify.sby：evaluator 按字母序选中 verify.sby（bmc）作主判据
         # uart_rx 回环依赖
         if meta.get("module") == "uart_rx":
             src = os.path.join(sample_dir, "uart_tx.sv")
@@ -154,6 +156,7 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
             if m:
                 tb_top = m.group(1)
         ev = evaluator.evaluate(work, {"run_formal": True, "verbose": False, "tb_top": tb_top})
+        result["verify_mode"] = "bmc"  # 主判据 bmc；prove 参考见 verify_repair.sby
         result["verdict"] = ev["verdict"]
         result["verify_elapsed"] = {
             "compile": ev["compile"].get("elapsed"),
