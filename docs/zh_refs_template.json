@@ -1,0 +1,14 @@
+{
+  "_comment": "中文参考文献模板（占位，勿直接使用）。条目必须来自真实检索：用户提供或 web 工具恢复后按软件学报/电子学报要求查新查全。字段：authors/title/journal/year 必填；volume/pages/note 可选。key 自动为 zh1..zhN。",
+  "refs": [
+    {
+      "authors": "作者1, 作者2, 等",
+      "title": "中文论文标题（占位）",
+      "journal": "期刊名（占位）",
+      "year": "20XX",
+      "volume": "X",
+      "pages": "XX--XX",
+      "note": "[Online]. Available: <真实URL占位>"
+    }
+  ]
+}
