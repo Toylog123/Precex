@@ -36,6 +36,15 @@ OP_REPLACEMENT = {
     '==': ['!=', '>=', '<='],
     '!=': ['==', '>=', '<='],
 }
+# 强变异：取反语义（弱化变异会虚报 killed=0%，--strong 使用此表）
+STRONG_OP_REPLACEMENT = {
+    '>=': ['<'],
+    '<=': ['>'],
+    '>': ['<='],
+    '<': ['>='],
+    '==': ['!='],
+    '!=': ['=='],
+}
 
 
 def expand_samples(spec):
@@ -66,16 +75,16 @@ def mutate_line(line, op_map):
     """对行内第一个比较运算符做一次扰动；返回 (mutated_line, old_op, new_op) 或 None。
     布尔断言变异：assert(!x) <-> assert(x)；assert(a && b) -> assert(a)（去一个条件）。
     """
-    # 布尔取反变异
-    m = re.search(r'assert\s*\(!', line)
-    if m:
-        mutated = line.replace('assert(!', 'assert(', 1)
-        return mutated, 'bool_neg', 'bool_pos'
-    m = re.search(r'assert\s*\([^!]', line)
-    if m and 'assert(!' not in line and '==' not in line and '<' not in line and '>' not in line:
-        # 纯布尔 assert(x) -> assert(!x)
-        mutated = line.replace('assert(', 'assert(!', 1)
-        return mutated, 'bool_pos', 'bool_neg'
+    # 布尔取反变异（兼容 'assert (' 带空格风格）
+    if 'assert' in line:
+        m = re.search(r'assert\s*\(\s*!', line)
+        if m:
+            mutated = re.sub(r'assert\s*\(\s*!', 'assert(', line, count=1)
+            return mutated, 'bool_neg', 'bool_pos'
+        m = re.search(r'assert\s*\(', line)
+        if m and '==' not in line and '<' not in line and '>' not in line and '!=' not in line:
+            mutated = re.sub(r'assert\s*\(', 'assert(!', line, count=1)
+            return mutated, 'bool_pos', 'bool_neg'
     for op in OPS:
         if op in line:
             repl = op_map[op]
@@ -85,15 +94,16 @@ def mutate_line(line, op_map):
     return None
 
 
-def sample_mutations(sample_dir):
+def sample_mutations(sample_dir, strong=False):
     """为一个样本生成最多 N 个 mutation 变体：每个 assert 行做 1 处运算符扰动。"""
     golden = os.path.join(sample_dir, 'golden.v')
     if not os.path.isfile(golden):
         return []
     src = open(golden, encoding='utf-8').read()
+    op_map = STRONG_OP_REPLACEMENT if strong else OP_REPLACEMENT
     variants = []
     for lineno, line in find_assert_lines(src):
-        m = mutate_line(line, OP_REPLACEMENT)
+        m = mutate_line(line, op_map)
         if not m:
             continue
         mutated, old_op, new_op = m
@@ -107,10 +117,10 @@ def sample_mutations(sample_dir):
     return variants
 
 
-def run_sby_on_src(sample, mutated_src, variant_idx, timeout=600):
+def run_sby_on_src(sample, mutated_src, variant_idx, timeout=600, depth=None, workroot='.suff'):
     """把 mutated golden 写入临时样本目录跑 sby，返回 (done, elapsed, rc)。"""
     sample_dir = os.path.join(BUGS, sample)
-    work = os.path.join(OUT_DIR, '.suff', '%s_m%d' % (sample, variant_idx))
+    work = os.path.join(OUT_DIR, workroot, '%s_m%d' % (sample, variant_idx))
     os.makedirs(work, exist_ok=True)
     # 复制样本必需文件（verify.sby 也复制，稍后内容替换 buggy.v -> golden.v）
     for fname in os.listdir(sample_dir):
@@ -133,11 +143,13 @@ def run_sby_on_src(sample, mutated_src, variant_idx, timeout=600):
     sby_src = open(sby, encoding='utf-8').read()
     # verify.sby 若 read buggy.v，替换成 golden.v；若已 golden 则不改
     sby_src = sby_src.replace('buggy.v', 'golden.v')
+    if depth is not None:
+        sby_src = re.sub(r'depth \d+', 'depth %d' % depth, sby_src)
     with open(sby, 'w', encoding='utf-8') as f:
         f.write(sby_src)
-    cmd = (WSL_PREFIX + 'cd /mnt/d/BaiduSyncdisk/02_Precex/experiments/runs/.suff/%s_m%d; '
-           'sby -f verify.sby -d /tmp/suff_%s_m%d > /tmp/suff_%s_m%d.out 2>&1; echo RC=$? >> /tmp/suff_%s_m%d.out'
-           % (sample, variant_idx, sample, variant_idx, sample, variant_idx, sample, variant_idx))
+    cmd = (WSL_PREFIX + 'cd /mnt/d/BaiduSyncdisk/02_Precex/experiments/runs/%s/%s_m%d; '
+           'sby -f verify.sby -d /tmp/%s_%s_m%d > /tmp/%s_%s_m%d.out 2>&1; echo RC=$? >> /tmp/%s_%s_m%d.out'
+           % (workroot, sample, variant_idx, workroot, sample, variant_idx, workroot, sample, variant_idx, workroot, sample, variant_idx))
     t0 = time.time()
     try:
         p = subprocess.Popen(['wsl', '-e', 'bash', '-c', cmd])
@@ -148,7 +160,7 @@ def run_sby_on_src(sample, mutated_src, variant_idx, timeout=600):
     elapsed = time.time() - t0
     done = ''
     try:
-        r = subprocess.run(['wsl', '-e', 'bash', '-c', 'cat /tmp/suff_%s_m%d.out' % (sample, variant_idx)],
+        r = subprocess.run(['wsl', '-e', 'bash', '-c', 'cat /tmp/%s_%s_m%d.out' % (workroot, sample, variant_idx)],
                            capture_output=True, text=True, timeout=30)
         content = r.stdout + r.stderr
         m = re.search(r'(DONE \([A-Z]+[^)]*\))', content)
@@ -164,11 +176,14 @@ def main(argv=None):
     ap.add_argument('--timeout', type=int, default=300, help='single sby run timeout seconds')
     ap.add_argument('--samples', default='')
     ap.add_argument('--out', default=os.path.join(OUT_DIR, 'sufficiency.json'))
+    ap.add_argument('--strong', action='store_true', help='强变异：取反语义（==<->!= 等），避免弱化变异虚报 0-killed')
+    ap.add_argument('--depth', type=int, default=None, help='覆盖 verify.sby 的 BMC depth')
     args = ap.parse_args(argv)
     samples = expand_samples(args.samples)
     print('samples: %d, jobs=%d' % (len(samples), args.jobs), flush=True)
 
-    os.makedirs(os.path.join(OUT_DIR, '.suff'), exist_ok=True)
+    workroot = '.suff_strong' if args.strong else '.suff'
+    os.makedirs(os.path.join(OUT_DIR, workroot), exist_ok=True)
     results = {}
     lock = __import__('threading').Lock()
     t_start = time.time()
@@ -176,7 +191,7 @@ def main(argv=None):
     # 先为每个样本生成 mutations
     plan = []
     for s in samples:
-        variants = sample_mutations(os.path.join(BUGS, s))
+        variants = sample_mutations(os.path.join(BUGS, s), strong=args.strong)
         plan.append((s, variants))
 
     tasks = [(s, i) for s, variants in plan for i in range(len(variants))]
@@ -186,7 +201,8 @@ def main(argv=None):
         s, vi = task
         sidx = next(idx for idx, (ss, _vs) in enumerate(plan) if ss == s)
         var = plan[sidx][1][vi]
-        done, elapsed, rc = run_sby_on_src(s, var['mutated_src'], vi, timeout=args.timeout)
+        done, elapsed, rc = run_sby_on_src(s, var['mutated_src'], vi, timeout=args.timeout,
+                                           depth=args.depth, workroot=workroot)
         # mutation 有效性：sby FAIL = 抓到反例 = 断言有效；PASS = 可能空洞
         killed = 'FAIL' in done
         with lock:
