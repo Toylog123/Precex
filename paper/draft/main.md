@@ -187,7 +187,8 @@ The original repair criterion (prove/k-induction) misjudged 78 correct repairs o
 
 ### RQ4: Cost & performance
 
-- Total LLM cost: $9.67 main experiment (306 runs, $0.0316 avg); full ledger $14.36 (839 calls).
+- Total LLM cost: $11.22 for the four-setting main experiment (408 runs, $0.0275 avg); full ledger $14.36 (839 calls).
+- Per-setting (all n=102): A $2.78 / B $2.72 / C $4.17 / D $1.56; tokens A 1.99M / B 1.76M / C 3.50M / D 1.07M.
 - C-window compression: main dataset traces are short (median 6 cycles); window=8 yields only 4.1%
   aggregate reduction ? semanticization cost is dominated by summary text, not trace length.
 - Verification: BMC 8-concurrency Gate-2 reverify = 68 jobs / 3.4 min; axi golden ~87s, uart_rx ~151s.
