@@ -40,6 +40,7 @@ ITEMS = [
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', default=os.path.join(REPO, 'submission_package'))
+    ap.add_argument('--zip', action='store_true', help='同时生成 ZIP 压缩包（规范命名 Precex_Submission_YYYYMMDD.zip）')
     args = ap.parse_args()
     out = os.path.abspath(args.out)
     shutil.rmtree(out, ignore_errors=True)
@@ -97,6 +98,20 @@ def main():
                 h = hashlib.sha256(open(fp, 'rb').read()).hexdigest()
                 f.write('%s  %s\n' % (h, rel))
     print('SHA256SUMS written:', sums_path)
+
+    if args.zip:
+        import datetime, zipfile
+        stamp = datetime.date.today().strftime('%Y%m%d')
+        zip_path = os.path.join(REPO, 'Precex_Submission_' + stamp + '.zip')
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for root_dir, _, files in os.walk(out):
+                for fn in sorted(files):
+                    fp = os.path.join(root_dir, fn)
+                    rel = os.path.relpath(fp, out).replace(os.sep, '/')
+                    zf.write(fp, os.path.join('submission_package', rel))
+        print('ZIP written:', zip_path)
+        zsum = hashlib.sha256(open(zip_path, 'rb').read()).hexdigest()
+        print('ZIP sha256:', zsum)
 
 
 if __name__ == '__main__':

@@ -32,6 +32,7 @@ dist/
 *.o
 *.exe
 submission_package/
+Precex_Submission_*.zip
 
 # 编辑器 / 系统
 .vscode/
