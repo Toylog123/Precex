@@ -1,4 +1,4 @@
-# PreCex 可复现性说明（REPRO）
+﻿# PreCex 可复现性说明（REPRO）
 
 > 作者：Toylog｜版本：v0.1（2026-08-04）｜性质：主实验与论文数字的可复现命令链、数据位置与账本口径。
 > 目标：照本文从空环境出发，可复现 306 次主实验（A/B/C×34×3）与论文全部关键数字。
@@ -53,6 +53,9 @@ python3 scripts/measure_slim_compression.py
 
 # 8) 多 LLM 可解释性评分（可选，需 provider key）
 python3 scripts/llm_interpretability.py --providers deepseek,minimax --samples s04-s37 --n 10
+
+# 9) 论文图表重建（数据驱动，从 experiments/runs 读取）
+python3 scripts/make_paper_figs.py
 ```
 
 ## 4. 数据位置（experiments/runs/ 不入库，按需保留）

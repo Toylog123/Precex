@@ -6,15 +6,48 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-OUT = r'D:\\BaiduSyncdisk\\02_Precex\\paper\\figures'
+import collections
+OUT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'paper', 'figures'))
 os.makedirs(OUT, exist_ok=True)
 plt.rcParams.update({'figure.dpi': 150, 'font.size': 10, 'axes.titlesize': 11, 'axes.labelsize': 10})
 
-# ---- Figure 1: Four-setting localization + cost ----
+def load_json(rel):
+    p = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', rel))
+    with open(p, encoding='utf-8') as f:
+        return json.load(f)
+
+# ---- authoritative data loading (replaces hard-coded numbers) ----
+abc = load_json('experiments/runs/experiments_results_corrected.json')
+dset = load_json('experiments/runs/experiments_results_D_clean.json')
+rows_abc = abc['results'] if isinstance(abc, dict) else abc
+rows_d = dset['results'] if isinstance(dset, dict) else dset
+
+def setting_stats(rows):
+    agg = collections.defaultdict(lambda: {'n': 0, 'loc': 0, 'cost': 0.0})
+    for r in rows:
+        s = r.get('setting')
+        a = agg[s]
+        a['n'] += 1
+        if r.get('loc_top1'):
+            a['loc'] += 1
+        a['cost'] += float(r.get('cost_usd') or r.get('cost') or 0)
+    return agg
+
+stats = setting_stats(rows_abc)
+stats_d = setting_stats(rows_d)
+for s in ('A', 'B', 'C'):
+    stats.setdefault(s, {'n': 0, 'loc': 0, 'cost': 0.0})
+if 'D' in stats_d:
+    stats['D'] = stats_d['D']
+for s in ('A', 'B', 'C', 'D'):
+    stats[s]['loc_rate'] = 100.0 * stats[s]['loc'] / max(stats[s]['n'], 1)
+
 settings = ['A', 'B', 'C', 'D']
-loc = [47.1, 61.8, 56.9, 49.0]
-cost = [2.78, 2.72, 4.17, 1.56]
+loc = [stats[s]['loc_rate'] for s in settings]
+cost = [round(stats[s]['cost'], 2) for s in settings]
 labels = ['A\n(raw log)', 'B\n(structured)', 'C\n(semanticized)', 'D\n(causal graph)']
+
+# ---- Figure 1: Four-setting localization + cost ----
 
 fig, ax1 = plt.subplots(figsize=(7, 4.2))
 bars = ax1.bar(labels, loc, color=['#8aa8c8', '#d1495b', '#f2a65a', '#6a8caf'], alpha=0.9, width=0.6)
@@ -22,13 +55,13 @@ ax1.set_ylabel('loc_top1 precision (%)')
 ax1.set_ylim(0, 100)
 for b, v in zip(bars, loc):
     ax1.text(b.get_x() + b.get_width()/2, v + 1.5, f'{v:.1f}%', ha='center', fontsize=9)
-ax1.set_title('Localization precision by evidence setting (n=102 each)')
+ax1.set_title('Localization precision by evidence setting (n=%d each)' % stats['A']['n'])
 ax1.annotate('', xy=(1, 68), xytext=(0, 68), arrowprops=dict(arrowstyle='-', color='k', lw=1))
 ax1.text(0.5, 70, 'p=0.0035', ha='center', fontsize=8)
 ax1.annotate('', xy=(1, 55), xytext=(3, 55), arrowprops=dict(arrowstyle='-', color='k', lw=1))
 ax1.text(2, 57, 'p=0.0164', ha='center', fontsize=8)
 ax2 = ax1.twinx()
-ax2.plot(labels, cost, 'k--o', linewidth=1.5, color='#333')
+ax2.plot(labels, cost, '--o', linewidth=1.5, color='#333')
 ax2.set_ylabel('LLM cost (USD)')
 ax2.set_ylim(0, 6)
 for x, v in zip(range(4), cost):
@@ -39,15 +72,14 @@ plt.close()
 
 # ---- Figure 2: Error-type x setting heatmap ----
 errs = ['state\ntrans', 'handshake', 'reset', 'fifo\nfull/empty', 'boundary\nwrap', 'width\ntrunc', 'edge']
-mat = np.array([
-    [33.3, 37.5, 37.5, 25.0],
-    [16.7, 33.3, 33.3, 41.7],
-    [55.6, 72.2, 83.3, 44.4],
-    [53.3, 53.3, 60.0, 46.7],
-    [42.9, 81.0, 57.1, 57.1],
-    [88.9, 100.0, 66.7, 100.0],
-    [100.0, 100.0, 100.0, 100.0],
-])
+err_order = ['状态跳转', '握手', '复位', 'FIFO 满空', '边界回绕', '位宽截断', '边沿']
+mat = np.zeros((7, 4))
+all_rows = rows_abc + rows_d
+for i, e in enumerate(err_order):
+    for j, s in enumerate(settings):
+        sub = [r for r in all_rows if r.get('error_type') == e and r.get('setting') == s]
+        n = len(sub)
+        mat[i, j] = 100.0 * sum(1 for r in sub if r.get('loc_top1')) / max(n, 1)
 fig, ax = plt.subplots(figsize=(6.5, 4.5))
 im = ax.imshow(mat, cmap='YlGnBu', vmin=0, vmax=100, aspect='auto')
 ax.set_xticks(range(4)); ax.set_xticklabels(labels, fontsize=9)
