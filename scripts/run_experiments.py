@@ -33,7 +33,8 @@ import evaluator  # noqa: E402
 
 SAMPLES_BUGS = os.path.join(REPO_ROOT, "samples", "bugs")
 DEFAULT_OUT = os.path.join(REPO_ROOT, "experiments", "runs", "experiments_results.json")
-BUGGY_HEADER_OFFSET = 4  # buggy.v 头注释偏移（与 bug_injector 一致）：缺陷行号 = inject_line + 4
+BUGGY_HEADER_OFFSET = 4
+_SLIM_C = True  # C 证据激进出采样压缩开关（--no-slim-c 关闭，走完整原文）  # buggy.v 头注释偏移（与 bug_injector 一致）：缺陷行号 = inject_line + 4
 
 
 
@@ -197,7 +198,10 @@ def _build_evidence_text(setting, sample_dir):
         if not os.path.isfile(p):
             return "（semantics.json 缺失）"
         with open(p, "r", encoding="utf-8") as f:
-            s = json.load(f)
+            raw = f.read()
+        if not _SLIM_C:
+            return raw
+        s = json.loads(raw)
         # 激进出采样压缩：关键窗口 fail_step±4 完整 + 之前每 8 拍采样 + text_summary 截 300 字，
         # 保留因果关键信号，砍掉冗余波形（实测 34 样本 2.18x 缩小、54% token 削减）
         fs = s.get("fail_step")
@@ -253,6 +257,8 @@ def main(argv=None):
     tasks_arg = []
     if "--tasks" in argv:
         tasks_arg = argv[argv.index("--tasks") + 1].split(",")
+    global _SLIM_C
+    _SLIM_C = "--no-slim-c" not in argv
 
     if "--mock" in argv:
         mock = True
