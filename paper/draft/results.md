@@ -44,6 +44,17 @@ B is best or tied-best on boundary_wrap (81.0%), width_trunc (100%), and state_t
 D is highest on handshake (41.7%, n=12 per setting — small-n caveat). The hard-class ordering
 (state_trans/handshake below width_trunc/edge) holds in every setting.
 
+**Non-LLM baselines.** To establish that the LLM's localization is non-trivial, we evaluate simple heuristic baselines on the same exact-match criterion (candidate line == buggy_inject_line, 34 samples):
+
+| Baseline | loc_top1 |
+| --- | --- |
+| First assertion line | 0.0% |
+| Any assertion line | 0.0% |
+| First line mentioning a failing signal | 0.0% |
+| Random line (expected value) | 0.50% |
+
+All four LLM settings (47.1%–61.8%) far exceed these baselines; structured evidence (B) achieves 61.8% — over 120x the random-line expectation. The assertion- and signal-based heuristics never hit because injected defects live in functional/sequential logic, not in the assertion block itself.
+
 ## RQ2: Is the repair trustworthy? (Verifier sufficiency + patch quality)
 
 **Sufficiency family** (mutation analysis on golden):
