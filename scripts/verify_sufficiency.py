@@ -63,12 +63,23 @@ def find_assert_lines(src):
 
 
 def mutate_line(line, op_map):
-    """对行内第一个比较运算符做一次扰动；返回 (mutated_line, old_op, new_op) 或 None。"""
+    """对行内第一个比较运算符做一次扰动；返回 (mutated_line, old_op, new_op) 或 None。
+    布尔断言变异：assert(!x) <-> assert(x)；assert(a && b) -> assert(a)（去一个条件）。
+    """
+    # 布尔取反变异
+    m = re.search(r'assert\s*\(!', line)
+    if m:
+        mutated = line.replace('assert(!', 'assert(', 1)
+        return mutated, 'bool_neg', 'bool_pos'
+    m = re.search(r'assert\s*\([^!]', line)
+    if m and 'assert(!' not in line and '==' not in line and '<' not in line and '>' not in line:
+        # 纯布尔 assert(x) -> assert(!x)
+        mutated = line.replace('assert(', 'assert(!', 1)
+        return mutated, 'bool_pos', 'bool_neg'
     for op in OPS:
         if op in line:
             repl = op_map[op]
             new_op = repl[len(line) % len(repl)]
-            # 只替换第一个出现，避免连击多个
             mutated = line.replace(op, new_op, 1)
             return mutated, op, new_op
     return None
