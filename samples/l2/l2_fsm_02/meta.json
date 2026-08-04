@@ -1,0 +1,24 @@
+{
+  "_doc": "PreCex %s 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "l2_fsm_02",
+  "module": "fsm_ctrl",
+  "error_type": "状态跳转",
+  "error_type_code": "state_trans",
+  "level": "L2",
+  "inject_line": 58,
+  "buggy_inject_line": 62,
+  "inject_desc": "S1 正常完成分支跳转目标 S2 改 S3（跳过 S2，击穿状态跳转合法性）",
+  "diff": "- hold_cnt == S1_HOLD) begin\n                        state    <= S2;\n+ hold_cnt == S1_HOLD) begin\n                        state    <= S3;",
+  "hit_assertion": "状态跳转合法性断言",
+  "golden_source": "rtl/fsm_ctrl/fsm_ctrl.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module fsm_ctrl --error-type state_trans --sample-id l2_fsm_02 --variant 2",
+  "param_override": null,
+  "verification": {
+    "compile_ok": true,
+    "sim_fail": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L2_VALID"
+  }
+}

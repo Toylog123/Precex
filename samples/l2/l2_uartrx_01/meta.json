@@ -1,0 +1,24 @@
+{
+  "_doc": "PreCex %s 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "l2_uartrx_01",
+  "module": "uart_rx",
+  "error_type": "状态跳转",
+  "error_type_code": "state_trans",
+  "level": "L2",
+  "inject_line": 50,
+  "buggy_inject_line": 54,
+  "inject_desc": "uart_rx 跳过起始位中点确认：IDLE 检测到下降沿直接进 DATA（击穿 A1/A2）",
+  "diff": "- S_IDLE: begin\n                    rx_busy <= 1'b0;\n                    if (!rxd) begin\n                        baud_cnt <= {DIV_W{1'b0}};\n                        state    <= S_START;\n+ S_IDLE: begin\n                    rx_busy <= 1'b0;\n                    if (!rxd) begin\n                        baud_cnt <= {DIV_W{1'b0}};\n                        state    <= S_DATA;",
+  "hit_assertion": "uart_rx A1/A2（起始位中点确认）",
+  "golden_source": "rtl/uart_rx/uart_rx.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module uart_rx --error-type state_trans --sample-id l2_uartrx_01 --variant 4",
+  "param_override": null,
+  "verification": {
+    "compile_ok": true,
+    "sim_fail": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L2_VALID"
+  }
+}

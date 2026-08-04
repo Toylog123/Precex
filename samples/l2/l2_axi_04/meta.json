@@ -1,0 +1,24 @@
+{
+  "_doc": "PreCex %s 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "l2_axi_04",
+  "module": "axi_lite_slave",
+  "error_type": "握手",
+  "error_type_code": "handshake",
+  "level": "L2",
+  "inject_line": 116,
+  "buggy_inject_line": 120,
+  "inject_desc": "写响应不释放：BVALID 释放分支删除（写响应持续有效，重复握手）",
+  "diff": "- \n        end else if (S_AXI_BVALID && S_AXI_BREADY) begin\n            S_AXI_BVALID <= 1'b0;\n        end\n+ \n        end else if (S_AXI_BVALID && S_AXI_BREADY) begin\n            // BUG: BVALID 释放分支被删除（写响应不释放）\n            // S_AXI_BVALID <= 1'b0;\n        end",
+  "hit_assertion": "axi 写通道握手断言（BVALID 不释放）",
+  "golden_source": "rtl/axi_lite_slave/axi_lite_slave.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module axi_lite_slave --error-type handshake --sample-id l2_axi_04 --variant 2",
+  "param_override": null,
+  "verification": {
+    "compile_ok": true,
+    "sim_fail": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L2_VALID"
+  }
+}

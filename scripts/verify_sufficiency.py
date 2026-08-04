@@ -20,11 +20,12 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-REPO_ROOT = r'D:/BaiduSyncdisk/02_Precex'
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # 仓库根（跨平台 WSL/Windows）
 BUGS = os.path.join(REPO_ROOT, 'samples', 'bugs')
 OUT_DIR = os.path.join(REPO_ROOT, 'experiments', 'runs')
 WSL_PREFIX = ('export HOME=/home/toylog; export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$HOME/.local/bin; '
               'export SMTBMC=/mnt/d/BaiduSyncdisk/02_Precex/smoke/yosys-smtbmc-z3.sh; ')
+IN_WSL = bool(os.environ.get('WSL_DISTRO_NAME'))  # 是否已在 WSL 内（WSL 内不嵌套调 wsl）
 
 # 比较运算符扰动映射：mutation 时把 op 换成不同的 op
 OPS = ['>=', '<=', '>', '<', '==', '!=']
@@ -175,12 +176,16 @@ def run_sby_on_src(sample, mutated_src, variant_idx, timeout=600, depth=None, wo
         sby_src = re.sub(r'depth \d+', 'depth %d' % depth, sby_src)
     with open(sby, 'w', encoding='utf-8') as f:
         f.write(sby_src)
-    cmd = (WSL_PREFIX + 'cd /mnt/d/BaiduSyncdisk/02_Precex/experiments/runs/%s/%s_m%d; '
+    work_path = os.path.join(REPO_ROOT, 'experiments', 'runs', workroot)
+    cmd = (WSL_PREFIX + 'cd %s/%s_m%d; '
            'sby -f verify.sby -d /tmp/%s_%s_m%d > /tmp/%s_%s_m%d.out 2>&1; echo RC=$? >> /tmp/%s_%s_m%d.out'
-           % (workroot, sample, variant_idx, workroot, sample, variant_idx, workroot, sample, variant_idx, workroot, sample, variant_idx))
+           % (work_path, sample, variant_idx, workroot, sample, variant_idx, workroot, sample, variant_idx, workroot, sample, variant_idx))
     t0 = time.time()
     try:
-        p = subprocess.Popen(['wsl', '-e', 'bash', '-c', cmd])
+        if IN_WSL:
+            p = subprocess.Popen(['bash', '-c', cmd])
+        else:
+            p = subprocess.Popen(['wsl', '-e', 'bash', '-c', cmd])
         rc = p.wait(timeout=timeout)
     except subprocess.TimeoutExpired:
         p.kill()
@@ -188,8 +193,12 @@ def run_sby_on_src(sample, mutated_src, variant_idx, timeout=600, depth=None, wo
     elapsed = time.time() - t0
     done = ''
     try:
-        r = subprocess.run(['wsl', '-e', 'bash', '-c', 'cat /tmp/%s_%s_m%d.out' % (workroot, sample, variant_idx)],
-                           capture_output=True, text=True, timeout=30)
+        if IN_WSL:
+            r = subprocess.run(['bash', '-c', 'cat /tmp/%s_%s_m%d.out' % (workroot, sample, variant_idx)],
+                               capture_output=True, text=True, timeout=30)
+        else:
+            r = subprocess.run(['wsl', '-e', 'bash', '-c', 'cat /tmp/%s_%s_m%d.out' % (workroot, sample, variant_idx)],
+                               capture_output=True, text=True, timeout=30)
         content = r.stdout + r.stderr
         m = re.search(r'(DONE \([A-Z]+[^)]*\))', content)
         done = m.group(1) if m else (content[-120:] if content else '')

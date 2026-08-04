@@ -1,0 +1,27 @@
+{
+  "_doc": "PreCex %s 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+  "sample_id": "l2_uarttx_01",
+  "module": "uart_tx",
+  "error_type": "握手",
+  "error_type_code": "handshake",
+  "level": "L2",
+  "inject_line": 57,
+  "buggy_inject_line": 61,
+  "inject_desc": "起始位握手失效：删 S_IDLE 中『起始位立即输出低电平』（txd 保持高，击穿 uart A1 起始位为低）",
+  "diff": "- txd      <= 1'b0;   // 起始位立即输出低电平\n+ <deleted>",
+  "hit_assertion": "uart_tx A1（START 时 txd==0）",
+  "golden_source": "rtl/uart_tx/uart_tx.sv",
+  "date": "2026-08-03",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module uart_tx --error-type handshake --sample-id l2_uarttx_01 --variant 1 --param CLK_FREQ=400,BAUD=100",
+  "param_override": {
+    "CLK_FREQ": "400",
+    "BAUD": "100"
+  },
+  "verification": {
+    "compile_ok": true,
+    "sim_fail": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L2_VALID"
+  }
+}
