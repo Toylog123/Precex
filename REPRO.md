@@ -45,10 +45,13 @@ python3 scripts/reverify_bmc.py --out experiments/runs/reverify_bmc_all.json
 # 5) 验证段计时聚合（从 gate2 日志恢复；未来 run 自动落盘 verify_elapsed）
 python3 scripts/aggregate_verify_timing.py
 
-# 6) C 证据压缩对比（原始 vs slim，只读）
+# 6) 非 LLM 定位基线（assert/信号/随机行启发式，论文实验设置引用）
+python3 scripts/nonllm_baselines.py
+
+# 7) C 证据压缩对比（原始 vs slim，只读）
 python3 scripts/measure_slim_compression.py
 
-# 7) 多 LLM 可解释性评分（可选，需 provider key）
+# 8) 多 LLM 可解释性评分（可选，需 provider key）
 python3 scripts/llm_interpretability.py --providers deepseek,minimax --samples s04-s37 --n 10
 ```
 

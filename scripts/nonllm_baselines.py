@@ -3,7 +3,7 @@
 Baselines: (1) assertion-line heuristics, (2) signal-mention line, (3) random line (exact expected value)."""
 import json, os, sys, io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-BASE = r'D:\BaiduSyncdisk\02_Precex'
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # 仓库根（跨平台）
 SAMPLES = os.path.join(BASE, 'samples', 'bugs')
 
 def buggy_line(meta):
