@@ -63,6 +63,7 @@ python3 scripts/make_paper_figs.py
 # 11) 组装投稿包并校验完整性（SHA256SUMS 由脚本自动生成）
 python3 scripts/build_submission_package.py
 cd submission_package && sha256sum -c verification/SHA256SUMS && cd ..
+# 同时生成 ZIP（可选）：python3 scripts/build_submission_package.py --zip
 ```
 
 ## 4. 数据位置（experiments/runs/ 不入库，按需保留）
