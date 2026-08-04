@@ -8,6 +8,7 @@
 # 用法：
 #   python3 scripts/run_experiments.py [--samples s04-s37] [--settings A,B,C,D]  # D=FVDebug 式因果图
 #            [--provider minimax|deepseek|openai|gemini|anthropic]  # 默认 minimax；DeepSeek 跨模型重跑用
+#            [--samples-dir bugs|l2]  # 默认 bugs；L2 假阳性率实验用 l2
 #            [--seeds 0,1,2] [--retries 2] [--mock] [--out ...]
 """
 PreCex 主实验批量评测。
@@ -33,6 +34,7 @@ from run_prestudy import parse_llm_output, apply_unified_diff  # noqa: E402
 import evaluator  # noqa: E402
 
 SAMPLES_BUGS = os.path.join(REPO_ROOT, "samples", "bugs")
+SAMPLES_L2 = os.path.join(REPO_ROOT, "samples", "l2")
 DEFAULT_OUT = os.path.join(REPO_ROOT, "experiments", "runs", "experiments_results.json")
 BUGGY_HEADER_OFFSET = 4
 _SLIM_C = True  # C 证据激进出采样压缩开关（--no-slim-c 关闭，走完整原文）  # buggy.v 头注释偏移（与 bug_injector 一致）：缺陷行号 = inject_line + 4
@@ -313,9 +315,10 @@ def main(argv=None):
         verify_cfg["depth_override"] = int(argv[argv.index("--verify-depth") + 1])
 
     sample_ids = expand_samples(",".join(samples))
+    samples_base = SAMPLES_L2 if "--samples-dir" in argv and argv[argv.index("--samples-dir") + 1] == "l2" else SAMPLES_BUGS
     dirs = {}
     for sid in sample_ids:
-        p = os.path.join(SAMPLES_BUGS, sid)
+        p = os.path.join(samples_base, sid)
         if os.path.isdir(p):
             dirs[sid] = p
         else:
