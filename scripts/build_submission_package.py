@@ -12,6 +12,7 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ITEMS = [
     ('paper/precex_paper.pdf', 'manuscript/precex_paper.pdf'),
     ('paper/manuscript/precex_paper.tex', 'manuscript/precex_paper.tex'),
+    ('paper/manuscript/abstract_en.tex', 'manuscript/abstract_en.tex'),
     ('paper/figures/fig_pipeline.pdf', 'figures/fig_pipeline.pdf'),
     ('paper/figures/fig_setting_loc_cost.pdf', 'figures/fig_setting_loc_cost.pdf'),
     ('paper/figures/fig_error_setting_heatmap.pdf', 'figures/fig_error_setting_heatmap.pdf'),
