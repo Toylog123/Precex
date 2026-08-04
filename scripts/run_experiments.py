@@ -71,7 +71,8 @@ def _extract_inline_assertions(design):
     return "\n".join(out) if out else "（未提取到独立断言段，断言已内联于设计）"
 
 
-def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retries=2):
+def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retries=2,
+            verify_cfg=None):
     """单个 (sample, setting, seed) 评测。返回结果 dict。"""
     meta = json.load(open(os.path.join(sample_dir, "meta.json"), encoding="utf-8"))
     design = open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read()
@@ -155,7 +156,10 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
             m = re.search(r"module\s+(tb_\w+)", open(tb_path, encoding="utf-8").read())
             if m:
                 tb_top = m.group(1)
-        ev = evaluator.evaluate(work, {"run_formal": True, "verbose": False, "tb_top": tb_top})
+        _ev_cfg = {"run_formal": True, "verbose": False, "tb_top": tb_top}
+        if verify_cfg:
+            _ev_cfg.update(verify_cfg)
+        ev = evaluator.evaluate(work, _ev_cfg)
         result["verify_mode"] = "bmc"  # 主判据 bmc；prove 参考见 verify_repair.sby
         result["verdict"] = ev["verdict"]
         result["verify_elapsed"] = {
@@ -298,6 +302,11 @@ def main(argv=None):
         out_path = argv[argv.index("--out") + 1]
     if "--verbose" in argv:
         verbose = True
+    verify_cfg = {}
+    if "--verify-timeout" in argv:
+        verify_cfg["formal_timeout"] = float(argv[argv.index("--verify-timeout") + 1])
+    if "--verify-depth" in argv:
+        verify_cfg["depth_override"] = int(argv[argv.index("--verify-depth") + 1])
 
     sample_ids = expand_samples(",".join(samples))
     dirs = {}
@@ -355,7 +364,8 @@ def main(argv=None):
                     continue
                 print("[run %d/%d] sample=%s setting=%s seed=%d mock=%s" % (
                     idx, total, sid, st, sd, mock), flush=True)
-                r = run_one(dirs[sid], sid, st, sd, llm, out_dir, mock=mock, retries=retries)
+                r = run_one(dirs[sid], sid, st, sd, llm, out_dir, mock=mock, retries=retries,
+                            verify_cfg=verify_cfg)
                 print("[result] %s/%s/seed%d loc_top1=%s repair=%s verdict=%s cost=%.4f tokens=%d" % (
                     sid, st, sd, r["loc_top1"], r["repair_pass"], r["verdict"],
                     r["cost"], r["input_tokens"] + r["output_tokens"]), flush=True)

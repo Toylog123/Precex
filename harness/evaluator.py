@@ -149,7 +149,8 @@ def _classify_formal(res, out):
 
 
 def formal_check(sby_file, timeout=600.0, run_script=None, sby="sby",
-                 smtbmc=DEFAULT_SMTBMC, cwd=None, retries=0, design_dir=None):
+                 smtbmc=DEFAULT_SMTBMC, cwd=None, retries=0, design_dir=None,
+                 depth_override=None):
     """③ sby 形式验证（bmc）：env 注入 z3 PATH 与 SMTBMC wrapper。
 
     - 默认直接 `sby -f <sby_file>`；若提供 run_script 则改为 `bash <run_script> -f <sby_file>`。
@@ -164,6 +165,18 @@ def formal_check(sby_file, timeout=600.0, run_script=None, sby="sby",
         env["PATH"] = local_bin + os.pathsep + env.get("PATH", "")
     if smtbmc and os.path.exists(smtbmc):
         env["SMTBMC"] = smtbmc
+    # 可选 depth 覆盖（长尾优化）：复制 sby 到临时文件并改写 "depth N" 行，
+    # 不改动样本目录原文件；depth_override=None 时保持文件原值（默认行为）。
+    if depth_override is not None:
+        import tempfile as _tf
+        _tmp_sby = os.path.join(_tf.mkdtemp(prefix="harness_sby_"), os.path.basename(sby_file))
+        with open(sby_file, "r", encoding="utf-8") as _f:
+            _sby_txt = _f.read()
+        _sby_txt = re.sub(r"(?m)^(\s*bmc:\s*depth\s+)\d+\s*$",
+                          lambda m: "%s%d" % (m.group(1), int(depth_override)), _sby_txt)
+        with open(_tmp_sby, "w", encoding="utf-8") as _f:
+            _f.write(_sby_txt)
+        sby_file = _tmp_sby
     # 组装命令
     if run_script:
         cmd = ["bash", run_script, "-f", sby_file]
