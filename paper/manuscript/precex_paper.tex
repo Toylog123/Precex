@@ -220,7 +220,7 @@ BugBench-PS 包含 34 个 L3 样本（s04--s37），覆盖 6 个开源教学级�
 
 全部实验基于开源工具链：iverilog 12.0、verilator 5.020、yosys 0.33、SymbiYosys（sby，smtbmc+z3 引擎）与 Python 3.12，运行于 WSL。证据链生成命令为 \texttt{python3 scripts/build\_evidence.py --samples s04-s37 --real --window 8}；主实验为 \texttt{python3 scripts/run\_experiments\_parallel.py --samples s04-s37 --settings A,B,C --seeds 0,1,2 --jobs 8}（结果合并到 \texttt{experiments/runs/experiments\_results\_parallel.json}）；充分性量化、T2 审计与 BMC 重验分别由 \texttt{verify\_sufficiency.py}、\texttt{t2\_audit.py}、\texttt{reverify\_bmc.py} 完成。所有 LLM 调用强制写入 token 账本（\texttt{experiments/runs/token\_ledger.jsonl}，1014 条），成本按 输入 $\times$ 输入单价 + 输出 $\times$ 输出单价 线性估算（MiniMax M3：0.60/2.40 美元每百万 token，标注为估算口径）。数据集 BugBench-PS（34 样本，6 模块 $\times$ 7 错误类型）与复现命令链一并开源，见仓库 \texttt{REPRO.md}。
 
-\subsection{非 LLM 基线}\subsection{非 LLM 基线}
+\subsection{非 LLM 基线}
 
 为确立 LLM 定位的非平凡性，在相同精确匹配口径（候选行等于 buggy\_inject\_line，34 样本）下评测三类简单启发式：首个断言行、任意断言行、首个提及失败信号的证据行，以及随机行期望。结果全部为 0\%（随机行期望 0.50\%），四设置 47.1--61.8\% 的定位精度远超这些基线，结构化证据（B）的 61.8\% 约为随机期望的 120 倍。
 
