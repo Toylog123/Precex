@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Generate paper figures for PreCex from authoritative data."""
 import os, json
 import matplotlib
@@ -8,7 +8,16 @@ import numpy as np
 
 import collections
 OUT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'paper', 'figures'))
+VEC = os.path.join(OUT, 'vector')
 os.makedirs(OUT, exist_ok=True)
+os.makedirs(VEC, exist_ok=True)
+
+def save_fig(fig, name):
+    fig.savefig(os.path.join(OUT, name + '.png'), bbox_inches='tight')
+    fig.savefig(os.path.join(VEC, name + '.pdf'), bbox_inches='tight', format='pdf')
+    fig.savefig(os.path.join(VEC, name + '.svg'), bbox_inches='tight', format='svg')
+    print('saved:', name, '(png/pdf/svg)')
+    plt.close(fig)
 plt.rcParams.update({'figure.dpi': 150, 'font.size': 10, 'axes.titlesize': 11, 'axes.labelsize': 10})
 
 def load_json(rel):
@@ -67,8 +76,7 @@ ax2.set_ylim(0, 6)
 for x, v in zip(range(4), cost):
     ax2.text(x, v + 0.15, f'${v:.2f}', ha='center', fontsize=8)
 plt.tight_layout()
-plt.savefig(os.path.join(OUT, 'fig_setting_loc_cost.png'), bbox_inches='tight')
-plt.close()
+save_fig(fig, 'fig_setting_loc_cost')
 
 # ---- Figure 2: Error-type x setting heatmap ----
 errs = ['state\ntrans', 'handshake', 'reset', 'fifo\nfull/empty', 'boundary\nwrap', 'width\ntrunc', 'edge']
@@ -92,8 +100,7 @@ for i in range(7):
                 color='white' if mat[i,j] > 55 else 'black')
 fig.colorbar(im, label='loc_top1 (%)')
 plt.tight_layout()
-plt.savefig(os.path.join(OUT, 'fig_error_setting_heatmap.png'), bbox_inches='tight')
-plt.close()
+save_fig(fig, 'fig_error_setting_heatmap')
 
 # ---- Figure 3: Pipeline architecture (schematic) ----
 fig, ax = plt.subplots(figsize=(9, 4.5))
@@ -119,6 +126,5 @@ ax.text(4.5, 1.05, 'fail: re-run <=N (new evidence)', ha='center', fontsize=8, c
 ax.text(4.9, 4.75, 'pass: patch + verification record', ha='center', fontsize=8.5, color='#2a7d2a')
 ax.text(0.3, 4.75, 'PreCex pipeline', fontsize=12, fontweight='bold')
 plt.tight_layout()
-plt.savefig(os.path.join(OUT, 'fig_pipeline.png'), bbox_inches='tight')
-plt.close()
+save_fig(fig, 'fig_pipeline')
 print('figures written:', os.listdir(OUT))

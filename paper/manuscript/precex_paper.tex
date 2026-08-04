@@ -151,7 +151,7 @@ AssertLLM2 & 断言生成 & --- & --- & --- & 变异驱动 \\
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.98\columnwidth]{fig_pipeline.png}%
+\includegraphics[width=0.98\columnwidth]{fig_pipeline.pdf}%
 \caption{PreCex 流水线：失败的形式化反例经解析生成结构化证据（B），可选语义化（C）或汇总为因果图（D），由 LLM 修复器生成最小 diff，并在 golden-first 的 BMC 判据下重新验证；失败结果回灌循环。}
 \label{fig:pipeline}
 \end{figure}
@@ -252,7 +252,7 @@ D 因果图 & 102 & 49.0\% & 100\% & 1.07M & \textbf{1.56} \\
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.98\columnwidth]{fig_setting_loc_cost.png}%
+\includegraphics[width=0.98\columnwidth]{fig_setting_loc_cost.pdf}%
 \caption{各设置的定位 Top-1 精度（柱）与 LLM 成本（折线）。B 相对 A 与 D 的精度优势统计显著（配对 McNemar）。}
 \label{fig:loc_cost}
 \end{figure}
@@ -267,7 +267,7 @@ D 因果图 & 102 & 49.0\% & 100\% & 1.07M & \textbf{1.56} \\
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.98\columnwidth]{fig_error_setting_heatmap.png}%
+\includegraphics[width=0.98\columnwidth]{fig_error_setting_heatmap.pdf}%
 \caption{错误类别 $\times$ 设置的定位 Top-1 精度热力图。困难类别排序（状态迁移/握手低于位宽截断/边沿）在全部设置中成立。}
 \label{fig:error_heatmap}
 \end{figure}
