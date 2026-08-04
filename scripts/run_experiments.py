@@ -211,6 +211,10 @@ def main(argv=None):
         settings = argv[argv.index("--settings") + 1].split(",")
     if "--seeds" in argv:
         seeds = [int(x) for x in argv[argv.index("--seeds") + 1].split(",")]
+    tasks_arg = []
+    if "--tasks" in argv:
+        tasks_arg = argv[argv.index("--tasks") + 1].split(",")
+
     if "--mock" in argv:
         mock = True
     if "--retries" in argv:
@@ -228,6 +232,22 @@ def main(argv=None):
             dirs[sid] = p
         else:
             print("warning: 跳过未找到样本 %s" % sid)
+
+    task_filter = None
+    if tasks_arg:
+        task_filter = set()
+        for t in tasks_arg:
+            parts = t.strip().split("/")
+            if len(parts) == 3:
+                task_filter.add((parts[0], parts[1], int(parts[2])))
+            else:
+                raise SystemExit("--tasks needs sXX/S/seed format: %s" % t)
+        keep_s = sorted({t[0] for t in task_filter})
+        keep_st = sorted({t[1] for t in task_filter})
+        keep_sd = sorted({t[2] for t in task_filter})
+        dirs = {s: dirs[s] for s in keep_s if s in dirs}
+        settings = keep_st
+        seeds = keep_sd
 
     llm = LLMClient(mock=mock, temperature=0.2)
     out_dir = tempfile.mkdtemp(prefix="exp_work_")
@@ -253,6 +273,8 @@ def main(argv=None):
             for sd in seeds:
                 idx += 1
                 key = (sid, st, sd)
+                if task_filter is not None and key not in task_filter:
+                    continue
                 if key in done_keys:
                     print("[skip %d/%d] %s/%s/seed%d (已存在，续跑跳过)" % (idx, total, sid, st, sd), flush=True)
                     continue

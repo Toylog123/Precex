@@ -28,7 +28,7 @@ def main(argv=None):
     ap.add_argument("--samples", default="s04-s37")
     ap.add_argument("--settings", default="A,B,C")
     ap.add_argument("--seeds", default="0,1,2")
-    ap.add_argument("--jobs", type=int, default=4)
+    ap.add_argument("--jobs", type=int, default=8)
     ap.add_argument("--retries", type=int, default=2)
     ap.add_argument("--out", default=None)
     ap.add_argument("--detach", action="store_true", help="nohup 启动后立即返回");
@@ -52,10 +52,13 @@ def main(argv=None):
         print("[merge] total=%d -> %s" % (len(results), out_path))
         return 0
     samples = expand_samples(args.samples)
-    jobs = max(1, min(args.jobs, len(samples)))
+    settings = [x.strip() for x in args.settings.split(",") if x.strip()]
+    seeds = [int(x) for x in args.seeds.split(",") if x.strip()]
+    tasks = [(s, st, sd) for s in samples for st in settings for sd in seeds]
+    jobs = max(1, min(args.jobs, len(tasks)))
     chunks = [[] for _ in range(jobs)]
-    for i, s in enumerate(samples):
-        chunks[i % jobs].append(s)
+    for i, t in enumerate(tasks):
+        chunks[i % jobs].append(t)
     shdir = os.path.join(workdir, ".par_sh")
     os.makedirs(shdir, exist_ok=True)
     for i, chunk in enumerate(chunks):
@@ -68,11 +71,12 @@ def main(argv=None):
         body += "cd %s\n" % WSL_ROOT
         body += "export PATH=$HOME/.local/bin:$PATH\n"
         body += "export SMTBMC=$PWD/smoke/yosys-smtbmc-z3.sh\n"
-        body += "nohup python3 scripts/run_experiments.py --samples %s --settings %s --seeds %s --retries %d --out %s > %s 2>&1 &\n" % (
-            ",".join(chunk), args.settings, args.seeds, args.retries, wsl_out, wsl_out + ".log")
+        task_ids = ",".join("%s/%s/%d" % (t[0], t[1], t[2]) for t in chunk)
+        body += "nohup python3 scripts/run_experiments.py --tasks %s --retries %d --out %s > %s 2>&1 &\n" % (
+            task_ids, args.retries, wsl_out, wsl_out + ".log")
         with open(sh, "w", encoding="utf-8", newline="\n") as f:
             f.write(body)
-        print("[spawn] part %d: %s" % (i, ",".join(chunk)), flush=True)
+        print("[spawn] part %d: %d tasks" % (i, len(chunk)), flush=True)
         if args.detach:
             subprocess.Popen(["wsl", "-e", "bash", wsl_sh], cwd=REPO_ROOT)
         else:
