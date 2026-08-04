@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""PreCex Gate-2 ?????????????? / meta ??? / ?????? / ??????
-???python3 scripts/gate2_audit.py
+"""PreCex Gate-2 dataset audit: completeness / meta consistency / evidence keys /
+uniqueness (buggy hash + inject key) / verify_repair prove mode.
+Output uses ASCII to avoid Windows console encoding issues.
+Usage: python scripts/gate2_audit.py
 """
-import json, os, re, sys, hashlib, collections
+import json
+import os
+import re
+import sys
+import hashlib
+import collections
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUGS = os.path.join(REPO_ROOT, "samples", "bugs")
@@ -18,42 +25,46 @@ ALLOWED_EXTRA = {EXTRA_UART_RX, "sby_work", "sby_golden", "sby_repair"}
 def audit():
     issues = []
     samples = sorted([d for d in os.listdir(BUGS) if re.match(r"^s\d{2}$", d) and os.path.isdir(os.path.join(BUGS, d))])
-    print("???:", len(samples))
+    print("[gate2-audit] samples:", len(samples))
     if len(samples) != 34:
-        issues.append("??? != 34: %d" % len(samples))
+        issues.append("sample count != 34: %d" % len(samples))
 
-    # 1) ?????
+    # 1) file completeness
     for s in samples:
         d = os.path.join(BUGS, s)
         files = set(os.listdir(d))
         missing = [f for f in REQUIRED if f not in files]
         if missing:
-            issues.append("%s ??: %s" % (s, ",".join(missing)))
-        # uart_rx ??? uart_tx.sv
+            issues.append("%s missing: %s" % (s, ",".join(missing)))
         meta_p = os.path.join(d, "meta.json")
         if os.path.isfile(meta_p):
-            meta = json.load(open(meta_p, encoding="utf-8"))
+            try:
+                meta = json.load(open(meta_p, encoding="utf-8"))
+            except Exception as e:
+                issues.append("%s meta.json unreadable: %s" % (s, e))
+                meta = {}
             if meta.get("module") == "uart_rx" and EXTRA_UART_RX not in files:
-                issues.append("%s uart_rx ? %s" % (s, EXTRA_UART_RX))
-        # ?????????????
+                issues.append("%s uart_rx missing %s" % (s, EXTRA_UART_RX))
         unexpected = files - set(REQUIRED) - ALLOWED_EXTRA - {"uart_tx.sv"}
         if unexpected:
-            issues.append("%s ????: %s" % (s, ",".join(sorted(unexpected))))
+            issues.append("%s unexpected files: %s" % (s, ",".join(sorted(unexpected))))
 
-    # 2) meta ???
+    # 2) meta consistency
     for s in samples:
         meta_p = os.path.join(BUGS, s, "meta.json")
-        meta = json.load(open(meta_p, encoding="utf-8"))
+        try:
+            meta = json.load(open(meta_p, encoding="utf-8"))
+        except Exception as e:
+            issues.append("%s meta.json unreadable: %s" % (s, e))
+            continue
         sid = meta.get("sample_id")
         if sid != s:
-            issues.append("%s meta.sample_id=%s ???" % (s, sid))
+            issues.append("%s meta.sample_id=%s mismatch" % (s, sid))
         for fld in ("module", "error_type", "inject_line"):
             if not meta.get(fld):
-                issues.append("%s meta ??? %s" % (s, fld))
-        # buggy_inject_line ???loc_top1 ?????
+                issues.append("%s meta missing %s" % (s, fld))
         if "buggy_inject_line" not in meta:
-            issues.append("%s meta ? buggy_inject_line" % s)
-        # golden_formal_result 应在 verification 嵌套，且为 pass
+            issues.append("%s meta missing buggy_inject_line" % s)
         v = meta.get("verification") or {}
         if v.get("golden_formal_result") not in ("pass", "PASS", True):
             issues.append("%s verification.golden_formal_result=%s" % (s, v.get("golden_formal_result")))
@@ -62,7 +73,7 @@ def audit():
         if v.get("verdict") not in ("L3_VALID", "valid", "PASS"):
             issues.append("%s verification.verdict=%s" % (s, v.get("verdict")))
 
-    # 3) evidence/semantics ??? + ????
+    # 3) evidence/semantics keys + sample_id
     for s in samples:
         for fname, keys in (("evidence.json", ["sample_id", "module", "error_type", "fail_step", "file", "line"]),
                             ("semantics.json", ["sample_id", "module", "error_type", "text_summary"])):
@@ -70,46 +81,65 @@ def audit():
             try:
                 data = json.load(open(p, encoding="utf-8"))
             except Exception as e:
-                issues.append("%s %s ????: %s" % (s, fname, e))
+                issues.append("%s %s unreadable: %s" % (s, fname, e))
                 continue
             for k in keys:
                 if k not in data:
-                    issues.append("%s %s ??? %s" % (s, fname, k))
+                    issues.append("%s %s missing %s" % (s, fname, k))
             if data.get("sample_id") and data["sample_id"] != s:
-                issues.append("%s %s sample_id=%s ???" % (s, fname, data["sample_id"]))
+                issues.append("%s %s sample_id=%s mismatch" % (s, fname, data["sample_id"]))
 
-    # 4) ????buggy.v ?? hash ?? + inject ???
+    # 4) uniqueness: buggy.v hash + (module,error_type,inject_line) key
     hashes = collections.defaultdict(list)
     inject_keys = collections.defaultdict(list)
     for s in samples:
         d = os.path.join(BUGS, s)
-        buggy = open(os.path.join(d, "buggy.v"), encoding="utf-8").read()
+        try:
+            buggy = open(os.path.join(d, "buggy.v"), encoding="utf-8").read()
+        except Exception as e:
+            issues.append("%s buggy.v unreadable: %s" % (s, e))
+            continue
         hashes[hashlib.md5(buggy.encode("utf-8")).hexdigest()].append(s)
-        meta = json.load(open(os.path.join(d, "meta.json"), encoding="utf-8"))
+        try:
+            meta = json.load(open(os.path.join(d, "meta.json"), encoding="utf-8"))
+        except Exception:
+            meta = {}
         k = (meta.get("module"), meta.get("error_type"), meta.get("inject_line"))
         inject_keys[k].append(s)
     for h, ss in hashes.items():
         if len(ss) > 1:
-            issues.append("buggy.v ????: %s" % ",".join(ss))
+            issues.append("buggy.v duplicate hash: %s" % ",".join(ss))
     for k, ss in inject_keys.items():
         if len(ss) > 1:
-            issues.append("(module,type,line) ??: %s <- %s" % (str(k), ",".join(ss)))
+            issues.append("(module,type,line) duplicate: %s <- %s" % (str(k), ",".join(ss)))
 
-    # 5) verify_repair.sby ?? prove ??
+    # 5) verify_repair.sby must be prove/k-induction mode
     for s in samples:
         p = os.path.join(BUGS, s, "verify_repair.sby")
         if os.path.isfile(p):
-            content = open(p, encoding="utf-8").read()
-            if "prove" not in content.lower() and "k-induction" not in content.lower():
-                issues.append("%s verify_repair.sby ? prove ??" % s)
+            content = open(p, encoding="utf-8", errors="replace").read().lower()
+            if "prove" not in content and "k-induction" not in content:
+                issues.append("%s verify_repair.sby not prove mode" % s)
 
-    print("\n=== ???? ===")
+    # 6) module x error_type matrix
+    matrix = collections.Counter()
+    for s in samples:
+        try:
+            meta = json.load(open(os.path.join(BUGS, s, "meta.json"), encoding="utf-8"))
+        except Exception:
+            continue
+        matrix[(meta.get("module"), meta.get("error_type"))] += 1
+    print("\n=== module x error_type matrix ===")
+    for k in sorted(matrix):
+        print("  %-20s %-20s %d" % (k[0], k[1], matrix[k]))
+
+    print("\n=== audit result ===")
     if issues:
-        print("?? %d ???:" % len(issues))
+        print("ISSUES %d:" % len(issues))
         for it in issues:
             print("  [%s]" % it)
         return 1
-    print("???? ??34 ???????meta ??????????????")
+    print("PASS: 34 samples complete, meta/evidence consistent, unique, prove mode ok")
     return 0
 
 
