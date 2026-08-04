@@ -1,0 +1,103 @@
+{
+  "base_label": "minimax",
+  "other_label": "deepseek",
+  "base_file": "experiments/runs/experiments_results_corrected.json",
+  "other_file": "experiments/runs/experiments_results_ds_full3.json",
+  "base_agg": {
+    "n": 306,
+    "loc_top1_rate": 0.5522875816993464,
+    "repair_pass_rate": 1.0,
+    "repair_pass_bmc_rate": 1.0,
+    "avg_attempts": 1.8104575163398693,
+    "cost": 9.666862199999999,
+    "input_tokens": 4309833,
+    "output_tokens": 2950401
+  },
+  "other_agg": {
+    "n": 306,
+    "loc_top1_rate": 0.5620915032679739,
+    "repair_pass_rate": 1.0,
+    "repair_pass_bmc_rate": 1.0,
+    "avg_attempts": 1.0065359477124183,
+    "cost": 1.0185917,
+    "input_tokens": 2122485,
+    "output_tokens": 2576585
+  },
+  "per_setting": {
+    "A": {
+      "base": {
+        "n": 102,
+        "loc_top1_rate": 0.47058823529411764,
+        "repair_pass_rate": 1.0,
+        "repair_pass_bmc_rate": 1.0,
+        "avg_attempts": 1.7941176470588236,
+        "cost": 2.7765252000000005,
+        "input_tokens": 1113898,
+        "output_tokens": 878411
+      },
+      "other": {
+        "n": 102,
+        "loc_top1_rate": 0.5098039215686274,
+        "repair_pass_rate": 1.0,
+        "repair_pass_bmc_rate": 1.0,
+        "avg_attempts": 1.0,
+        "cost": 0.34230056,
+        "input_tokens": 673098,
+        "output_tokens": 885953
+      }
+    },
+    "B": {
+      "base": {
+        "n": 102,
+        "loc_top1_rate": 0.6176470588235294,
+        "repair_pass_rate": 1.0,
+        "repair_pass_bmc_rate": 1.0,
+        "avg_attempts": 1.7352941176470589,
+        "cost": 2.7161933999999994,
+        "input_tokens": 842497,
+        "output_tokens": 921123
+      },
+      "other": {
+        "n": 102,
+        "loc_top1_rate": 0.5490196078431373,
+        "repair_pass_rate": 1.0,
+        "repair_pass_bmc_rate": 1.0,
+        "avg_attempts": 1.0098039215686274,
+        "cost": 0.27919962000000004,
+        "input_tokens": 503911,
+        "output_tokens": 745186
+      }
+    },
+    "C": {
+      "base": {
+        "n": 102,
+        "loc_top1_rate": 0.5686274509803921,
+        "repair_pass_rate": 1.0,
+        "repair_pass_bmc_rate": 1.0,
+        "avg_attempts": 1.9019607843137254,
+        "cost": 4.1741436,
+        "input_tokens": 2353438,
+        "output_tokens": 1150867
+      },
+      "other": {
+        "n": 102,
+        "loc_top1_rate": 0.6274509803921569,
+        "repair_pass_rate": 1.0,
+        "repair_pass_bmc_rate": 1.0,
+        "avg_attempts": 1.0098039215686274,
+        "cost": 0.39709152000000003,
+        "input_tokens": 945476,
+        "output_tokens": 945446
+      }
+    }
+  },
+  "mcnemar": {
+    "discordant": 0,
+    "base_only": 0,
+    "other_only": 0,
+    "base_ok": 306,
+    "other_ok": 306,
+    "p_value": 1.0
+  },
+  "note": "跨模型主实验对比（方案 B 口径）"
+}

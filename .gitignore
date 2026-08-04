@@ -53,6 +53,9 @@ experiments/runs/*
 !experiments/runs/experiments_results_corrected.json
 !experiments/runs/experiments_results_D_clean.json
 !experiments/runs/experiments_results_ds.json
+!experiments/runs/experiments_results_ds_seeds12.json
+!experiments/runs/experiments_results_ds_full3.json
+!experiments/runs/cross_model_3seeds.json
 !experiments/runs/experiments_results_l2.json
 !experiments/runs/token_ledger.jsonl
 !experiments/runs/reverify_bmc_all.json

@@ -218,7 +218,7 @@ BugBench-PS 包含 34 个 L3 样本（s04--s37），覆盖 6 个开源教学级�
 
 \subsection{可复现性}
 
-全部实验基于开源工具链：iverilog 12.0、verilator 5.020、yosys 0.33、SymbiYosys（sby，smtbmc+z3 引擎）与 Python 3.12，运行于 WSL。证据链生成命令为 \texttt{python3 scripts/build\_evidence.py --samples s04-s37 --real --window 8}；主实验为 \texttt{python3 scripts/run\_experiments\_parallel.py --samples s04-s37 --settings A,B,C --seeds 0,1,2 --jobs 8}（结果合并到 \texttt{experiments/runs/\allowbreak experiments\_results\_parallel.json}）；充分性量化、T2 审计与 BMC 重验分别由 \texttt{verify\_sufficiency.py}、\texttt{t2\_audit.py}、\texttt{reverify\_bmc.py} 完成。所有 LLM 调用强制写入 token 账本（\texttt{experiments/runs/token\_ledger.jsonl}，1312 条），成本按 输入 $\times$ 输入单价 + 输出 $\times$ 输出单价 线性估算（MiniMax M3：0.60/2.40 美元每百万 token，标注为估算口径）。数据集 BugBench-PS（34 样本，6 模块 $\times$ 7 错误类型）与复现命令链一并开源，见仓库 \texttt{REPRO.md}。
+全部实验基于开源工具链：iverilog 12.0、verilator 5.020、yosys 0.33、SymbiYosys（sby，smtbmc+z3 引擎）与 Python 3.12，运行于 WSL。证据链生成命令为 \texttt{python3 scripts/build\_evidence.py --samples s04-s37 --real --window 8}；主实验为 \texttt{python3 scripts/run\_experiments\_parallel.py --samples s04-s37 --settings A,B,C --seeds 0,1,2 --jobs 8}（结果合并到 \texttt{experiments/runs/\allowbreak experiments\_results\_parallel.json}）；充分性量化、T2 审计与 BMC 重验分别由 \texttt{verify\_sufficiency.py}、\texttt{t2\_audit.py}、\texttt{reverify\_bmc.py} 完成。所有 LLM 调用强制写入 token 账本（\texttt{experiments/runs/token\_ledger.jsonl}，1723 条），成本按 输入 $\times$ 输入单价 + 输出 $\times$ 输出单价 线性估算（MiniMax M3：0.60/2.40 美元每百万 token，标注为估算口径）。数据集 BugBench-PS（34 样本，6 模块 $\times$ 7 错误类型）与复现命令链一并开源，见仓库 \texttt{REPRO.md}。
 
 \subsection{非 LLM 基线}
 
@@ -348,7 +348,7 @@ FIFO 满空 & 53.3\% & 53.3\% & \textbf{60.0\%} & 46.7\% \\
 
 \begin{table}[!t]
 \centering
-\caption{跨模型主实验对比（MiniMax M3 vs DeepSeek v4-flash，seed 0 严格配对，n=34 每设置；修复率按 BMC 判据）}
+\caption{跨模型主实验对比（MiniMax M3 vs DeepSeek v4-flash，seed 0 严格配对，n=34 每设置，3-seed 全量验证见正文；修复率按 BMC 判据）}
 \label{tab:cross_model}
 \scriptsize
 \setlength{\tabcolsep}{4pt}
@@ -364,13 +364,13 @@ C 反例语义化 & 64.7\% & \textbf{67.6\%} & 100\% & 100\% \\
 \end{tabular}
 \end{table}
 
-\textbf{发现 6：}证据表征的定位优势是模型依赖的（表~\ref{tab:cross_model}）。为检验“单提供商威胁”，我们用 DeepSeek v4-flash（temperature=0）在 34 个 L3 样本的 A/B/C 三设置上重跑 seed 0（102 次调用，成本 \$0.34，全部 BMC 三通过）。与 MiniMax M3 的 102 条 seed 0 严格配对比较：修复率两模型均为 100\%（BMC 判据，McNemar 不一致对 0），跨模型差异不在“能否修复”而在定位与成本——DeepSeek 总体定位 59.8\%（vs MiniMax 56.9\%），但按设置看，MiniMax 上 B 最优（64.7\%，对 A 的配对 McNemar $p=0.0078$），DeepSeek 上 B 被 C 反超（67.6\%，$p=0.125$，n=34 小样本不显著）。DeepSeek 成本为同任务 MiniMax 的约 1/9.4（\$0.34 vs \$3.19），且首次尝试即全部通过（attempts=1 vs 1.78）。
+\textbf{发现 6：}证据表征的定位优势是模型依赖的（表~\ref{tab:cross_model}）。为检验“单提供商威胁”，我们用 DeepSeek v4-flash（temperature=0）在 34 个 L3 样本的 A/B/C 三设置上重跑 3 个 seeds（306 次调用，成本 \$1.02，全部 BMC 三通过）。与 MiniMax M3 的 306 条三-seed 严格配对比较：修复率两模型均为 100\%（BMC 判据，McNemar 不一致对 0），跨模型差异不在“能否修复”而在定位与成本——DeepSeek 总体定位 56.2\%（vs MiniMax 55.2\%），但按设置看，MiniMax 上 B 最优（61.8\%，对 A 的 47.1\%），DeepSeek 上 B（54.9\%）被 C（62.7\%）反超。DeepSeek 成本为同任务 MiniMax 的约 1/9.5（\$1.02 vs \$9.67），且首次尝试即全部通过（attempts=1.007 vs 1.810）。
 
 \textbf{方法论含义：}跨模型对比必须先统一修复判据口径；若以旧 prove 判据（MiniMax 225/306）对比 DeepSeek 的 BMC 结果（102/102），会错误得出“DeepSeek 修复率显著更高”。统一 BMC 口径后该差异消失。这进一步支持本文的核心主张：在判据可靠的前提下，证据表征的相对效应应限定于所测模型，论文不宣称跨模型普遍性。
 % =============================================================================
 \section{结论}
 
-本文提出 PreCex，一个开源、反例驱动的综合前 RTL 缺陷定位与修复流水线，并系统研究了此前反例理解类系统未受控的证据表征维度。在含 408 次主实验（MiniMax M3）、102 次跨模型重跑（DeepSeek v4-flash，seed 0 严格配对）与 72 次 L2 门禁对照评测的 34 样本跨周期（L3）基准上，主要结论如下：
+本文提出 PreCex，一个开源、反例驱动的综合前 RTL 缺陷定位与修复流水线，并系统研究了此前反例理解类系统未受控的证据表征维度。在含 408 次主实验（MiniMax M3）、306 次跨模型重跑（DeepSeek v4-flash，三-seed 严格配对）与 72 次 L2 门禁对照评测的 34 样本跨周期（L3）基准上，主要结论如下：
 
 \begin{itemize}
 \item 四种证据表征（原始日志、结构化证据、反例语义化、FVDebug 式因果图）在一致的 BMC 判据下修复率均达 100\%；表征决定定位的精度与成本，而非能否修复。
