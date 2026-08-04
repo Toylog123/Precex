@@ -56,6 +56,7 @@ def main():
         copied.append(dst_rel)
     print('submission package: %s' % out)
     print('files: %d' % len(copied))
+
     for c in copied:
         print('  -', c)
     # 校验清单
@@ -76,9 +77,26 @@ def main():
             f.write('| cover_letter.md | 投稿信草稿 |\n')
             f.write('| submission_checklist.md | 投稿包清单 |\n')
             f.write('| review_risk_response.md | 评审风险预案 |\n')
-            f.write('| verification/ | 数字终审 + 引用审计 + BMC 深度抽查 + 数据 |\n\n')
+            f.write('| verification/ | 数字终审 + 引用审计 + BMC 深度抽查 + 数据 |\n')
+            f.write('| verification/SHA256SUMS | 全部文件 SHA-256 校验和 |\n')
+            f.write('\n')
             f.write('## 冻结前置条件（需用户确认）\n\n1. 作者单位\n2. 目标期刊\n3. 人工可解释性评分（可选）\n\n确认后运行重新生成即完成冻结。\n')
         print('README.md written')
+
+    # R9: SHA256SUMS for package integrity
+    sums_path = os.path.join(out, "verification", "SHA256SUMS")
+    os.makedirs(os.path.dirname(sums_path), exist_ok=True)
+    with open(sums_path, "w", encoding="utf-8") as f:
+        for root_dir, _, files in os.walk(out):
+            for fn in sorted(files):
+                if fn == "SHA256SUMS":
+                    continue
+                fp = os.path.join(root_dir, fn)
+                rel = os.path.relpath(fp, out).replace(os.sep, '/')
+                import hashlib
+                h = hashlib.sha256(open(fp, 'rb').read()).hexdigest()
+                f.write('%s  %s\n' % (h, rel))
+    print('SHA256SUMS written:', sums_path)
 
 
 if __name__ == '__main__':
