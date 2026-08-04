@@ -25,6 +25,7 @@ import subprocess
 import sys
 import time
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 
 # 仓库根与 smoke 目录（用于默认 SMTBMC wrapper 定位）
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -221,6 +222,26 @@ def evaluate(sample_dir, cfg=None):
     tmpdir = tempfile.mkdtemp(prefix="harness_")
     try:
         # ① 编译检查（设计文件，0 error 判据）
+        # sby 形式验证（与 compile+sim 并行，互不依赖；run_formal=False 时跳过）
+        formal_res = {"result": "skipped", "exit_code": None, "stdout": "", "stderr": "", "log_tail": ""}
+        formal_fut = None
+        if cfg.get("run_formal", True) and sby_file:
+            def _formal_job():
+                t0 = time.time()
+                fr = formal_check(
+                    sby_file, timeout=cfg.get("formal_timeout", 600.0),
+                    run_script=cfg.get("run_script"),
+                    sby=cfg.get("sby", "sby"),
+                    smtbmc=cfg.get("smtbmc", DEFAULT_SMTBMC),
+                    cwd=sample_dir, retries=cfg.get("formal_retries", 0),
+                    design_dir=os.path.join(tmpdir, "sby_out"),
+                )
+                fr["elapsed"] = round(time.time() - t0, 2)
+                return fr
+            _ex = ThreadPoolExecutor(max_workers=1)
+            formal_fut = _ex.submit(_formal_job)
+
+        # 编译检查（设计文件，0 error 判据）
         comp_out = os.path.join(tmpdir, "a.out")
         t0_comp = time.time()
         compile_res = compile_check(design_files, top=cfg.get("top"),
@@ -231,7 +252,7 @@ def evaluate(sample_dir, cfg=None):
         if cfg.get("verbose"):
             print("[evaluate:%s] compile ok=%s" % (sample, compile_res["ok"]))
 
-        # ② 弱 tb 仿真（设计 + tb 一起编译运行）
+        # 弱 tb 仿真（设计 + tb 一起编译运行）
         sim_files = design_files + ([tb_file] if tb_file else [])
         # tb top 从文件内容提取模块名（文件名可能被重命名，如 tb_weak.sv 内模块 tb_fifo_sync）；cfg 可覆盖
         sim_top = cfg.get("tb_top")
@@ -250,19 +271,10 @@ def evaluate(sample_dir, cfg=None):
         if cfg.get("verbose"):
             print("[evaluate:%s] sim ok=%s exit=%s" % (sample, sim_res["ok"], sim_res["exit_code"]))
 
-        # ③ sby 形式验证（默认跑；run_formal=False 时跳过）
-        formal_res = {"result": "skipped", "exit_code": None, "stdout": "", "stderr": "", "log_tail": ""}
-        if cfg.get("run_formal", True) and sby_file:
-            t0_formal = time.time()
-            formal_res = formal_check(
-                sby_file, timeout=cfg.get("formal_timeout", 600.0),
-                run_script=cfg.get("run_script"),
-                sby=cfg.get("sby", "sby"),
-                smtbmc=cfg.get("smtbmc", DEFAULT_SMTBMC),
-                cwd=sample_dir, retries=cfg.get("formal_retries", 0),
-                design_dir=os.path.join(tmpdir, "sby_out"),
-            )
-            formal_res["elapsed"] = round(time.time() - t0_formal, 2)
+        # 等待 formal 并行结果
+        if formal_fut is not None:
+            formal_res = formal_fut.result()
+            _ex.shutdown(wait=True)
             if cfg.get("verbose"):
                 print("[evaluate:%s] formal result=%s exit=%s" % (sample, formal_res["result"], formal_res["exit_code"]))
 
