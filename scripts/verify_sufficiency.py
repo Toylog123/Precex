@@ -46,6 +46,8 @@ STRONG_OP_REPLACEMENT = {
     '!=': ['=='],
 }
 
+# 高阶变异类型：delete = 删除断言行；const = 改常量（DATA_W/ADDR_W/DEPTH 等参数引用）
+HIGHER_ORDER_MUTATIONS = ['delete', 'const']
 
 def expand_samples(spec):
     if not spec:
@@ -94,15 +96,42 @@ def mutate_line(line, op_map):
     return None
 
 
-def sample_mutations(sample_dir, strong=False):
-    """为一个样本生成最多 N 个 mutation 变体：每个 assert 行做 1 处运算符扰动。"""
+def sample_mutations(sample_dir, strong=False, higher=None):
+    """Generate mutations: per assert line one operator perturbation (strong/weak),
+    plus optional higher-order types: delete (comment out assert), const (replace
+    parameter constant refs like DATA_W/ADDR_W/DEPTH/DIV/HALF)."""
     golden = os.path.join(sample_dir, 'golden.v')
     if not os.path.isfile(golden):
         return []
     src = open(golden, encoding='utf-8').read()
     op_map = STRONG_OP_REPLACEMENT if strong else OP_REPLACEMENT
+    higher = higher or []
     variants = []
     for lineno, line in find_assert_lines(src):
+        # higher-order mutations first (delete / const), one variant each
+        if 'delete' in higher:
+            lines = src.split('\n')
+            lines[lineno - 1] = '// [mutation-delete] ' + line
+            variants.append({
+                'line': lineno, 'old': 'delete', 'new': 'comment_out',
+                'original_line': line, 'mutated_line': lines[lineno - 1],
+                'mutated_src': '\n'.join(lines),
+            })
+        if 'const' in higher:
+            for pat in (r'\bDATA_W\b', r'\bADDR_W\b', r'\bDEPTH\b', r'\bDIV\b', r'\bHALF\b'):
+                m = re.search(pat, line)
+                if m:
+                    repl_val = {'DATA_W': "1'b1", 'ADDR_W': "1'b1", 'DEPTH': "2'd2",
+                                'DIV': "3'd4", 'HALF': "2'd2"}.get(m.group(0), '1')
+                    mutated = re.sub(pat, repl_val, line, count=1)
+                    lines = src.split('\n')
+                    lines[lineno - 1] = mutated
+                    variants.append({
+                        'line': lineno, 'old': 'const:' + pat, 'new': repl_val,
+                        'original_line': line, 'mutated_line': mutated,
+                        'mutated_src': '\n'.join(lines),
+                    })
+                    break
         m = mutate_line(line, op_map)
         if not m:
             continue
@@ -115,7 +144,6 @@ def sample_mutations(sample_dir, strong=False):
             'mutated_src': '\n'.join(lines),
         })
     return variants
-
 
 def run_sby_on_src(sample, mutated_src, variant_idx, timeout=600, depth=None, workroot='.suff'):
     """把 mutated golden 写入临时样本目录跑 sby，返回 (done, elapsed, rc)。"""
