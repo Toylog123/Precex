@@ -21,6 +21,7 @@ ITEMS = [
     ('docs/投稿包清单.md', 'submission_checklist.md'),
     ('docs/评审风险预案.md', 'review_risk_response.md'),
     ('scripts/audit_paper_numbers.py', 'verification/audit_paper_numbers.py'),
+    ('scripts/audit_paper_refs.py', 'verification/audit_paper_refs.py'),
     ('docs/bmc_depth_spotcheck_slim.json', 'verification/bmc_depth_spotcheck_slim.json'),
 ]
 
@@ -64,7 +65,7 @@ def main():
             f.write('| cover_letter.md | 投稿信草稿 |\n')
             f.write('| submission_checklist.md | 投稿包清单 |\n')
             f.write('| review_risk_response.md | 评审风险预案 |\n')
-            f.write('| verification/ | 数字终审与 BMC 深度抽查 |\n\n')
+            f.write('| verification/ | 数字终审 + 引用审计 + BMC 深度抽查 |\n\n')
             f.write('## 冻结前置条件（需用户确认）\n\n1. 作者单位\n2. 目标期刊\n3. 人工可解释性评分（可选）\n\n确认后运行重新生成即完成冻结。\n')
         print('README.md written')
 
