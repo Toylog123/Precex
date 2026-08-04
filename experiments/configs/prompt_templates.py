@@ -61,6 +61,8 @@ def build_prompt(setting, design, assertions, evidence_text, meta=None):
         ev_label = "【证据段 A：原始反例日志/反例原文（未结构化处理）】"
     elif setting == "B":
         ev_label = "【证据段 B：结构化证据 JSON（EvidenceEngine 输出）】"
+    elif setting == "D":
+        ev_label = "【证据段 D：FVDebug 式因果图（失败断言 + 根因节点 + 因果链状态轨迹，确定性提取）】"
     elif setting == "C":
         ev_label = "【证据段 C：反例语义化（周期事件表+状态轨迹+故障锥+NL 摘要）】"
     else:

@@ -15,12 +15,12 @@ added 2026-08-04). Repair success judged by BMC (verify.sby) with golden double-
 | A (raw) | 102 | 47.1% | 100% | 1.99M | $2.78 |
 | B (structured) | 102 | 61.8% | 100% | 1.76M | $2.72 |
 | C (semanticized) | 102 | 56.9% | 100% | 3.50M | $4.17 |
-| D (causal graph) | 102 | TBD | TBD | TBD | TBD |
+| D (causal graph) | 102 | 49.0% | 100% | 1.07M | $1.56 |
 
 **Finding 1.** All four settings reach 100% repair under a consistent BMC criterion ?
 evidence representation does not gate *whether* the model can fix, but *how precisely and cheaply*.
 
-**Finding 2.** B (structured evidence) dominates on both precision (61.8%) and cost ($2.72);
+**Finding 2.** B (structured evidence) dominates on precision (61.8%); D (FVDebug-style causal graph) is cheapest ($1.56, 43% below B; 1.07M tokens) at 49.0% precision - a clear precision/cost trade-off.
 C's semanticization adds 1.7?2x cost with no repair gain (consistent with Gate-0 prestudy).
 
 **Finding 3 (loc difficulty by error type).** Single-point semantic errors are easy to locate
@@ -58,7 +58,7 @@ The original repair criterion (prove/k-induction) misjudged 78 correct repairs o
 
 ## Open items before paper submission
 
-- [ ] Fill D setting numbers + statistical test (B vs C/D loc, paired)
-- [ ] FVDebug quantitative comparison via D (claim: causal-graph evidence is cheap but B still wins)
+- [x] Fill D setting numbers (102 runs, $1.56, loc 49.0%, repair 100%)
+- [x] FVDebug quantitative comparison via D (D cheap but lower precision than B; B remains main setting)
 - [ ] Human interpretability rating (small study) for C/D
 - [ ] Full paper sections: Intro / Method / Related / Threats to validity

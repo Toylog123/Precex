@@ -6,7 +6,7 @@
 #   - 指标：loc_top1 / repair_pass / verdict / tokens / cost / attempts
 #   - 输出 experiments/runs/experiments_results.json + .csv（不入库），token 记账由 llm_client 强制
 # 用法：
-#   python3 scripts/run_experiments.py [--samples s04-s37] [--settings A,B,C]
+#   python3 scripts/run_experiments.py [--samples s04-s37] [--settings A,B,C,D]  # D=FVDebug 式因果图
 #            [--seeds 0,1,2] [--retries 2] [--mock] [--out ...]
 """
 PreCex 主实验批量评测。
@@ -239,6 +239,33 @@ def _build_evidence_text(setting, sample_dir):
         if ts:
             slim["text_summary"] = ts[:300] + ("…" if len(ts) > 300 else "")
         return json.dumps(slim, ensure_ascii=False, indent=2)
+    if setting == "D":
+        # FVDebug 式因果图（确定性提取，无 LLM 生成）：失败断言 + fault_cone 根因节点 + 全周期可读 state_trace + 触发条件
+        parts = []
+        ev_path = os.path.join(sample_dir, "evidence.json")
+        sem_path = os.path.join(sample_dir, "semantics.json")
+        ev = {}
+        sem = {}
+        if os.path.isfile(ev_path):
+            with open(ev_path, "r", encoding="utf-8") as f:
+                ev = json.load(f)
+        if os.path.isfile(sem_path):
+            with open(sem_path, "r", encoding="utf-8") as f:
+                sem = json.load(f)
+        parts.append("## FVDebug 式因果图（D 设置：反例自动提取，无 LLM 生成）")
+        parts.append("### 失败断言")
+        parts.append("module=%s | error_type=%s | fail_stage=%s | fail_step=%s" % (
+            ev.get("module"), ev.get("error_type"), ev.get("fail_stage"), ev.get("fail_step")))
+        parts.append("### 根因节点（fault_cone，按影响排序）")
+        cone = sem.get("fault_cone") or []
+        for node in cone:
+            parts.append("- %s" % (node if isinstance(node, str) else json.dumps(node, ensure_ascii=False)))
+        parts.append("### 因果链状态轨迹（全周期可读信号名）")
+        for row in (sem.get("state_trace") or []):
+            parts.append("cyc%s: %s" % (row.get("cycle", "?"), json.dumps(row, ensure_ascii=False)))
+        parts.append("### 触发条件")
+        parts.append(str(sem.get("trigger_condition") or ev.get("trigger_condition") or "?"))
+        return "\n".join(parts)
     raise ValueError("setting 必须是 A/B/C")
 
 

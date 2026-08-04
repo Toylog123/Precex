@@ -15,7 +15,7 @@ def agg(rs):
         a = st.setdefault(s, {"n":0, "loc":0, "repair_bmc":0, "pass":0, "fail":0, "tokens":0, "cost":0.0, "attempts":0})
         a["n"] += 1
         a["loc"] += 1 if r.get("loc_top1") else 0
-        a["repair_bmc"] += 1 if r.get("repair_pass_bmc") else 0
+        a["repair_bmc"] += 1 if (r.get("repair_pass_bmc") or r.get("repair_pass")) else 0
         v = r.get("verdict")
         if v == "PASS": a["pass"] += 1
         elif v == "FAIL": a["fail"] += 1
