@@ -90,9 +90,9 @@ python3 scripts/llm_interpretability.py --providers deepseek,minimax --samples s
 | 充分性（常量变异） | 484 → 396（81.8%） |
 | T2 审计 | 408/408（A/B/C 306 + D 102；接口/断言/证据 0 失败） |
 | reverify | 303/303（prove 误判 78、假阳性 0；74.3%→100%） |
-| 验证性能 | Gate-2 重验 202.6s（3.4min）/68 任务；axi golden ≈87s、uart_rx ≈151s |
+| 验证性能 | Gate-2 重验 202.6s（3.4min）/68 任务；axi golden ≈88s、uart_rx ≈153s（verify_timing.json 实测 87.5-88.0s / 150.6-152.6s，取上界约数） |
 | 补丁规模 | 408 条 diff mean 2.1 / median 2 / max 6 行 |
-| 反例长度 | 34 样本全量 295 拍、中位 6 拍；window=8 压缩后 283 拍（压缩率 4.1%） |
+| 反例长度 | 34 样本 VCD 时钟事件合计 295 拍、中位 6 拍、最长 41 拍（s24=37、s35=41）；窗口压缩收益有限，不另报压缩率 |
 | C 证据压缩（slim） | 34 样本总体 -44.6%（1.81×），中位 -42.8% |
 
 ## 7. 已知边界
