@@ -54,7 +54,10 @@ python3 scripts/measure_slim_compression.py
 # 8) 多 LLM 可解释性评分（可选，需 provider key）
 python3 scripts/llm_interpretability.py --providers deepseek,minimax --samples s04-s37 --n 10
 
-# 9) 论文图表重建（数据驱动，从 experiments/runs 读取）
+# 9) 论文数字终审（40 项断言，从 experiments/runs 读取并逐一核对）
+python3 scripts/audit_paper_numbers.py
+
+# 10) 论文图表重建（数据驱动，从 experiments/runs 读取）
 python3 scripts/make_paper_figs.py
 ```
 
