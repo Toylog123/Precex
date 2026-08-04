@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+# PreCex - scripts/build_submission_package.py
+# 组装投稿包：论文 PDF/tex + 图表 + REPRO + 投稿信 + 数据清单 -> 单目录
+# 用法：python scripts/build_submission_package.py [--out <dir>]
+# 说明：作者单位/目标期刊占位符随论文 tex；冻结前需用户确认这两项。
+import argparse
+import os
+import shutil
+
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+ITEMS = [
+    ('paper/precex_paper.pdf', 'manuscript/precex_paper.pdf'),
+    ('paper/manuscript/precex_paper.tex', 'manuscript/precex_paper.tex'),
+    ('paper/figures/fig_pipeline.pdf', 'figures/fig_pipeline.pdf'),
+    ('paper/figures/fig_setting_loc_cost.pdf', 'figures/fig_setting_loc_cost.pdf'),
+    ('paper/figures/fig_error_setting_heatmap.pdf', 'figures/fig_error_setting_heatmap.pdf'),
+    ('REPRO.md', 'REPRO.md'),
+    ('docs/cover_letter.md', 'cover_letter.md'),
+    ('docs/投稿包清单.md', 'submission_checklist.md'),
+    ('docs/评审风险预案.md', 'review_risk_response.md'),
+    ('scripts/audit_paper_numbers.py', 'verification/audit_paper_numbers.py'),
+    ('docs/bmc_depth_spotcheck_slim.json', 'verification/bmc_depth_spotcheck_slim.json'),
+]
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--out', default=os.path.join(REPO, 'submission_package'))
+    args = ap.parse_args()
+    out = os.path.abspath(args.out)
+    shutil.rmtree(out, ignore_errors=True)
+    os.makedirs(out, exist_ok=True)
+    copied = []
+    for src_rel, dst_rel in ITEMS:
+        src = os.path.join(REPO, src_rel)
+        dst = os.path.join(out, dst_rel)
+        if not os.path.isfile(src):
+            print('MISSING:', src_rel)
+            continue
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        shutil.copy2(src, dst)
+        copied.append(dst_rel)
+    print('submission package: %s' % out)
+    print('files: %d' % len(copied))
+    for c in copied:
+        print('  -', c)
+    # 校验清单
+    missing = [r for r, _ in ITEMS if not os.path.isfile(os.path.join(REPO, r))]
+    if missing:
+        print('MISSING FILES:', missing)
+    else:
+        print('ALL %d ITEMS PRESENT' % len(ITEMS))
+        readme = os.path.join(out, 'README.md')
+        with open(readme, 'w', encoding='utf-8') as f:
+            f.write('# PreCex 投稿包\n\n')
+            f.write('> 由 scripts/build_submission_package.py 自动组装（2026-08-05）。\n\n')
+            f.write('## 内容索引\n\n| 文件 | 用途 |\n|---|---|\n')
+            f.write('| manuscript/precex_paper.pdf | 论文全文（8 页，矢量图） |\n')
+            f.write('| manuscript/precex_paper.tex | 论文 LaTeX 主稿（中文） |\n')
+            f.write('| figures/*.pdf | 三张矢量图 |\n')
+            f.write('| REPRO.md | 可复现性说明 |\n')
+            f.write('| cover_letter.md | 投稿信草稿 |\n')
+            f.write('| submission_checklist.md | 投稿包清单 |\n')
+            f.write('| review_risk_response.md | 评审风险预案 |\n')
+            f.write('| verification/ | 数字终审与 BMC 深度抽查 |\n\n')
+            f.write('## 冻结前置条件（需用户确认）\n\n1. 作者单位\n2. 目标期刊\n3. 人工可解释性评分（可选）\n\n确认后运行重新生成即完成冻结。\n')
+        print('README.md written')
+
+
+if __name__ == '__main__':
+    main()

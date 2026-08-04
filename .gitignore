@@ -31,6 +31,7 @@ build/
 dist/
 *.o
 *.exe
+submission_package/
 
 # 编辑器 / 系统
 .vscode/
