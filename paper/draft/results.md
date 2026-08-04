@@ -27,7 +27,22 @@ C's semanticization adds 1.7–2× cost with no repair gain (consistent with Gat
 
 **Finding 3 (loc difficulty by error type).** Single-point semantic errors are easy to locate
 (edge 100%, width_trunc 85.2%); cross-state/handshake errors are hard (state_trans 36.1%, handshake 27.8%).
-The gap is setting-independent.
+The relative difficulty ordering is stable across settings. Setting-level localization by error class
+(per-setting n: 24/24/24/24 for state_trans, 12/12/12/12 for handshake, 3/3/3/3 for edge):
+
+| Error class | A | B | C | D |
+| --- | --- | --- | --- | --- |
+| state_trans | 33.3% | **37.5%** | 37.5% | 25.0% |
+| handshake | 16.7% | 33.3% | 33.3% | **41.7%** |
+| reset | 55.6% | 72.2% | **83.3%** | 44.4% |
+| fifo_full_empty | 53.3% | 53.3% | **60.0%** | 46.7% |
+| boundary_wrap | 42.9% | **81.0%** | 57.1% | 57.1% |
+| width_trunc | 88.9% | **100%** | 66.7% | 100% |
+| edge | 100% | 100% | 100% | 100% |
+
+B is best or tied-best on boundary_wrap (81.0%), width_trunc (100%), and state_trans (37.5%);
+D is highest on handshake (41.7%, n=12 per setting — small-n caveat). The hard-class ordering
+(state_trans/handshake below width_trunc/edge) holds in every setting.
 
 ## RQ2: Is the repair trustworthy? (Verifier sufficiency + patch quality)
 
