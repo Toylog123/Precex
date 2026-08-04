@@ -18,7 +18,7 @@ On a 34-sample L3 benchmark across 6 modules and 7 error classes (408 LLM repair
 
 ## 1. Introduction
 
-## Problem
+### Problem
 
 RTL designs are increasingly complex, and cross-cycle behavioral defects (L3: weak
 testbenches pass but formal verification fails) are among the hardest to localize and
@@ -29,7 +29,7 @@ structured counterexample understanding, but lacks: (1) an open-source end-to-en
 pipeline, (2) cross-cycle bug-specific study, (3) a rigorous verification-sufficiency
 loop, and (4) a controlled ablation of evidence representations.
 
-## Motivation
+### Motivation
 
 We observe that the *evidence representation* given to the LLM is a key but understudied
 axis. We systematically compare four evidence settings on the same 34-sample L3 dataset
@@ -40,7 +40,7 @@ axis. We systematically compare four evidence settings on the same 34-sample L3 
 - C: counterexample semanticization (CexSemantizer: cycle events + state trace + fault cone + NL summary)
 - D: FVDebug-style causal graph (deterministic extraction)
 
-## Contributions
+### Contributions
 
 1. **Open-source counterexample-driven repair pipeline** (iverilog/yosys/sby/z3 + MiniMax M3 API),
    fully reproducible; 34-sample L3 dataset with golden double-check and sufficiency audits.
@@ -205,13 +205,13 @@ The original repair criterion (prove/k-induction) misjudged 78 correct repairs o
 
 ---
 
-### 4. Related Work
+## 4. Related Work
 
 ### Scope
 
 PreCex sits at the intersection of four lines of work: (i) formal-verification failure analysis and counterexample understanding; (ii) LLM-based RTL debugging and repair; (iii) assertion generation and verification sufficiency; and (iv) RTL debugging benchmarks. This section positions our pipeline against each, with emphasis on the evidence-representation axis that PreCex ablates.
 
-## Counterexample-driven debugging and root-cause analysis
+### Counterexample-driven debugging and root-cause analysis
 
 **FVDebug** [arXiv:2510.15906] is the closest competitor. It builds a causal DAG from a failing formal trace, scans suspicious nodes with batched LLM calls, produces a root-cause narrative through an agent, and generates fixes, demonstrated on two industrial counterexamples. PreCex shares the counterexample-understanding core: our Setting D is a deterministic, fully open-source realization of the FVDebug-style causal graph (failed assertion + fault cone + full-cycle state trace + trigger condition). FVDebug leaves three axes unaddressed that PreCex controls for: it depends on a commercial toolchain, it reports no controlled ablation of the evidence representation, and it does not quantify verifier sufficiency. PreCex is fully open-source (iverilog/yosys/SymbiYosys/Z3), compares four evidence representations on the same 34-sample dataset, and audits the verifier with mutation analysis, vacuity control, and an independent T2 review agent.
 
@@ -223,23 +223,23 @@ PreCex sits at the intersection of four lines of work: (i) formal-verification f
 
 **ChipAgents RCA** (commercial, 2026) combines a waveform-understanding engine with a prover-verifier agent pair and self-consistency ranking, and reports localization of a three-cycle race condition in industrial deployment. It corroborates that cross-cycle root-cause analysis is a real industrial pain point, but is a closed black box with no ablation detail.
 
-## LLM-based RTL repair
+### LLM-based RTL repair
 
 **VeriPilot** [arXiv:2606.23759] uses a golden reference model with CDFG signal tracking and raises GPT-4o repair rates on CVDP from 54.3% to 85.71%. **VeriDebug** [arXiv:2504.19099] learns a contrastive embedding and guides correction, reaching 64.7% Acc@1 on a combined localization-plus-type task. **RTLFixer** applies retrieval-augmented repair to syntax errors. These works are not counterexample-driven: they rely on reference models, fine-tuned embeddings, or syntax-only fixes. PreCex deliberately targets the pre-synthesis setting with no reference model and treats the evidence representation rather than model capacity as the studied variable.
 
 **Fixbench-RTL** and **HDL-FixBench** are repair benchmarks spanning syntax/functional/security domains (Fixbench) and repository-scale instances (57 instances from OpenTitan/CVA6/Ibex, best model 40.3%; rejected by ICLR 2026). HDL-FixBench's rejection highlights pitfalls we engineered against: small scale, insufficient diversity, disputed patch thresholds, missing non-LLM baselines, and contamination risk. BugBench-PS addresses these with 34 L3 samples across 6 modules and 7 error classes, per-sample golden double-checking, tool-execution adjudication, and a documented contamination statement.
 
-## Assertion generation and verification sufficiency
+### Assertion generation and verification sufficiency
 
 **AssertLLM** [ASPDAC'25] and **AssertLLM2** generate SVA from natural-language specifications plus waveforms; AssertLLM2 introduces an 83-design assertion benchmark and evaluates assertions through mutation-based bug detection in a bug-hunting setting. **AssertGen** [ATS'25] extracts verification goals via chain-of-thought and bridges cross-layer signals, with mutation-testing coverage evaluation. **LASSO** [MLCAD'25] generates safety properties with explicit vacuity checking and coverage feedback, detecting 5 real bugs in OpenTitan. **LintLLM** [GLSVLSI'25] performs LLM linting with mutation-based defect injection.
 
 These works generate or audit assertions; PreCex consumes assertions plus counterexamples to localize and repair. Their evaluation practices (mutation coverage, vacuity, bug-hunting) provide the methodological precedent for our sufficiency audits: 88.5% strong mutants and 81.8% constant mutants killed, with delete-mutation vacuity control.
 
-## Benchmarks and evaluation methodology
+### Benchmarks and evaluation methodology
 
 Tool-execution adjudication is an accepted evaluation practice in the EDA-AI literature: Rule2DRC (ICML 2026) compares 13,921 layout-rule results and PostEDA-Bench evaluates 145 DRC/PPA tasks by executing design tools. PreCex follows the same principle: repair success is adjudicated by compilation, weak-testbench regression, and formal BMC, never by the LLM's self-report. Engineering-semantics datasets (OpenRTLSet, EDA-Schema-V2, ChipLingo) informed our evidence schema design.
 
-## Positioning
+### Positioning
 
 | Work | Evidence representation | Open-source | Cross-cycle (L3) focus | Controlled evidence ablation | Sufficiency quantification |
 | --- | --- | --- | --- | --- | --- |
@@ -257,7 +257,7 @@ Our three differentiators are each evidenced by controlled experiments in this p
 
 ---
 
-### 5. Threats to Validity and Conclusion
+## 5. Threats to Validity and Conclusion
 
 ### Threats to validity
 
@@ -281,7 +281,7 @@ Our three differentiators are each evidenced by controlled experiments in this p
 
 loc_top1 records whether the model's top-ranked candidate line is inside the injected defect's reference diff; repair rate is measured under the BMC criterion; cost is metered by API tokens. These constructs match the repair-benchmark literature. Statistical claims use paired McNemar tests on per-sample localization outcomes (102 pairs per comparison): B vs A p=0.0035 and B vs D p=0.0164 are significant; B vs C p=0.404 and C vs D p=0.186 are not. All comparisons are reported, including non-significant ones.
 
-## Conclusion
+### Conclusion
 
 We presented PreCex, an open-source, counterexample-driven pipeline for pre-synthesis RTL defect localization and repair, and studied the evidence-representation axis that prior counterexample-understanding systems leave uncontrolled. On a 34-sample cross-cycle (L3) benchmark with 408 LLM repair runs:
 
