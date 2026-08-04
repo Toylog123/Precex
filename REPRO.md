@@ -61,9 +61,12 @@ python3 scripts/llm_interpretability.py --providers deepseek,minimax --samples s
 | --- | --- | --- |
 | 主实验结果 | experiments/runs/experiments_results_parallel.json | 306 条（A/B/C×34×3） |
 | D 设置结果 | experiments/runs/_d_*.json + 合并 | 102 条 |
-| token 账本 | experiments/runs/token_ledger.jsonl | 1014 条，全部调用强制记账 |
+| 主实验修正（BMC） | experiments/runs/experiments_results_corrected.json | 306 条，repair_pass_bmc 全部 True（论文口径） |
+| 跨模型重跑（DeepSeek） | experiments/runs/experiments_results_ds.json | 102 条（A/B/C×34×seed0） |
+| L2 假阳性率 | experiments/runs/experiments_results_l2.json | 72 条（A/B/C×24 L2 样本） |
+| token 账本 | experiments/runs/token_ledger.jsonl | 1312 条，全部调用强制记账 |
 | 充分性 | experiments/runs/reverify_bmc_all.json / t2_audit_abc.json / t2_audit_D.json | 303/303、408/408 |
-| 验证计时 | experiments/runs/verify_timing.json | gate2 逐样本 verify/golden 耗时 |
+| 验证计时 | experiments/runs/verify_timing.json | 重验逐样本 verify/golden 耗时 |
 | C 压缩对比 | experiments/runs/slim_compression.json | 原始 vs slim 字符/比率 |
 | LLM 评分 | experiments/runs/llm_scores/ | 多模型可解释性评分（不入库） |
 
@@ -72,9 +75,9 @@ python3 scripts/llm_interpretability.py --providers deepseek,minimax --samples s
 - 公式：`cost = input_tokens × 输入单价/1M + output_tokens × 输出单价/1M`（USD）
 - MiniMax M3：输入 $0.60/1M、输出 $2.40/1M；>512K 上下文翻倍（代码注释标注"占位，以平台账单为准待校准"）
 - DeepSeek V4-Flash：输入 $0.14/1M（cache miss）、输出 $0.28/1M
-- 完整账本（2026-08-04）：**1014 次调用，$16.79**；主实验 408 runs（A/B/C/D）**$11.22、avg $0.0275**
+- 完整账本（2026-08-05）：**1312 次调用，$17.79**；主实验 408 runs（A/B/C/D）**$11.22、avg $0.0275**；DeepSeek 跨模型 102 次 $0.34 + L2 72 次 $0.29 + 可解释性 40 次 $0.11
 - 分设置：A $2.78 / B $2.72 / C $4.17 / D $1.56；tokens A 1.99M / B 1.76M / C 3.50M / D 1.07M
-- 核对：token_ledger.jsonl 1014 条全部与公式一致（0 mismatch），上下文均 <512K
+- 核对：token_ledger.jsonl 1312 条全部与公式一致（0 mismatch），上下文均 <512K
 
 ## 6. 论文关键数字锚点（全部与原始数据核对一致，2026-08-04 审计）
 
