@@ -59,6 +59,10 @@ python3 scripts/audit_paper_numbers.py
 
 # 10) 论文图表重建（数据驱动，从 experiments/runs 读取）
 python3 scripts/make_paper_figs.py
+
+# 11) 组装投稿包并校验完整性（SHA256SUMS 由脚本自动生成）
+python3 scripts/build_submission_package.py
+cd submission_package && sha256sum -c verification/SHA256SUMS && cd ..
 ```
 
 ## 4. 数据位置（experiments/runs/ 不入库，按需保留）
@@ -74,6 +78,7 @@ python3 scripts/make_paper_figs.py
 | 充分性 | experiments/runs/reverify_bmc_all.json / t2_audit_abc.json / t2_audit_D.json | 303/303、408/408；均已入库 |
 | 验证计时 | experiments/runs/verify_timing.json | 重验逐样本 verify/golden 耗时；已入库 |
 | C 压缩对比 | experiments/runs/slim_compression.json | 原始 vs slim 字符/比率；已入库 |
+| BMC 深度抽查 | docs/bmc_depth_spotcheck_slim.json | axi 16→24、uart_rx 24→32，6 目标 5 PASS + 1 手工 apply；已入库 |
 | LLM 评分 | experiments/runs/llm_scores/ | 多模型可解释性评分（summary/all/deepseek/minimax 已入库） |
 
 ## 5. 账本口径（成本核算）
