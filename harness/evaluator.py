@@ -248,6 +248,7 @@ def evaluate(sample_dir, cfg=None):
                     smtbmc=cfg.get("smtbmc", DEFAULT_SMTBMC),
                     cwd=sample_dir, retries=cfg.get("formal_retries", 0),
                     design_dir=os.path.join(tmpdir, "sby_out"),
+                    depth_override=cfg.get("depth_override"),
                 )
                 fr["elapsed"] = round(time.time() - t0, 2)
                 return fr

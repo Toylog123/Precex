@@ -1,0 +1,111 @@
+{
+  "module_depths": {
+    "axi_lite_slave": [
+      16,
+      24
+    ],
+    "uart_rx": [
+      24,
+      32
+    ]
+  },
+  "targets": [
+    [
+      "s17",
+      "B",
+      0
+    ],
+    [
+      "s17",
+      "C",
+      0
+    ],
+    [
+      "s25",
+      "B",
+      0
+    ],
+    [
+      "s34",
+      "B",
+      0
+    ],
+    [
+      "s18",
+      "B",
+      0
+    ],
+    [
+      "s36",
+      "B",
+      0
+    ]
+  ],
+  "total": 6,
+  "pass": 5,
+  "results": [
+    {
+      "sample": "s17",
+      "setting": "B",
+      "seed": 0,
+      "module": "axi_lite_slave",
+      "old_depth": 16,
+      "new_depth": 24,
+      "verdict": "PASS",
+      "formal": "pass",
+      "exit_code": 0
+    },
+    {
+      "sample": "s17",
+      "setting": "C",
+      "seed": 0,
+      "module": "axi_lite_slave",
+      "apply": "FAIL",
+      "error": "cannot locate hunk @120 (first old line \"            S_AXI_BRESP  <= 2'b00;             // OKAY\")"
+    },
+    {
+      "sample": "s25",
+      "setting": "B",
+      "seed": 0,
+      "module": "axi_lite_slave",
+      "old_depth": 16,
+      "new_depth": 24,
+      "verdict": "PASS",
+      "formal": "pass",
+      "exit_code": 0
+    },
+    {
+      "sample": "s34",
+      "setting": "B",
+      "seed": 0,
+      "module": "axi_lite_slave",
+      "old_depth": 16,
+      "new_depth": 24,
+      "verdict": "PASS",
+      "formal": "pass",
+      "exit_code": 0
+    },
+    {
+      "sample": "s18",
+      "setting": "B",
+      "seed": 0,
+      "module": "uart_rx",
+      "old_depth": 24,
+      "new_depth": 32,
+      "verdict": "PASS",
+      "formal": "pass",
+      "exit_code": 0
+    },
+    {
+      "sample": "s36",
+      "setting": "B",
+      "seed": 0,
+      "module": "uart_rx",
+      "old_depth": 24,
+      "new_depth": 32,
+      "verdict": "PASS",
+      "formal": "pass",
+      "exit_code": 0
+    }
+  ]
+}
