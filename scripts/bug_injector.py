@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# PreCex - scripts/bug_injector.py：L3 缺陷样本注入器（黄金 RTL → 规则化文本变换注入 7 类缺陷 → 三通过自动校验 → 7 件套落盘）
+# PreCex - scripts/bug_injector.py：L3/L2 缺陷样本注入器（黄金 RTL → 规则化文本变换注入 7 类缺陷 → 三通过自动校验 → 7 件套落盘）
 # 作者：Toylog | 版本：v0.1 | 功能概述：对 rtl/<模块>/<模块>.sv 做规则化正则变换注入缺陷，生成 samples/bugs/<sample-id>/
 #   7 件套（buggy.v / golden.v / assertions.sv / tb_weak.sv / cex.vcd / cex.log / meta.json / evidence.json / notes.md），
 #   复用 harness/evaluator.py 三通过判定（compile 0 error + 弱 tb 全绿 + sby formal 抓反例），三者同时满足才产出有效 L3 样本。
@@ -26,9 +26,11 @@ from evaluator import compile_check, sim_check, formal_check  # noqa: E402  复�
 
 RTL_DIR = os.path.join(REPO_ROOT, "rtl")
 SAMPLES_DIR = os.path.join(REPO_ROOT, "samples", "bugs")
+L2_SAMPLES_DIR = os.path.join(REPO_ROOT, "samples", "l2")
 DATE = "2026-08-03"          # 构造日期（数据集污染检查用）
 FORMAL_TIMEOUT = 900.0       # 注入校验时 formal 超时（sby smtbmc+z3，秒；uart_rx 深度 240 需较长 BMC）
 SIM_TIMEOUT = 120.0          # 弱 tb 仿真超时
+BUGGY_HEADER_OFFSET = 4      # buggy.v 头部注释 4 行，注入行号 = 源码行号 + 4（loc_top1 评估口径）
 
 # 各模块 sby BMC 深度：反例可达拍数 + 裕量（fifo A5 需写 4 拍；fsm A6 需走完序列约 12 拍）
 MODULE_DEPTH = {
@@ -535,6 +537,36 @@ def _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, module, top_
         "sby_work": os.path.join(work_dir, "sby_work")}
 
 
+def _validate_l2_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, module, top_mod):
+    """L2 样本双检：① 编译 0 error；② 弱 tb 仿真必须 FAIL（弱 tb 可抓）；③ sby formal 也抓反例。
+    命中"伪 L3"判据（弱 tb 抓得到 + formal 也失败），供假阳性率量化。"""
+    buggy = os.path.join(tmp_dir, "buggy.v")
+    tb = os.path.join(tmp_dir, "tb_weak.sv")
+    extra_files = []
+    if module == "uart_rx":
+        extra_files = [os.path.join(tmp_dir, "uart_tx.sv")]
+    comp = compile_check([buggy] + extra_files, cwd=tmp_dir, out="a.out")
+    if not comp["ok"]:
+        return False, {"stage": "compile", "detail": (comp["stdout"] + comp["stderr"])[-800:]}
+    sim = sim_check([buggy, tb] + extra_files, top=tb_top, cwd=tmp_dir,
+                    out_bin="sim.out", sim_timeout=SIM_TIMEOUT)
+    # L2 判定：弱 tb 必须 FAIL（仿真抓 bug）——与 L3（弱 tb 全绿放过）相反
+    if sim["ok"]:
+        return False, {"stage": "sim", "detail": "L2 期望弱 tb FAIL，但仿真通过（exit=%s）；换更浅/单周期注入点"
+                       % sim["exit_code"]}
+    sim_out = sim["stdout"] + sim["stderr"]
+    fail_lines = [l.strip() for l in sim_out.splitlines() if "FAIL" in l or "$fatal" in l]
+    if not fail_lines:
+        return False, {"stage": "sim", "detail": "L2 弱 tb 未显式 FAIL/$fatal（exit=%s）：%s"
+                       % (sim["exit_code"], sim_out[-300:])}
+    formal = formal_check(sby_file, timeout=FORMAL_TIMEOUT, cwd=tmp_dir,
+                          design_dir=os.path.join(work_dir, "sby_work"))
+    if formal["result"] != "fail":
+        return False, {"stage": "formal", "result": formal["result"], "detail": formal["log_tail"][-400:]}
+    return True, {"stage": "all", "sim_fail": fail_lines[-3:], "formal": formal,
+        "sby_work": os.path.join(work_dir, "sby_work")}
+
+
 def _copy_cex(sby_work, sample_dir):
     """从 sby 工作目录拷贝反例证据：engine_0/trace.vcd → cex.vcd，engine_0/logfile.txt → cex.log。"""
     vcd = log = None
@@ -567,7 +599,7 @@ def _copy_cex(sby_work, sample_dir):
 # ---- 样本落盘 ----
 def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertions_src,
                   tb_src, top_mod, tb_top, depth, variant, line_no, diff, verify, cmd_line,
-                  param_map=None):
+                  param_map=None, level="L3"):
     param_map = param_map or {}
     """生成 7 件套（buggy/golden/弱tb/cex.vcd/cex.log/meta.json/evidence.json/notes.md）+ verify.sby。
     断言已内联于 buggy.v/golden.v（不再生成独立 assertions.sv / formal_top.sv）。"""
@@ -583,10 +615,10 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
     with open(os.path.join(sample_dir, "golden.v"), "w", encoding="utf-8") as f:
         f.write(golden_src)
     head = (
-        "// PreCex - %s L3 缺陷样本 %s（buggy 版）\n"
+        "// PreCex - %s %s 缺陷样本 %s（buggy 版）\n"
         "// 作者：Toylog | 版本：v0.1 | 功能概述：注入『%s』类缺陷——%s\n"
         "// 来源：rtl/%s/%s.sv 单点注入（行 %d）| 击穿断言：%s\n\n" % (
-            module, sample_id, verify["err_name"], variant["desc"], module, module, line_no, variant["hit"]))
+            module, level, sample_id, verify["err_name"], variant["desc"], module, module, line_no, variant["hit"]))
     with open(os.path.join(sample_dir, "buggy.v"), "w", encoding="utf-8") as f:
         f.write(head + buggy_src)
     with open(os.path.join(sample_dir, "tb_weak.sv"), "w", encoding="utf-8") as f:
@@ -601,10 +633,10 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
         f.write(_gen_repair_sby(module, top_mod, depth))
     # meta.json（可复现：记录注入命令与参数）
     meta = {
-        "_doc": "PreCex L3 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
+        "_doc": "PreCex %s 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
         "sample_id": sample_id, "module": module,
         "error_type": verify["err_name"], "error_type_code": verify["code"],
-        "level": "L3", "inject_line": line_no,
+        "level": level, "inject_line": line_no,
         "buggy_inject_line": line_no + BUGGY_HEADER_OFFSET,
 
         "inject_desc": variant["desc"], "diff": diff,
@@ -612,7 +644,7 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
         "golden_source": "rtl/%s/%s.sv" % (module, module),
         "date": DATE, "reproduce_cmd": cmd_line,
         "param_override": param_map or None,
-        "verification": {"compile_ok": True, "sim_ok": True, "formal_result": "fail", "golden_formal_result": "pass", "verdict": "L3_VALID"},
+        "verification": ({"compile_ok": True, "sim_ok": True, "formal_result": "fail", "golden_formal_result": "pass", "verdict": "L3_VALID"} if level == "L3" else {"compile_ok": True, "sim_fail": True, "formal_result": "fail", "golden_formal_result": "pass", "verdict": "L2_VALID"}),
     }
     with open(os.path.join(sample_dir, "meta.json"), "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
@@ -624,27 +656,32 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
             "entries": [], "note": "占位骨架：由证据管线填充反例周期事件/故障锥等结构化证据",
         }, f, ensure_ascii=False, indent=2)
     # notes.md 构造说明
+    if level == "L3":
+        verify_line = ("- 三通过校验（L3 判定）：① iverilog 编译 0 error ✓；② 弱 tb 仿真全绿（放过 buggy）✓；"
+                       "③ sby (smtbmc+z3) BMC 抓到反例 ✓\n")
+    else:
+        verify_line = ("- L2 双检校验：① iverilog 编译 0 error ✓；② 弱 tb 仿真 FAIL（弱 tb 可抓）✓；"
+                       "③ sby (smtbmc+z3) BMC 抓到反例 ✓（伪 L3 判据成立）\n")
     with open(os.path.join(sample_dir, "notes.md"), "w", encoding="utf-8") as f:
         f.write(
-            "# %s - %s L3 缺陷样本构造说明\n\n"
+            "# %s - %s %s 缺陷样本构造说明\n\n"
             "> 作者：Toylog | 版本：v0.1 | 功能概述：记录注入方式、校验结果与人工核对记录\n\n"
             "- 来源模块：`rtl/%s/%s.sv`（黄金基线）\n"
             "- 错误类型：%s（%s）\n"
             "- 注入点：第 %d 行，规则化文本变换：\n\n"
             "```\n%s\n```\n\n"
             "- 击穿断言：%s\n"
-            "- 三通过校验（L3 判定）：① iverilog 编译 0 error ✓；② 弱 tb 仿真全绿（放过 buggy）✓；"
-            "③ sby (smtbmc+z3) BMC 抓到反例 ✓\n"
+            "%s"
             "- 复现命令：`%s`\n"
             "- 人工核对：反例波形见 cex.vcd，引擎日志见 cex.log（构造日期 %s）\n" % (
-                sample_id, module, module, module, verify["err_name"], verify["code"],
-                line_no, diff, variant["hit"], cmd_line, DATE))
-    return meta
+                sample_id, module, level, module, module, verify["err_name"], verify["code"],
+                line_no, diff, variant["hit"], verify_line, cmd_line, DATE))
 
 
-def _report_failure(cmd_line, module, err_code, fails):
+def _report_failure(cmd_line, module, err_code, fails, level="L3"):
     """校验全部失败：打印各 variant 失败原因（含调弱 tb 提示），不产出样本。"""
     print("== 注入失败：module=%s error_type=%s（不产出无效样本）==" % (module, err_code))
+    print("    level=%s（L3 期望弱 tb 全绿；L2 期望弱 tb FAIL）" % level)
     for v, fail in fails:
         print("  variant[%s]：%s" % (v["desc"], fail["stage"]))
         print("    " + fail.get("detail", fail.get("result", "")).replace("\n", "\n    "))
@@ -668,10 +705,11 @@ def main(argv=None):
     ap.add_argument("--seed", type=int, default=0, help="variant 尝试顺序随机种子（默认 0=声明顺序）")
     ap.add_argument("--param", default="", help="测试参数覆写，逗号分隔如 CLK_FREQ=400,BAUD=100（用于 uart 小 DIV 深时序样本）")
     ap.add_argument("--dry-run", action="store_true", help="仅打印将应用的 diff，不落盘不校验")
+    ap.add_argument("--level", default="L3", choices=["L3", "L2"], help="样本等级（默认 L3；L2=单周期可观测错误，弱 tb 直接 FAIL）")
     args = ap.parse_args(argv)
 
     if args.list_types:
-        print("== PreCex 7 类错误模板（BugBench-PS L3）==")
+        print("== PreCex 7 类错误模板（BugBench-PS L3/L2；L2 用弱 tb 可抓的单周期错误）==")
         for code, t in INJECTORS.items():
             print("\n[%s] %s：%s" % (code, t["name"], t["desc"]))
             for i, v in enumerate(t["variants"], 1):
@@ -713,7 +751,11 @@ def main(argv=None):
     if param_map:
         golden = _apply_params(golden, param_map)
         tb = _apply_params(tb, param_map)
-    tb = _weaken_tb(tb, args.error_type)   # 弱 tb 清洗：剥离会击穿本类缺陷的仿真检查行
+    if args.level == "L2":
+        # L2 单周期错误：用原始 tb 强检查（弱 tb 应能抓到缺陷），不做 L3 式清洗
+        pass
+    else:
+        tb = _weaken_tb(tb, args.error_type)   # L3 弱 tb 清洗：剥离会击穿本类缺陷的仿真检查行
     tb = _strip_tb_assert(tb)              # 剥离断言模块实例化（断言已内联）
     # 内联断言到设计（golden/buggy 均含内联断言块 + initial 初值 + 复位静默环境约束）
     def _finalize(design_src):
@@ -769,7 +811,7 @@ def main(argv=None):
 
     # 逐 variant 注入 + 校验（dry-run 时仅打印所有可应用 diff，不落盘不校验）
     fails = []
-    sample_dir = os.path.join(SAMPLES_DIR, args.sample_id)
+    sample_dir = os.path.join(L2_SAMPLES_DIR if args.level == "L2" else SAMPLES_DIR, args.sample_id)
     for i, v in enumerate(variants, 1):
         if args.variant is not None and i != args.variant:
             continue
@@ -803,7 +845,7 @@ def main(argv=None):
             sby_file = os.path.join(tmp_dir, "verify.sby")
             with open(sby_file, "w", encoding="utf-8") as f:
                 f.write(_gen_sby(args.module, top_mod, depth))
-            ok, detail = _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, args.module, top_mod)
+            ok, detail = (_validate_l2_candidate if args.level == "L2" else _validate_candidate)(tmp_dir, tb_top, sby_file, depth, work_dir, args.module, top_mod)
             if not ok:
                 fails.append((v, detail))
                 print("  校验失败（%s），尝试下一变体…" % detail["stage"])
@@ -811,10 +853,11 @@ def main(argv=None):
             # 三通过成立 → 落盘样本 + 拷贝 cex 证据
             _write_sample(sample_dir, args.module, args.sample_id, golden_inline, buggy_inline, assertions,
                           tb, top_mod, tb_top, depth, v, line_no, diff,
-                          {"err_name": err["name"], "code": args.error_type}, cmd_line, param_map)
+                          {"err_name": err["name"], "code": args.error_type}, cmd_line, param_map, args.level)
             copied = _copy_cex(detail["sby_work"], sample_dir)
-            print("  校验通过：compile ✓ sim ✓ formal=fail ✓  → 样本 %s 已产出（cex: %s）"
-                  % (sample_dir, ",".join(copied) or "(未找到 trace 波形)"))
+            tag = "L3 三通过" if args.level == "L3" else "L2 双检（弱 tb FAIL + formal fail）"
+            print("  校验通过 [%s]：compile ✓ sim ✓ formal=fail ✓  → 样本 %s 已产出（cex: %s）"
+                  % (tag, sample_dir, ",".join(copied) or "(未找到 trace 波形)"))
             return 0
         finally:
             shutil.rmtree(tmp_dir, ignore_errors=True)
@@ -822,7 +865,7 @@ def main(argv=None):
     if args.dry_run:
         print("\n== dry-run：以上为将应用的 diff（未落盘、未校验）==")
         return 0
-    _report_failure(cmd_line, args.module, args.error_type, fails)
+    _report_failure(cmd_line, args.module, args.error_type, fails, args.level)
     return 1
 
 
