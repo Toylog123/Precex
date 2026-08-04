@@ -3,6 +3,7 @@
 % 结构参照 D:\BaiduSyncdisk\zh\manuscript\hetero_classifier_paper.tex
 % 单文件主稿：只维护本文件；编译见 scripts/compile_paper.ps1
 % 数据来源：experiments/runs/corrected.json + experiments_results_D_clean.json
+
 % =============================================================================
 
 \documentclass[journal]{IEEEtran}
@@ -44,7 +45,7 @@
 % 摘要
 % =============================================================================
 \begin{abstract}
-跨周期行为缺陷——弱测试平台仿真通过而形式验证失败的寄存器传输级（RTL）缺陷——是综合前最难定位与修复的问题之一。本文提出 PreCex，一个完全开源、反例驱动的 RTL 缺陷定位与修复流水线（iverilog/Yosys/SymbiYosys/Z3 加大语言模型，LLM）。它将失败的形式化反例转换为结构化证据，定位缺陷区域，生成最小补丁，并在带 golden-first 判据的有界模型检验（BMC）下重新验证。
+跨周期行为缺陷——弱测试平台仿真通过而形式验证失败的寄存器传输级（RTL）缺陷——是综合前最难定位与修复的问题之一。本文提出 PreCex，一个完全开源、反例驱动的 RTL 缺陷定位与修复流水线（iverilog/Yosys/SymbiYosys/Z3 加大语言模型，LLM）。它将失败的形式化反例转换为结构化证据，定位缺陷区域，生成最小补丁，并在带 golden-first 规则的有界模型检验（BMC）下重新验证。
 
 在覆盖 6 个模块、7 类错误的 34 样本 L3 基准（408 次 LLM 修复运行）上，四种证据表征——原始日志、结构化证据（B）、反例语义化（C）与 FVDebug 式因果图（D）——在统一的 BMC 判据下修复率均达到 100%。结构化证据取得最高定位精度（61.8%），显著优于原始日志（47.1%，$p=0.0035$）与因果图（49.0%，$p=0.0164$）；因果图成本最低（1.56 美元对 2.72 美元，低 43%）。变异分析杀死 88.5% 的强变异体与 81.8% 的常量变异体；独立 T2 审计 408/408 全部通过，接口变更与断言篡改均为零。判据翻案审计表明，prove/k-归纳在有门控时序断言的模块上会误判 78 个正确修复，这促使我们采用 golden-first 的 BMC 判据，为自动修复评测提供了方法论教训。
 \end{abstract}
@@ -62,7 +63,7 @@ RTL 调试，形式验证，反例，大语言模型修复，变异分析
 
 寄存器传输级（RTL）设计复杂度持续增长，跨周期行为缺陷（L3：弱测试平台通过而形式验证失败）是综合前最难定位与修复的缺陷类型之一。此类缺陷通常隐藏在状态机迁移、握手时序或边界回绕逻辑中：简单断言行启发式无法命中注入点，仿真波形中的信息过载使人工与自动化定位都极为耗时。一旦缺陷进入综合与流片流程，修复成本呈数量级上升，因此在综合前准确、低成本地定位并修复 RTL 缺陷具有明确工程价值。
 
-现有基于大语言模型（LLM）的修复流水线主要面临两类困难。其一，直接输入原始日志或波形，信息过载导致定位噪声，模型难以从数千行仿真记录中筛出真正的因果信号。其二，依赖参考模型（golden reference model）进行差分调试的方法在综合前阶段往往不可用——此时不存在可作为规范的金牌实现。近期工作（FVDebug、GROVE）证明了结构化反例理解的价值，但仍缺乏四点能力：(1) 开源端到端流水线；(2) 面向跨周期缺陷的系统性研究；(3) 严格的验证充分性闭环；(4) 证据表征的受控消融。
+现有基于大语言模型（LLM）的修复流水线主要面临两类困难。其一，直接输入原始日志或波形，信息过载导致定位噪声，模型难以从数千行仿真记录中筛出真正的因果信号。其二，依赖参考模型（golden reference model）进行差分调试的方法在综合前阶段往往不可用——此时不存在可作为规范的金牌实现。近期工作（FVDebug、GROVE）证明了结构化反例理解的价值，但仍缺乏四点能力：（1）开源端到端流水线；（2）面向跨周期缺陷的系统性研究；（3）严格的验证充分性闭环；（4）证据表征的受控消融。
 
 \subsection{设计动机}
 
@@ -139,7 +140,7 @@ AssertLLM2 & 断言生成 & --- & --- & --- & 变异驱动 \\
 \end{tabular}
 \end{table}
 
-表~\ref{tab:positioning} 汇总了与已有工作的定位差异。PreCex 的三项差异化能力均有受控实验佐证：(1) 完全开源、可复现的反例驱动流水线；(2) 四设置证据表征消融与配对显著性检验；(3) 带验证充分性闭环（变异、空泛、独立 T2 审计）的跨周期 L3 基准。此外，判据翻案审计（第 V-F 节）贡献了一条方法论经验：修复判据必须先用 golden 设计验证，才能用于评判修复。
+表~\ref{tab:positioning} 汇总了与已有工作的定位差异。PreCex 的三项差异化能力均有受控实验佐证：(1) 完全开源、可复现的反例驱动流水线；(2) 四设置证据表征消融与配对显著性检验；(3) 带验证充分性闭环（变异、空泛、独立 T2 审计）的跨周期 L3 基准。此外，判据翻案审计（第 V-E 节）贡献了一条方法论经验：修复判据必须先用 golden 设计验证，才能用于评判修复。
 
 % =============================================================================
 % III. 方法
@@ -159,7 +160,7 @@ AssertLLM2 & 断言生成 & --- & --- & --- & 变异驱动 \\
 
 \subsection{证据引擎与反例语义化}
 
-EvidenceEngine 以失败断言、错误类型与失败阶段的统一模式组织反例，输出稳定可解析的 evidence.json。CexSemantizer 在此基础上生成周期事件表（每周期信号变化）、状态轨迹（跨周期信号演化）、故障锥（与失败断言相关的信号依赖闭包）与自然语言摘要。实验表明主数据集反例普遍较短（中位 6 周期），window=8 压缩的聚合收益仅 4.1\%——语义化的成本由摘要文本主导而非轨迹长度，这一观察直接支撑了第 V-F 节的成本分析。
+EvidenceEngine 以失败断言、错误类型与失败阶段的统一模式组织反例，输出稳定可解析的 evidence.json。CexSemantizer 在此基础上生成周期事件表（每周期信号变化）、状态轨迹（跨周期信号演化）、故障锥（与失败断言相关的信号依赖闭包）与自然语言摘要。实验表明主数据集反例普遍较短（中位 6 周期），window=8 压缩的聚合收益仅 4.1\%——语义化的成本由摘要文本主导而非轨迹长度，这一观察直接支撑了第 V-D 节的成本分析。
 
 \subsection{四种证据表征}
 
@@ -182,11 +183,11 @@ D & FVDebug 式因果图（失败断言+故障锥+全周期状态轨迹+触发�
 \end{tabular}
 \end{table}
 
-四种证据表征的设置与成本见表~\ref{tab:evidence}。四种设置使用同一 prompt 家族，仅替换证据段，以控制偏置。A 为基线，B 与 D 均为零 LLM 成本的确定性提取，C 引入一次 LLM 语义化调用，是四者中唯一的额外推理成本来源。
+各设置的证据内容与提取成本见表~\ref{tab:evidence}。四种设置使用同一 prompt 家族，仅替换证据段，以控制偏置。A 为基线，B 与 D 均为零 LLM 成本的确定性提取，C 引入一次 LLM 语义化调用，是四者中唯一的额外推理成本来源。
 
 \subsection{修复判据：golden-first 规则}
 
-主判据为 BMC（verify.sby），与 golden 验证（verify\_golden.sby）一致。原协议采用 prove/k-归纳（verify\_repair.sby）作为修复判定，但在带门控时序断言的 axi/uart 模块上不收敛：golden 设计本身返回 UNKNOWN（rc=4），旧判据下 78 个正确修复被误判为失败。同一正确修复（s33 B0、s17 B1）在 bmc 下 PASS、prove 下 FAIL 的实测直接暴露了这一矛盾。
+主判据为 BMC（verify.sby），与 golden 验证（verify\_golden.sby）一致。原协议采用 prove/k-归纳（verify\_repair.sby）作为修复判定，但在带门控时序断言的 axi/uart 模块上不收敛：golden 设计本身返回 UNKNOWN（rc=4），旧判据下 78 个正确修复被误判为失败。同一正确修复（s33 的 B 设置 seed0、s17 的 B 设置 seed1）在 bmc 下 PASS、prove 下 FAIL 的实测直接暴露了这一矛盾。
 
 据此确立 golden-first 规则：任何修复判据必须首先在 golden 设计上通过（判据-黄金一致性检查），方可用于评判修复。BMC 重验 303/303 全部通过，修复率由 74.3\% 修正为 100\%。prove/k-归纳仅作为辅助参考保留，不再作为失败判据。
 
@@ -212,7 +213,7 @@ BugBench-PS 包含 34 个 L3 样本（s04--s37），覆盖 6 个开源教学级�
 
 \subsection{评测协议与成本记账}
 
-主实验为 34 样本 $\times$ 4 设置 $\times$ 3 seeds $=$ 408 次真实 LLM 修复运行（MiniMax M3，temperature 0.2）。修复成功由 BMC 加 golden 双重校验裁决；成本按 API token 记账，主实验合计 11.22 美元（408 次运行，平均 0.0275 美元/次），含全部预研与重跑在内的完整账本为 16.79 美元（1014 次调用）；成本按 MiniMax M3 公开单价估算（输入 0.60 美元/百万 token、输出 2.40 美元/百万 token），非平台实际账单。运行采用并行调度：8 并发（运维阶段因 API/验证阻塞调整为 4 并发加 420 秒硬超时与断点续跑），Gate-2 全量重验 68 个 BMC 任务在 3.4 分钟内完成。
+主实验为 34 样本 $\times$ 4 设置 $\times$ 3 seeds $=$ 408 次真实 LLM 修复运行（MiniMax M3，temperature 0.2）。修复成功由 BMC 加 golden 双重校验裁决。成本按 API token 记账（MiniMax M3 公开单价：输入 0.60 美元/百万 token、输出 2.40 美元/百万 token，为估算值而非平台账单），主实验合计 11.22 美元（408 次运行，平均 0.0275 美元/次）；含预研与重跑在内的完整账本为 16.79 美元（1014 次调用）。运行采用并行调度：8 并发（运维阶段因 API/验证阻塞调整为 4 并发加 420 秒硬超时与断点续跑），Gate-2 全量重验 68 个 BMC 任务在 3.4 分钟内完成。
 
 \subsection{非 LLM 基线}
 
@@ -323,6 +324,15 @@ FIFO 满空 & 53.3\% & 53.3\% & \textbf{60.0\%} & 46.7\% \\
 % =============================================================================
 % VI. 结论
 % =============================================================================
+\subsection{模块与错误类型的交互效应}
+
+\textbf{发现 5：}B 的定位优势并非均匀分布，而是集中在数值、位宽与边界类缺陷。按模块与错误类型交叉统计（408 次运行，BMC 判据）：在 axi\_lite\_slave 的边界回绕类缺陷上 B 的 top-1 定位为 83.3\%（C 为 33.3\%），在 counter\_alu 边界回绕上为 100\%（C 为 33.3\%），在 fifo\_sync 位宽截断上为 100\%（A/C 为 66.7\%）；而在 uart\_tx/uart\_rx 的握手与状态跳转类缺陷上，四设置 top-1 定位全部为 0\%，修复率仍为 100\%。这表明结构化证据的增益来自"算术/位宽/边界"语义清晰、便于精确行号映射的缺陷；对协议交互类缺陷，证据表示难以改善定位精度，但形式再验证闭环仍能保证修复正确。
+
+\subsection{证据可解释性的多模型评估}
+
+\textbf{探索性评估：}为量化 B/C/D 证据表示的可解释性差异，我们以 5 维 Likert 量表（完整性、可读性、因果性、可操作性、可信度，1--5 分）对 10 个样本的 C（反例语义化）与 D（FVDebug 式因果图）证据进行多模型评分（DeepSeek v4-flash 与 MiniMax M3，temperature=0，40 次调用，总成本 \$0.11）。C 证据的因果性与可操作性跨模型一致中等（ICC(2,1) 0.656 与 0.753），而完整性、可读性、可信度一致低（$\approx$0）；D 证据五维 ICC 全部 $\approx$0，两模型几乎无一致。该结果说明：LLM 作为可解释性代理评分的跨模型一致性仅在"因果链是否可追踪"这一维度上可信，其余维度主观差异大，需人工标定；论文将此作为探索性结果，并如实报告 LLM 代理评分的局限。
+
+% =============================================================================
 \section{结论}
 
 本文提出 PreCex，一个开源、反例驱动的综合前 RTL 缺陷定位与修复流水线，并系统研究了此前反例理解类系统未受控的证据表征维度。在含 408 次 LLM 修复运行的 34 样本跨周期（L3）基准上，主要结论如下：
@@ -330,7 +340,7 @@ FIFO 满空 & 53.3\% & 53.3\% & \textbf{60.0\%} & 46.7\% \\
 \begin{itemize}
 \item 四种证据表征（原始日志、结构化证据、反例语义化、FVDebug 式因果图）在一致的 BMC 判据下修复率均达 100\%；表征决定定位的精度与成本，而非能否修复。
 \item 结构化证据（B）定位精度最高（61.8\%），对原始日志（47.1\%，$p=0.0035$）与因果图（49.0\%，$p=0.0164$）的优势统计显著；因果图（D）成本最低（1.56 美元对 2.72 美元，低 43\%）；语义化（C）增加成本而无显著精度增益。
-\item 修复可信度有据可依：强变异 88.5\%、常量变异 81.8\% 被杀，空泛性控制通过，独立 T2 审计 408/408 通过，接口与断言篡改均为零，loc\_dev 中位数为零。
+\item 修复可信度有据可依：强变异 88.5\%、常量变异 81.8\% 被杀，空泛性控制通过，独立 T2 审计 408/408 通过，接口与断言篡改均为零，定位偏差（loc\_dev）中位数为零。
 \item 判据翻案审计（以 BMC 替代 prove/k-归纳，辅以 golden-first 规则）为自动修复流水线提供方法论教训：评测判据本身必须先经 golden 设计验证，才能用于评判修复。
 \end{itemize}
 
@@ -351,70 +361,70 @@ FIFO 满空 & 53.3\% & 53.3\% & \textbf{60.0\%} & 46.7\% \\
 \setlength{\itemsep}{0pt}
 
 \bibitem{fvdebug}
-Y.~Bai, G.~B.~Hamad, C.-T.~Ho, S.~Suhaib, and H.~Ren, FVDebug: An LLM-driven debugging assistant for automated root cause analysis of formal verification failures, arXiv:2510.15906, 2025.
+Y.~Bai, G.~B.~Hamad, C.-T.~Ho, S.~Suhaib, and H.~Ren, ``FVDebug: An LLM-driven debugging assistant for automated root cause analysis of formal verification failures,'' arXiv:2510.15906, 2025.
 
 \bibitem{grove}
-Y.~Bai and H.~Ren, Learning to debug: LLM-organized knowledge trees for solving RTL assertion failures, arXiv:2511.17833, 2025.
+Y.~Bai and H.~Ren, ``Learning to debug: LLM-organized knowledge trees for solving RTL assertion failures,'' arXiv:2511.17833, 2025.
 
 \bibitem{openllmformal}
-H.~T.~Tran, Open-source LLM-driven formal verification: A multi-agent pipeline for RTL repair, arXiv:2607.28877, 2026.
+H.~T.~Tran, ``Open-source LLM-driven formal verification: A multi-agent pipeline for RTL repair,'' arXiv:2607.28877, 2026.
 
 \bibitem{formalrtl}
-K.~Li, M.~Li, X.~Wen, S.~Zhao, J.~Wu, J.~Huang, and Q.~Xu, FormalRTL: Verified RTL synthesis at scale, 2026. [Online]. Available: https://formind.netlify.app/files/papers/FormalRTL.pdf
+K.~Li, M.~Li, X.~Wen, S.~Zhao, J.~Wu, J.~Huang, and Q.~Xu, ``FormalRTL: Verified RTL synthesis at scale,'' 2026. [Online]. Available: https://formind.netlify.app/files/papers/FormalRTL.pdf
 
 \bibitem{chipagents}
-WhaleChip, WhaleChip uses ChipAgents to compress root cause analysis into minutes, SemiWiki, 2026. [Online]. Available: https://semiwiki.com/eda/chipagents-ai/371464-whalechip-uses-chipagents-to-compress-root-cause-analysis-into-minutes/
+WhaleChip, ``WhaleChip uses ChipAgents to compress root cause analysis into minutes,'' SemiWiki, 2026. [Online]. Available: https://semiwiki.com/eda/chipagents-ai/371464-whalechip-uses-chipagents-to-compress-root-cause-analysis-into-minutes/
 
 \bibitem{veripilot}
-Y.~Wang, C.~Liu, J.~Zhang, L.~Zhang, et~al., VeriPilot: An LLM-powered Verilog debugging framework, arXiv:2606.23759, 2026.
+Y.~Wang, C.~Liu, J.~Zhang, L.~Zhang, et~al., ``VeriPilot: An LLM-powered Verilog debugging framework,'' arXiv:2606.23759, 2026.
 
 \bibitem{veridebug}
-N.~Wang, B.~Yao, J.~Zhou, Y.~Hu, et~al., VeriDebug: A unified LLM for Verilog debugging via contrastive embedding and guided correction, arXiv:2504.19099, 2025.
+N.~Wang, B.~Yao, J.~Zhou, Y.~Hu, et~al., ``VeriDebug: A unified LLM for Verilog debugging via contrastive embedding and guided correction,'' arXiv:2504.19099, 2025.
 
 \bibitem{rtlfixer}
-Y.-D.~Tsai, M.~Liu, and H.~Ren, RTLFixer: Automatically fixing RTL syntax errors with large language models, arXiv:2311.16543, 2023.
+Y.-D.~Tsai, M.~Liu, and H.~Ren, ``RTLFixer: Automatically fixing RTL syntax errors with large language models,'' arXiv:2311.16543, 2023.
 
 \bibitem{fixbench}
-S.~Li, W.~Fu, Y.~Zhao, X.~Guo, and Y.~Jin, Fixbench-RTL: A comprehensive benchmark for evaluating LLMs on RTL debugging, in Proc. IEEE AsianHOST, 2025, pp.~1--6.
+S.~Li, W.~Fu, Y.~Zhao, X.~Guo, and Y.~Jin, ``Fixbench-RTL: A comprehensive benchmark for evaluating LLMs on RTL debugging,'' in Proc. IEEE AsianHOST, 2025, pp.~1--6.
 
 \bibitem{hdlfixbench}
-HDL-FixBench: A repository-scale RTL repair benchmark, OpenReview preprint, 2026. [Online]. Available: https://openreview.net/forum?id=omi6IH5N42
+``HDL-FixBench: A repository-scale RTL repair benchmark,'' OpenReview preprint, 2026. [Online]. Available: https://openreview.net/forum?id=omi6IH5N42
 
 \bibitem{assertllm}
-W.~Fang, M.~Li, M.~Li, Z.~Yan, S.~Liu, et~al., AssertLLM: Generating and evaluating hardware verification assertions from design specifications via multi-LLMs, arXiv:2402.00386, 2024 (ASPDAC 2025).
+W.~Fang, M.~Li, M.~Li, Z.~Yan, S.~Liu, et~al., ``AssertLLM: Generating and evaluating hardware verification assertions from design specifications via multi-LLMs,'' arXiv:2402.00386, 2024 (ASPDAC 2025).
 
 \bibitem{assertllm2}
-Y.~Wu, W.~Fang, J.~Wang, W.~Li, et~al., AssertLLM2: A comprehensive LLM benchmark for assertion generation from design specifications, arXiv:2605.27472, 2026.
+Y.~Wu, W.~Fang, J.~Wang, W.~Li, et~al., ``AssertLLM2: A comprehensive LLM benchmark for assertion generation from design specifications,'' arXiv:2605.27472, 2026.
 
 \bibitem{assertgen}
-H.~Lyu, Y.~Wang, Y.~Du, M.~Shi, et~al., AssertGen: Enhancement of LLM-aided assertion generation through cross-layer signal bridging, arXiv:2509.23674, 2025.
+H.~Lyu, Y.~Wang, Y.~Du, M.~Shi, et~al., ``AssertGen: Enhancement of LLM-aided assertion generation through cross-layer signal bridging,'' arXiv:2509.23674, 2025.
 
 \bibitem{lasso}
-LASSO: Safety property generation with vacuity checking and coverage feedback, MLCAD 2025. [Online]. Available: https://faculty.eng.ufl.edu/sandip/wp-content/uploads/sites/681/2026/02/mlcad25.pdf
+``LASSO: Safety property generation with vacuity checking and coverage feedback,'' MLCAD 2025. [Online]. Available: https://faculty.eng.ufl.edu/sandip/wp-content/uploads/sites/681/2026/02/mlcad25.pdf
 
 \bibitem{lintllm}
-Z.~Fang, R.~Chen, Z.~Yang, and Y.~Guo, LintLLM: An open-source Verilog linting framework based on large language models, arXiv:2502.10815, 2025 (GLSVLSI 2025).
+Z.~Fang, R.~Chen, Z.~Yang, and Y.~Guo, ``LintLLM: An open-source Verilog linting framework based on large language models,'' arXiv:2502.10815, 2025 (GLSVLSI 2025).
 
 \bibitem{rule2drc}
-J.~Kim, J.~Byun, D.~Hwang, S.-J.~Park, and H.~O.~Song, Rule2DRC: Benchmarking LLM agents for DRC script synthesis with execution-guided test generation, arXiv:2605.15669, 2026 (ICML 2026).
+J.~Kim, J.~Byun, D.~Hwang, S.-J.~Park, and H.~O.~Song, ``Rule2DRC: Benchmarking LLM agents for DRC script synthesis with execution-guided test generation,'' arXiv:2605.15669, 2026 (ICML 2026).
 
 \bibitem{posteda}
-P.~Liu, N.~Xu, J.~Tang, Y.~Cao, and C.~Ding, Bridging the last mile of circuit design: PostEDA-Bench, a hierarchical benchmark for PPA convergence, arXiv:2605.06936, 2026.
+P.~Liu, N.~Xu, J.~Tang, Y.~Cao, and C.~Ding, ``Bridging the last mile of circuit design: PostEDA-Bench, a hierarchical benchmark for PPA convergence,'' arXiv:2605.06936, 2026.
 
 \bibitem{openrtlset}
-J.~Wang, L.~J.~Wan, S.~Pingali, S.~Smith, M.~Jha, et~al., OpenRTLSet: A fully open-source dataset for large language model-based Verilog module design, arXiv:2606.10285, 2026.
+J.~Wang, L.~J.~Wan, S.~Pingali, S.~Smith, M.~Jha, et~al., ``OpenRTLSet: A fully open-source dataset for large language model-based Verilog module design,'' arXiv:2606.10285, 2026.
 
 \bibitem{edaschema}
-P.~Shrestha, A.~Aversa, and I.~Savidis, EDA-Schema-V2: A multimodal schema, open datasets, and benchmarks for machine learning in digital physical design, arXiv:2605.06952, 2026.
+P.~Shrestha, A.~Aversa, and I.~Savidis, ``EDA-Schema-V2: A multimodal schema, open datasets, and benchmarks for machine learning in digital physical design,'' arXiv:2605.06952, 2026.
 
 \bibitem{chiplingo}
-L.~Li, X.~Yu, J.~Ni, J.~Zhu, J.~Zhang, et~al., ChipLingo: A systematic training framework for large language models in EDA, arXiv:2604.27415, 2026.
+L.~Li, X.~Yu, J.~Ni, J.~Zhu, J.~Zhang, et~al., ``ChipLingo: A systematic training framework for large language models in EDA,'' arXiv:2604.27415, 2026.
 
 \bibitem{yosys}
-C.~Wolf, Yosys open synthesis suite, 2013. [Online]. Available: https://yosyshq.net/yosys/
+C.~Wolf, ``Yosys open synthesis suite,'' 2013. [Online]. Available: https://yosyshq.net/yosys/
 
 \bibitem{sby}
-C.~Wolf, SymbiYosys (sby): A front-end for Yosys-based formal verification flows, 2018. [Online]. Available: https://github.com/YosysHQ/SymbiYosys
+C.~Wolf, ``SymbiYosys (sby): A front-end for Yosys-based formal verification flows,'' 2018. [Online]. Available: https://github.com/YosysHQ/SymbiYosys
 
 \end{thebibliography}
 
