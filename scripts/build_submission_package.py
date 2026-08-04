@@ -57,7 +57,7 @@ def main():
             f.write('# PreCex 投稿包\n\n')
             f.write('> 由 scripts/build_submission_package.py 自动组装（2026-08-05）。\n\n')
             f.write('## 内容索引\n\n| 文件 | 用途 |\n|---|---|\n')
-            f.write('| manuscript/precex_paper.pdf | 论文全文（8 页，矢量图） |\n')
+            f.write('| manuscript/precex_paper.pdf | 论文全文（9 页，矢量图） |\n')
             f.write('| manuscript/precex_paper.tex | 论文 LaTeX 主稿（中文） |\n')
             f.write('| figures/*.pdf | 三张矢量图 |\n')
             f.write('| REPRO.md | 可复现性说明 |\n')

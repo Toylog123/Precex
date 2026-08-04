@@ -1,0 +1,71 @@
+# -*- coding: utf-8 -*-
+"""Paper cross-reference integrity audit (P0.3)."""
+import os, re, sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEFAULT_TEX = os.path.join(ROOT, "paper", "manuscript", "precex_paper.tex")
+
+def check(name, cond, detail=""):
+    print(("PASS" if cond else "FAIL") + ": " + name + (" | " + detail if detail else ""))
+    return cond
+
+def main():
+    tex_path = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_TEX
+    tex = open(os.path.abspath(tex_path), encoding="utf-8").read()
+    fails = 0
+
+    labels = re.findall(r"\\label\{([^}]+)\}", tex)
+    dups = sorted({x for x in labels if labels.count(x) > 1})
+    fails += not check("labels unique", not dups, "dups=%s" % dups)
+
+    refs = re.findall(r"\\(?:ref|eqref|autoref)\{([^}]+)\}", tex)
+    missing = sorted({r for r in refs if r not in labels})
+    fails += not check("refs resolve", not missing, "missing=%s" % missing)
+
+    cites_raw = re.findall(r"\\cite[a-z]*\{([^}]+)\}", tex)
+    cite_keys = [k.strip() for g in cites_raw for k in g.split(",") if k.strip()]
+    bibs = re.findall(r"\\bibitem\{([^}]+)\}", tex)
+    missing_c = sorted({k for k in cite_keys if k not in bibs})
+    unused = sorted({b for b in bibs if b not in cite_keys})
+    fails += not check("cites resolve", not missing_c, "missing=%s" % missing_c)
+    fails += not check("bibitems cited", not unused, "uncited=%s" % unused)
+
+    imgs = re.findall(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}", tex)
+    bad_imgs = [i for i in imgs if not (os.path.isfile(os.path.join(ROOT, "paper", "manuscript", i))
+                                        or os.path.isfile(os.path.join(ROOT, "paper", "figures", os.path.basename(i))))]
+    fails += not check("figures exist", not bad_imgs, "missing=%s" % bad_imgs)
+
+    floats = re.findall(r"\\begin\{(figure|table)\*?\}(.*?)\\end\{\1\*?\}", tex, re.S)
+    bad = []
+    for env, body in floats:
+        nc = len(re.findall(r"\\caption\{", body)); nl = len(re.findall(r"\\label\{", body))
+        if nc != 1 or nl != 1:
+            bad.append(env + ":cap=" + str(nc) + ",lab=" + str(nl))
+    fails += not check("floats caption/label", not bad, "bad=%s" % bad)
+
+    # 5b) bare % that would truncate body text (skip full-line comments,
+    #     BOM-prefixed comment lines, trailing "}%" and "\\author{...%")
+    bare_pct = []
+    for i, ln in enumerate(tex.split("\n"), 1):
+        s = ln.lstrip("﻿").lstrip()
+        if s.startswith("%"):
+            continue
+        stripped = s.rstrip()
+        if stripped.endswith("}%"):
+            continue
+        if re.match(r"\\author\{[^}]*%\s*$", stripped):
+            continue
+        if re.search(r"(?<!\\)%", stripped):
+            bare_pct.append(i)
+    fails += not check("no bare % in body", not bare_pct, "lines=%s" % bare_pct)
+
+
+    print()
+    print("summary: labels=%d refs=%d cites=%d figures=%d floats=%d" % (
+        len(labels), len(set(refs)), len(set(cite_keys)), len(imgs), len(floats)))
+    print("TOTAL FAILS:", fails)
+    sys.exit(1 if fails else 0)
+
+if __name__ == "__main__":
+    main()
+
