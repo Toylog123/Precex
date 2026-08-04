@@ -87,3 +87,18 @@ sby -f verify_golden.sby -d sby_golden                     # 期望 DONE PASS（
 - edge 类型仍仅 1 例（注入器变体池瓶颈）；边沿变体（posedge→negedge）因 yosys 双极性冲突不可用；uart_tx 3 例（s15,s16,s35）、uart_rx 4 例（s18,s26,s36,s37），s35–s37 为参数化深时序样本
 - 深时序反例成本控制：uart_rx START 中点类原需 depth≥230 不可收敛，经 --param 小 DIV（DIV=16）降为 depth 176 入库（s36/s37）；DIV=4 过激进（HALF=2 竞态）不可用；counter 满值回绕仍用低阈值变体（s32）
 - 目标 30–40：当前 34 例；Gate-2 前按矩阵缺口补足（重点：edge/handshake 新变体）
+
+- **缺口补齐尝试（2026-08-04，6 个候选变体全部无效 → 可证明变体饱和结论）**：
+  | 候选 | 模块 × 类型 × 变体 | 失败阶段 | 原因 |
+  | --- | --- | --- | --- |
+  | s38 | fsm_ctrl × width_trunc × v3（hold_cnt 3bit） | formal PASS | 断言未击穿：hold_cnt 截断不改状态转移合法性（A4 自环合法） |
+  | s39a | uart_tx × boundary_wrap × v3（bit_cnt==DATA_W 卡死） | formal PASS | 无 liveness 断言，DATA 自环合法 |
+  | s40a | axi × edge × v3（ACLK negedge） | formal ERROR rc=16 | yosys 双极性冲突（复核确认） |
+  | s39b | axi × handshake × v5（RVALID 释放删除） | sim FAIL | 弱 tb 读回检查抓到（tb_weak.sv:153），清洗键未覆盖该检查 |
+  | s40b | uart_rx × handshake × v6（rx_busy 不释放，本日新增） | formal PASS | A5 非阻塞时序：进入 S_IDLE 当拍 rx_busy 已清零，断言永不触发 |
+  | — | uart_rx × edge（baud_tick 取反） | 未建 | uart_rx 无 baud_tick 线网；位定时偏移不触发结构性断言 |
+  - **结论**：34 样本是当前断言集下可证明变体的近饱和点。缺口变体要么断言未击穿（formal PASS）、
+    要么弱 tb 不容忍（sim FAIL）、要么工具链不支持（yosys 双沿）。uart_rx 断言以结构型（状态机合法性）
+    为主，对位定时序常量/边沿变异不敏感；edge 类型仅 uart_tx baud_tick 一个可证明模式。
+  - **待办（future work）**：闭合 edge/handshake 缺口须新增数值型断言（rx_data 帧比对、采样点周期精确性），
+    属断言基线变更（红线），不做。数据集维持 34 例定案。
