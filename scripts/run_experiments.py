@@ -154,6 +154,11 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
                 tb_top = m.group(1)
         ev = evaluator.evaluate(work, {"run_formal": True, "verbose": False, "tb_top": tb_top})
         result["verdict"] = ev["verdict"]
+        result["verify_elapsed"] = {
+            "compile": ev["compile"].get("elapsed"),
+            "sim": ev["sim"].get("elapsed"),
+            "formal": ev["formal"].get("elapsed"),
+        }
         if ev["verdict"] == "PASS":
             result["repair_pass"] = True
             break

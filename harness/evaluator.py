@@ -23,6 +23,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 import tempfile
 
 # 仓库根与 smoke 目录（用于默认 SMTBMC wrapper 定位）
@@ -221,10 +222,12 @@ def evaluate(sample_dir, cfg=None):
     try:
         # ① 编译检查（设计文件，0 error 判据）
         comp_out = os.path.join(tmpdir, "a.out")
+        t0_comp = time.time()
         compile_res = compile_check(design_files, top=cfg.get("top"),
                                     out=comp_out, iverilog=cfg.get("iverilog", "iverilog"),
                                     timeout=cfg.get("compile_timeout", 60.0),
                                     cwd=sample_dir, retries=cfg.get("retries", MAX_RETRIES))
+        compile_res["elapsed"] = round(time.time() - t0_comp, 2)
         if cfg.get("verbose"):
             print("[evaluate:%s] compile ok=%s" % (sample, compile_res["ok"]))
 
@@ -236,18 +239,21 @@ def evaluate(sample_dir, cfg=None):
             m = re.search(r"module\s+(tb_\w+)", open(tb_file, encoding="utf-8").read())
             sim_top = m.group(1) if m else os.path.splitext(os.path.basename(tb_file))[0]
         sim_out = os.path.join(tmpdir, "sim.out")
+        t0_sim = time.time()
         sim_res = sim_check(sim_files, top=sim_top, out_bin=sim_out,
                             iverilog=cfg.get("iverilog", "iverilog"),
                             vvp=cfg.get("vvp", "vvp"),
                             compile_timeout=cfg.get("compile_timeout", 60.0),
                             sim_timeout=cfg.get("sim_timeout", 120.0),
                             cwd=sample_dir, retries=cfg.get("retries", MAX_RETRIES))
+        sim_res["elapsed"] = round(time.time() - t0_sim, 2)
         if cfg.get("verbose"):
             print("[evaluate:%s] sim ok=%s exit=%s" % (sample, sim_res["ok"], sim_res["exit_code"]))
 
         # ③ sby 形式验证（默认跑；run_formal=False 时跳过）
         formal_res = {"result": "skipped", "exit_code": None, "stdout": "", "stderr": "", "log_tail": ""}
         if cfg.get("run_formal", True) and sby_file:
+            t0_formal = time.time()
             formal_res = formal_check(
                 sby_file, timeout=cfg.get("formal_timeout", 600.0),
                 run_script=cfg.get("run_script"),
@@ -256,6 +262,7 @@ def evaluate(sample_dir, cfg=None):
                 cwd=sample_dir, retries=cfg.get("formal_retries", 0),
                 design_dir=os.path.join(tmpdir, "sby_out"),
             )
+            formal_res["elapsed"] = round(time.time() - t0_formal, 2)
             if cfg.get("verbose"):
                 print("[evaluate:%s] formal result=%s exit=%s" % (sample, formal_res["result"], formal_res["exit_code"]))
 
