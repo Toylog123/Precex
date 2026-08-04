@@ -28,7 +28,7 @@
 | EvidenceEngine | 编译/lint/仿真/反例日志 → 统一 JSON schema（含 X 态归一化） |
 | CexSemantizer | VCD → 周期事件序列/状态轨迹/故障锥 + NL 摘要（+T1 视觉通道） |
 | LocalRepairer | 切片约束（状态相关域）→ 最小 patch + 修改意图 |
-| Verifier | 编译→弱 tb 回归→sby k-induction/bmc 三通过 + mutation/非空洞/假阳性 + T2 独立验证 agent |
+| Verifier | 编译→弱 tb 回归→sby BMC（golden-first）主判据 + mutation/非空洞/假阳性 + T2 独立验证 agent |
 
 | 支撑要素 | 说明 |
 | --- | --- |
@@ -104,7 +104,7 @@ precex/
 
 ## 当前状态
 
-- **2026-08-05**：M0.5/M1/M2 全完成——34 样本定案（Gate-2）、主实验 408 次（BMC 100%）、跨模型 306 对、L2 91.7%、论文 9 页 0 overfull；M3 投稿准备进行中（投稿信草稿已就绪，待目标期刊/作者信息确认）
+- **2026-08-05**：M0.5/M1/M2 全完成——34 样本定案（Gate-2）、主实验 408 次（BMC 100%）、跨模型 306 对、L2 91.7%、论文 9 页 0 overfull；M3 投稿准备进行中（投稿包 25 项 + SHA256SUMS 校验、中英摘要一致性审计、REPRO 命令链均已完成；待目标期刊/作者信息确认）
 - 进度详情见 [docs/进度.md](docs/进度.md)
 
 ## 文档索引
