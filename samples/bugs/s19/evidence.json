@@ -6,7 +6,7 @@
   "inject_line": 54,
   "inject_desc": "同拍读写 count 守恒破坏：删 can_wr&&can_rd 的保持分支（同拍读写 count 仍 +1，击穿 A4）",
   "module": "fifo_sync",
-  "file": "s19\\buggy.v",
+  "file": "s19/buggy.v",
   "line": 139,
   "code_slice": " 135:             assert (head < DEPTH);\n 136:             assert (tail < DEPTH);\n 137:         end\n 138:     end\n 139: \n 140:     // A4 count 增量守恒（打拍两拍）：count 变化量必须恰好等于 (can_wr - can_rd)\n 141:     always @(posedge clk) begin\n 142:         if (rst_n) begin\n 143:             if (delta_d == 2'b00) begin",
   "signals": {
@@ -29,5 +29,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s19\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s19/cex.vcd"
 }

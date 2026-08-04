@@ -6,7 +6,7 @@
   "inject_line": 39,
   "inject_desc": "计数器增量 1 改 2（cnt_en 时 +2，击穿 A1 仅使能 +1）",
   "module": "counter_alu",
-  "file": "s11\\buggy.v",
+  "file": "s11/buggy.v",
   "line": 96,
   "code_slice": "  92:             a_d       <= a;\n  93:             b_d       <= b;\n  94:             alu_out_d <= alu_out;\n  95:         end\n  96:     end\n  97: \n  98:     // A1 计数器仅在使能时自增：上周期使能 → 本周期 cnt 必须等于上周期 cnt + 1（模 2^DATA_W）\n  99:     always @(posedge clk) begin\n 100:         if (rst_n && cnt_en_d) begin",
   "signals": {
@@ -30,5 +30,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s11\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s11/cex.vcd"
 }

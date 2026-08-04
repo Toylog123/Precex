@@ -6,7 +6,7 @@
   "inject_line": 37,
   "inject_desc": "计数器复位值 0 改全 1（复位释放后 cnt 非 0，击穿 A3 复位归 0）",
   "module": "counter_alu",
-  "file": "s10\\buggy.v",
+  "file": "s10/buggy.v",
   "line": 110,
   "code_slice": " 106:     always @(posedge clk) begin\n 107:         if (rst_n && !cnt_en_d) begin\n 108:             assert (cnt == cnt_d);\n 109:         end\n 110:     end\n 111: \n 112:     // A3 复位释放后归 0：上周期处于复位（rst_n_d==0）且本周期复位释放 → cnt 必须为 0\n 113:     always @(posedge clk) begin\n 114:         if (rst_n && !rst_n_d) begin",
   "signals": {
@@ -30,5 +30,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s10\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s10/cex.vcd"
 }

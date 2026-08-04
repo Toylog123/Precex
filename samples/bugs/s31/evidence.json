@@ -6,7 +6,7 @@
   "inject_line": 28,
   "inject_desc": "counter ALU 运算译码对调：op==OP_ADD 输出改减法（加法变减法，击穿 A4）",
   "module": "counter_alu",
-  "file": "s31\\buggy.v",
+  "file": "s31/buggy.v",
   "line": 117,
   "code_slice": " 113:     always @(posedge clk) begin\n 114:         if (rst_n && !rst_n_d) begin\n 115:             assert (cnt == {DATA_W{1'b0}});\n 116:         end\n 117:     end\n 118: \n 119:     // A4 ALU 输出正确性（打拍比较）：上周期 ALU 组合输出必须等于上周期输入 (op,a,b) 的参考计算结果\n 120:     always @(posedge clk) begin\n 121:         if (rst_n) begin",
   "signals": {
@@ -30,5 +30,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s31\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s31/cex.vcd"
 }

@@ -6,7 +6,7 @@
   "inject_line": 67,
   "inject_desc": "uart_rx 起始位确认后跳过数据位：START 中点确认后直接进 STOP（击穿 A4）",
   "module": "uart_rx",
-  "file": "s36\\buggy.v",
+  "file": "s36/buggy.v",
   "line": 159,
   "code_slice": " 155:     end\n 156: \n 157:     // A4 状态机跳转合法性（打拍对，含自环）：\n 158:     // IDLE->{IDLE,START}, START->{START,DATA,IDLE}, DATA->{DATA,STOP}, STOP->{STOP,IDLE}\n 159:     always @(posedge clk) begin\n 160:         if (rst_n) begin\n 161:             case (state_d)\n 162:                 S_IDLE:  assert ((state == S_IDLE)  || (state == S_START));\n 163:                 S_START: assert ((state == S_START) || (state == S_DATA) || (state == S_IDLE));",
   "signals": {
@@ -26,5 +26,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s36\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s36/cex.vcd"
 }

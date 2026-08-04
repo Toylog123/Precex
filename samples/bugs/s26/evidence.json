@@ -6,7 +6,7 @@
   "inject_line": 44,
   "inject_desc": "uart_rx 复位后忙标志错误：复位时 rx_busy 改为 1（复位后误报忙，击穿 A5）",
   "module": "uart_rx",
-  "file": "s26\\buggy.v",
+  "file": "s26/buggy.v",
   "line": 160,
   "code_slice": " 156:                 S_DATA:  assert ((state == S_DATA)  || (state == S_STOP));\n 157:                 S_STOP:  assert ((state == S_STOP)  || (state == S_IDLE));\n 158:             endcase\n 159:         end\n 160:     end\n 161: \n 162:     // A5 忙标志一致：rx_busy 有效期间不得处于 IDLE\n 163:     always @(posedge clk) begin\n 164:         if (rst_n && rx_busy) begin",
   "signals": {
@@ -26,5 +26,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s26\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s26/cex.vcd"
 }

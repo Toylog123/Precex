@@ -6,7 +6,7 @@
   "inject_line": 50,
   "inject_desc": "uart_rx 跳过起始位中点确认：IDLE 检测到下降沿直接进 DATA（击穿 A1/A2）",
   "module": "uart_rx",
-  "file": "s18\\buggy.v",
+  "file": "s18/buggy.v",
   "line": 150,
   "code_slice": " 146:         end\n 147:     end\n 148: \n 149:     // A4 状态机跳转合法性（打拍对，含自环）：\n 150:     // IDLE->{IDLE,START}, START->{START,DATA,IDLE}, DATA->{DATA,STOP}, STOP->{STOP,IDLE}\n 151:     always @(posedge clk) begin\n 152:         if (rst_n) begin\n 153:             case (state_d)\n 154:                 S_IDLE:  assert ((state == S_IDLE)  || (state == S_START));",
   "signals": {
@@ -26,5 +26,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s18\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s18/cex.vcd"
 }

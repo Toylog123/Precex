@@ -6,7 +6,7 @@
   "inject_line": 100,
   "inject_desc": "axi 写地址译码偏移：AWADDR[ADDR_W-1:2] 改 [ADDR_W-2:1]（寄存器错位写，击穿 A7）",
   "module": "axi_lite_slave",
-  "file": "s27\\buggy.v",
+  "file": "s27/buggy.v",
   "line": 267,
   "code_slice": " 263: \n 264:     // A7 写数据生效（跨周期）：全字节掩码写入时，BVALID 后寄存器必须等于写数据\n 265:     // （掩码写（WSTRB 非全 1）只更新部分字节，无法与原始数据整体比对，故仅全掩码时检查）\n 266:     always @(posedge ACLK) begin\n 267:         if (ARESETN && S_AXI_BVALID && (wstrb_d == {(DATA_W/8){1'b1}})) begin\n 268:             case (waddr_d[ADDR_W-1:2])\n 269:                 2'd0: assert (reg0 == wdata_d);\n 270:                 2'd1: assert (reg1 == wdata_d);\n 271:                 2'd2: assert (reg2 == wdata_d);",
   "signals": {
@@ -41,5 +41,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s27\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s27/cex.vcd"
 }

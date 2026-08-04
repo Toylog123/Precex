@@ -6,7 +6,7 @@
   "inject_line": 138,
   "inject_desc": "axi 复位后读响应错误：复位时 RVALID 改为 1（复位释放后读响应错误，击穿 A8）",
   "module": "axi_lite_slave",
-  "file": "s25\\buggy.v",
+  "file": "s25/buggy.v",
   "line": 280,
   "code_slice": " 276: \n 277:     // A8 复位输出：复位释放当拍（ARESETN 上升沿）所有 valid/ready 必须为 0\n 278:     // （复位期间输出为 X/未稳定，故只在释放沿检查）\n 279:     always @(posedge ACLK) begin\n 280:         if (ARESETN && !aresetn_d) begin\n 281:             assert (!S_AXI_AWREADY);\n 282:             assert (!S_AXI_WREADY);\n 283:             assert (!S_AXI_BVALID);\n 284:             assert (!S_AXI_ARREADY);",
   "signals": {
@@ -41,5 +41,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s25\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s25/cex.vcd"
 }

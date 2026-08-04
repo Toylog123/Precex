@@ -6,7 +6,7 @@
   "inject_line": 27,
   "inject_desc": "count 位宽收窄 1 位（count 存满值时截断回绕，击穿 A1/A4 满值与守恒）",
   "module": "fifo_sync",
-  "file": "s14\\buggy.v",
+  "file": "s14/buggy.v",
   "line": 143,
   "code_slice": " 139:         end\n 140:     end\n 141: \n 142:     // A4 count 增量守恒（打拍两拍）：count 变化量必须恰好等于 (can_wr - can_rd)\n 143:     always @(posedge clk) begin\n 144:         if (rst_n) begin\n 145:             if (delta_d == 2'b00) begin\n 146:                 assert (count == count_d);          // 同拍读写或不动作：count 不变\n 147:             end else if (delta_d == 2'b01) begin",
   "signals": {
@@ -29,5 +29,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s14\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s14/cex.vcd"
 }

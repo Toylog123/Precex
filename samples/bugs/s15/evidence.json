@@ -6,7 +6,7 @@
   "inject_line": 57,
   "inject_desc": "起始位握手失效：删 S_IDLE 中『起始位立即输出低电平』（txd 保持高，击穿 uart A1 起始位为低）",
   "module": "uart_tx",
-  "file": "s15\\buggy.v",
+  "file": "s15/buggy.v",
   "line": 117,
   "code_slice": " 113: \n 114:     always @(posedge clk) begin\n 115:         if (!rst_n) state_d <= S_IDLE;\n 116:         else        state_d <= state;\n 117:     end\n 118: \n 119:     // A1 起始位为低：处于 START 状态时 txd 必须为 0\n 120:     always @(posedge clk) begin\n 121:         if (rst_n && (state == S_START)) begin",
   "signals": {
@@ -26,5 +26,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s15\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s15/cex.vcd"
 }

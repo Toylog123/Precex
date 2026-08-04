@@ -234,10 +234,28 @@ def main(argv=None):
     results = []
     total = len(dirs) * len(settings) * len(seeds)
     idx = 0
+    # 增量写入：每完成一条 append 一行到 <out>.partial.jsonl，中断不丢进度；启动时跳过已完成键（断点续跑）
+    partial_path = out_path + ".partial.jsonl"
+    done_keys = set()
+    if os.path.isfile(partial_path):
+        with open(partial_path, "r", encoding="utf-8") as pf:
+            for ln in pf:
+                ln = ln.strip()
+                if not ln: continue
+                try:
+                    prev = json.loads(ln)
+                    done_keys.add((prev["sample"], prev["setting"], prev["seed"]))
+                    results.append(prev)
+                except Exception:
+                    pass
     for sid in sorted(dirs):
         for st in settings:
             for sd in seeds:
                 idx += 1
+                key = (sid, st, sd)
+                if key in done_keys:
+                    print("[skip %d/%d] %s/%s/seed%d (已存在，续跑跳过)" % (idx, total, sid, st, sd), flush=True)
+                    continue
                 print("[run %d/%d] sample=%s setting=%s seed=%d mock=%s" % (
                     idx, total, sid, st, sd, mock), flush=True)
                 r = run_one(dirs[sid], sid, st, sd, llm, out_dir, mock=mock, retries=retries)
@@ -245,6 +263,8 @@ def main(argv=None):
                     sid, st, sd, r["loc_top1"], r["repair_pass"], r["verdict"],
                     r["cost"], r["input_tokens"] + r["output_tokens"]), flush=True)
                 results.append(r)
+                with open(partial_path, "a", encoding="utf-8") as pf:
+                    pf.write(json.dumps(r, ensure_ascii=False) + chr(10))
     shutil.rmtree(out_dir, ignore_errors=True)
 
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)

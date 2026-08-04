@@ -6,7 +6,7 @@
   "inject_line": 116,
   "inject_desc": "写响应不释放：BVALID 释放分支删除（写响应持续有效，重复握手）",
   "module": "axi_lite_slave",
-  "file": "s17\\buggy.v",
+  "file": "s17/buggy.v",
   "line": 234,
   "code_slice": " 230:     always @(posedge ACLK) begin\n 231:         if (ARESETN && w_done && w_done_d) begin\n 232:             assert (!S_AXI_WREADY);\n 233:         end\n 234:     end\n 235: \n 236:     // A3 BVALID 前置条件：写响应有效时 AW/W 必须均已完成\n 237:     always @(posedge ACLK) begin\n 238:         if (ARESETN && S_AXI_BVALID) begin",
   "signals": {
@@ -41,5 +41,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s17\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s17/cex.vcd"
 }

@@ -6,7 +6,7 @@
   "inject_line": 48,
   "inject_desc": "写指针不回绕推进：tail <= tail+1 改 tail 保持（同址覆写，数据顺序错乱）",
   "module": "fifo_sync",
-  "file": "s13\\buggy.v",
+  "file": "s13/buggy.v",
   "line": 161,
   "code_slice": " 157:         if (rst_n) begin\n 158:             assert (half_full == (count >= (DEPTH >> 1)));\n 159:         end\n 160:     end\n 161: \n 162:     // A6 写指针推进：can_wr 写成功拍后，下一拍 tail 必须 +1（抓写指针不回绕/同址覆写）\n 163:     always @(posedge clk) begin\n 164:         if (rst_n) begin\n 165:             if (can_wr_d) begin",
   "signals": {
@@ -29,5 +29,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s13\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s13/cex.vcd"
 }

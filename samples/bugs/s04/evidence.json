@@ -6,7 +6,7 @@
   "inject_line": 35,
   "inject_desc": "半满标志比较 >= 改 >（count==DEPTH/2 时半满错误为 0，击穿 A5）",
   "module": "fifo_sync",
-  "file": "s04\\buggy.v",
+  "file": "s04/buggy.v",
   "line": 153,
   "code_slice": " 149:             end else if (delta_d == 2'b11) begin    // -1 的补码\n 150:                 assert (count == count_d - 1'b1);   // 仅读：count -1\n 151:             end\n 152:         end\n 153:     end\n 154: \n 155:     // A5 半满标志正确性：half_full == (count >= DEPTH/2)\n 156:     always @(posedge clk) begin\n 157:         if (rst_n) begin",
   "signals": {
@@ -29,5 +29,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s04\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s04/cex.vcd"
 }

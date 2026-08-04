@@ -6,7 +6,7 @@
   "inject_line": 44,
   "inject_desc": "写入动作整体删除：删 mem[tail]<=din 与 tail<=tail+1（写请求被吞但 count 仍 +1，击穿 A6）",
   "module": "fifo_sync",
-  "file": "s29\\buggy.v",
+  "file": "s29/buggy.v",
   "line": 157,
   "code_slice": " 153:         if (rst_n) begin\n 154:             assert (half_full == (count >= (DEPTH >> 1)));\n 155:         end\n 156:     end\n 157: \n 158:     // A6 写指针推进：can_wr 写成功拍后，下一拍 tail 必须 +1（抓写指针不回绕/同址覆写）\n 159:     always @(posedge clk) begin\n 160:         if (rst_n) begin\n 161:             if (can_wr_d) begin",
   "signals": {
@@ -29,5 +29,5 @@
     "count": 0,
     "signals": []
   },
-  "raw_trace_ref": "samples\\bugs\\s29\\cex.vcd"
+  "raw_trace_ref": "samples/bugs/s29/cex.vcd"
 }

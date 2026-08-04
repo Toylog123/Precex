@@ -97,26 +97,52 @@ def apply_unified_diff(original, diff_text):
         def _norm(s):
             return s.rstrip("\r\n")
         old_norm = [_norm(x) for x in old_seq]
+        # 定位模式：0=精确匹配；1=前导空白归一（缩进差异容忍）；2=全空白归一（最后手段）
+        def _key(s, mode):
+            s = _norm(s)
+            if mode == 1:
+                return s.lstrip(" \t")
+            if mode == 2:
+                return "".join(s.split())
+            return s
         # 在文件中定位 old_seq（优先 h.old_start-1 附近，失败则全文件搜）
         start = min(max(0, h["old_start"] - 1), max(0, len(lines) - len(old_seq)))
         idx = None
-        for i in range(max(0, start - 10), min(len(lines) - len(old_seq) + 1, start + len(old_seq) + 10)):
-            if [_norm(x) for x in lines[i:i + len(old_seq)]] == old_norm:
-                idx = i
+        mode = 0
+        for cand_mode in (0, 1, 2):
+            for i in range(max(0, start - 10), min(len(lines) - len(old_seq) + 1, start + len(old_seq) + 10)):
+                if [_key(x, cand_mode) for x in lines[i:i + len(old_seq)]] == [_key(x, cand_mode) for x in old_seq]:
+                    idx = i
+                    mode = cand_mode
+                    break
+            if idx is not None:
                 break
         if idx is None:
-            # 回退：全文件模糊搜索
-            for i in range(len(lines) - len(old_seq) + 1):
-                if [_norm(x) for x in lines[i:i + len(old_seq)]] == old_norm:
-                    idx = i
+            # 回退：全文件搜索（逐级）
+            for cand_mode in (0, 1, 2):
+                for i in range(len(lines) - len(old_seq) + 1):
+                    if [_key(x, cand_mode) for x in lines[i:i + len(old_seq)]] == [_key(x, cand_mode) for x in old_seq]:
+                        idx = i
+                        mode = cand_mode
+                        break
+                if idx is not None:
                     break
         if idx is None:
             return False, None, "cannot locate hunk @%d (first old line %r)" % (
                 h["old_start"], (old_seq[0] if old_seq else "?").rstrip("\n"))
         # 替换行：保留原文件行尾风格（CRLF/LF），diff 缺失行尾时补回
         eol = "\n" if not lines or not lines[0].endswith("\r\n") else "\r\n"
+        # 模糊匹配时：以文件侧对应行缩进为准，避免 LLM 缩进幻觉导致格式漂移
+        file_indent = ""
+        if mode > 0:
+            m = re.match(r"^([ \t]*)", lines[idx])
+            file_indent = m.group(1) if m else ""
         patched_seq = []
-        for ln in new_seq:
+        for j, ln in enumerate(new_seq):
+            if mode > 0 and j < len(old_seq):
+                stripped = ln.lstrip(" \t")
+                if stripped and not stripped.startswith(("//", "/*", "*")):
+                    ln = file_indent + stripped
             if not ln.endswith(("\n", "\r")):
                 ln += eol
             elif eol == "\r\n" and ln.endswith("\n") and not ln.endswith("\r\n"):
