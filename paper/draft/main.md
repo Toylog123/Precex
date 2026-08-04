@@ -58,6 +58,10 @@ axis. We systematically compare four evidence settings on the same 34-sample L3 
 
 ## 2. Method
 
+![PreCex pipeline](figures/fig_pipeline.png)
+
+*Figure 1: PreCex pipeline. A failing formal trace is parsed into structured evidence (B), optionally semanticized (C) or summarized as a causal graph (D), used by the LLM repairer to produce a minimal diff, and re-verified under BMC with a golden-first criterion; failures re-enter the loop.
+
 ### System architecture
 
 Core 4 components + 2 support elements (per docs/方案.md §4):
@@ -113,6 +117,10 @@ added 2026-08-04). Repair success judged by BMC (verify.sby) with golden double-
 | C (semanticized) | 102 | 56.9% | 100% | 3.50M | $4.17 |
 | D (causal graph) | 102 | 49.0% | 100% | 1.07M | $1.56 |
 
+![Four-setting localization and cost](figures/fig_setting_loc_cost.png)
+
+*Figure 2: loc_top1 precision (bars) and LLM cost (dashed line) by evidence setting. B's precision lead over A and D is significant (paired McNemar).*
+
 **Finding 1.** All four settings reach 100% repair under a consistent BMC criterion —
 evidence representation does not gate *whether* the model can fix, but *how precisely and cheaply*.
 
@@ -135,6 +143,10 @@ The relative difficulty ordering is stable across settings. Setting-level locali
 | boundary_wrap | 42.9% | **81.0%** | 57.1% | 57.1% |
 | width_trunc | 88.9% | **100%** | 66.7% | 100% |
 | edge | 100% | 100% | 100% | 100% |
+
+![Error-class x setting heatmap](figures/fig_error_setting_heatmap.png)
+
+*Figure 3: loc_top1 precision by error class and setting. The hard-class ordering (state_trans/handshake below width_trunc/edge) holds across all settings.*
 
 B is best or tied-best on boundary_wrap (81.0%), width_trunc (100%), and state_trans (37.5%);
 D is highest on handshake (41.7%, n=12 per setting — small-n caveat). The hard-class ordering
