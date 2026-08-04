@@ -1,23 +1,27 @@
 #!/usr/bin/env python3
-# PreCex - harness/llm_client.py MiniMax M3 API 统一封装（token 记账强制）
-# 作者：Toylog | 版本：v0.1 | 功能概述：OpenAI 兼容 /chat/completions 调用封装：
+# PreCex - harness/llm_client.py 多提供商 LLM API 统一封装（token 记账强制）
+# 作者：Toylog | 版本：v0.2 | 功能概述：OpenAI 兼容 /chat/completions 调用封装（含 Anthropic 原生适配）：
 #   真实调用与 mock 双模式，自动记录 in/out token 与费用到 experiments/runs/token_ledger.jsonl；
 #   内置 TokenLedger 读取/汇总，供 scripts/token_accounting.py 与管线自测使用。
 #   纯标准库实现（urllib），无第三方依赖，设计在 WSL Python 3.10+ 内运行。
+#
+# v0.2（2026-08-04）多提供商扩展（P2 多 LLM 可解释性评分前置）：
+#   - PROVIDERS 注册表：minimax（默认）/ deepseek / openai / gemini（OpenAI 兼容端点）/ anthropic（原生格式）
+#   - 每提供商独立 env key、base_url、model、计价；env 可用 <PROVIDER>_BASE_URL / <PROVIDER>_MODEL 覆盖
+#   - LLMClient(provider="deepseek") 直接切换；缺 key 时真实调用抛错（configured_providers() 可预检）
+#   - 账本每行新增 provider 字段；旧账本无该字段，读取时兼容缺省
+#   - DeepSeek 模型 deepseek-v4-flash（DeepSeek-V4-Flash-0731，官方 Models & Pricing 页确认 2026-08-04），
+#     OpenAI 兼容端点 https://api.deepseek.com/v1；计价 输入 $0.14/1M、输出 $0.28/1M
 
-"""MiniMax M3 调研结论（2026-08-03，写入文件头注释存档）：
-- 端点（OpenAI 兼容）：国内 https://api.minimaxi.com/v1 ；海外 https://api.minimax.io/v1 。
-  （国内平台文档 platform.minimaxi.com、海外平台文档 platform.minimax.io，均确认该 base_url）
-- 模型 ID：MiniMax-M3（上下文 1,000,000 token，最新 M 系列：Agent 推理/工具调用/代码/长上下文）。
-- 调用路径：POST {base_url}/chat/completions，请求头 Authorization: Bearer <key>，
-  Content-Type: application/json。
-- 多模态输入：messages 的 content 支持内容块数组；图片用
-  {"type": "image_url", "image_url": {"url": "..."}}（detail 可取 low/default/high，
-  可用 max_long_side_pixel 控制），视频用 {"type": "video_url", ...}。供 T1 视觉通道使用。
-- Thinking 控制：原生返回时 content 内带 <think> 标签（多轮对话需完整保留 assistant 消息）；
-  传 "reasoning_split": true 可把思考分离到 reasoning_details 字段。
-- 计费参考（占位，待平台账单校准）：输入 $0.60 / 1M token、输出 $2.40 / 1M token；
-  上下文超过 512K 时翻倍（$1.20 / $4.80）。可用 input_token_price / output_token_price 覆盖。
+"""多提供商调研结论（存档）：
+- MiniMax M3：端点（OpenAI 兼容）https://api.minimaxi.com/v1；模型 MiniMax-M3（上下文 1,000,000 token）。
+  计费参考（占位，待平台账单校准）：输入 $0.60 / 1M token、输出 $2.40 / 1M token；>512K 翻倍。
+- DeepSeek V4-Flash（2026-08-04 官方 Models & Pricing 页）：模型 deepseek-v4-flash（版本 DeepSeek-V4-Flash-0731），
+  OpenAI 兼容 base_url https://api.deepseek.com/v1；1M 上下文、最大输出 384K；
+  计价 输入 $0.14 / 1M（cache miss）、输出 $0.28 / 1M。
+- 调用路径（OpenAI 兼容）：POST {base_url}/chat/completions，Authorization: Bearer <key>。
+- 多模态输入：messages 的 content 支持内容块数组；图片用 {"type":"image_url",...}。
+- Thinking 控制：MiniMax 传 "reasoning_split": true 可把思考分离到 reasoning_details 字段。
 """
 
 import json
@@ -30,20 +34,70 @@ from datetime import datetime, timezone
 from urllib import error as urllib_error
 from urllib import request as urllib_request
 
-# 默认端点 / 模型 / 网络参数（构造参数可覆盖）
-DEFAULT_BASE_URL = "https://api.minimaxi.com/v1"  # 国内端点；海外可改 https://api.minimax.io/v1
-DEFAULT_MODEL = "MiniMax-M3"
+# ---- 提供商注册表 ----------------------------------------------------------
+PROVIDERS = {
+    "minimax": {
+        "label": "MiniMax",
+        "env_key": "MINIMAX_API_KEY",
+        "base_url": "https://api.minimaxi.com/v1",
+        "model": "MiniMax-M3",
+        "input_price": 0.60,
+        "output_price": 2.40,
+        "native": False,
+    },
+    "deepseek": {
+        "label": "DeepSeek",
+        "env_key": "DEEPSEEK_API_KEY",
+        "base_url": "https://api.deepseek.com/v1",
+        "model": "deepseek-v4-flash",
+        "input_price": 0.14,
+        "output_price": 0.28,
+        "native": False,
+    },
+    "openai": {
+        "label": "OpenAI",
+        "env_key": "OPENAI_API_KEY",
+        "base_url": "https://api.openai.com/v1",
+        "model": "gpt-4o",
+        "input_price": 2.50,
+        "output_price": 10.00,
+        "native": False,
+    },
+    "gemini": {
+        "label": "Gemini",
+        "env_key": "GEMINI_API_KEY",
+        "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+        "model": "gemini-2.0-flash",
+        "input_price": 0.10,
+        "output_price": 0.40,
+        "native": False,
+    },
+    "anthropic": {
+        "label": "Anthropic",
+        "env_key": "ANTHROPIC_API_KEY",
+        "base_url": "https://api.anthropic.com/v1",
+        "model": "claude-sonnet-4-20250514",
+        "input_price": 3.00,
+        "output_price": 15.00,
+        "native": True,
+    },
+}
+DEFAULT_PROVIDER = "minimax"
+
+# 默认端点 / 模型 / 网络参数（向后兼容旧构造参数默认值）
+DEFAULT_BASE_URL = PROVIDERS[DEFAULT_PROVIDER]["base_url"]
+DEFAULT_MODEL = PROVIDERS[DEFAULT_PROVIDER]["model"]
 DEFAULT_TIMEOUT = 120.0
 DEFAULT_MAX_RETRIES = 3
 
-# 价格占位（USD / 百万 token，2026-06 发布价；>512K 上下文翻倍，以平台账单为准待校准）
-DEFAULT_INPUT_TOKEN_PRICE = 0.60
-DEFAULT_OUTPUT_TOKEN_PRICE = 2.40
+# 价格占位（USD / 百万 token，随 provider 切换；以平台账单为准待校准）
+DEFAULT_INPUT_TOKEN_PRICE = PROVIDERS[DEFAULT_PROVIDER]["input_price"]
+DEFAULT_OUTPUT_TOKEN_PRICE = PROVIDERS[DEFAULT_PROVIDER]["output_price"]
 
 # 仓库根与账本默认路径（experiments/runs/ 不入库，见 .gitignore 约定）
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_LEDGER_PATH = os.path.join(REPO_ROOT, "experiments", "runs", "token_ledger.jsonl")
-ENV_KEY = "MINIMAX_API_KEY"
+ENV_KEY = PROVIDERS[DEFAULT_PROVIDER]["env_key"]
 
 
 def _load_env_file(env_path=None):
@@ -62,6 +116,17 @@ def _load_env_file(env_path=None):
     return data
 
 
+def configured_providers(env_path=None):
+    """返回已配置 key 的 provider 列表（.env 或环境变量任一存在即算）。"""
+    env = _load_env_file(env_path)
+    out = []
+    for pid, p in PROVIDERS.items():
+        key = env.get(p["env_key"]) or os.environ.get(p["env_key"]) or ""
+        if key:
+            out.append(pid)
+    return out
+
+
 def _new_session():
     """生成会话标识：优先环境变量 PRECEX_SESSION（整批实验统一标识），否则进程级随机 id。"""
     s = os.environ.get("PRECEX_SESSION")
@@ -71,36 +136,46 @@ def _new_session():
 
 
 class LLMClient:
-    """MiniMax M3 客户端：真实 / mock 双模式 + token 记账强制（所有调用自动入账本）。
+    """多提供商客户端：真实 / mock 双模式 + token 记账强制（所有调用自动入账本）。
 
-    构造参数：api_key（默认 .env > 环境变量 MINIMAX_API_KEY）、base_url、model、
-    temperature、timeout、max_retries、mock、input_token_price / output_token_price、
-    ledger_path（账本路径）、session（会话标识，供跨进程归并）。
+    构造参数：provider（默认 minimax；可选 deepseek/openai/gemini/anthropic）、
+    api_key（默认 .env > 环境变量）、base_url、model、temperature、timeout、max_retries、
+    mock、input_token_price / output_token_price、ledger_path、session。
+    base_url/model 未显式传入时用 provider 默认（可被 <PROVIDER>_BASE_URL/<PROVIDER>_MODEL 覆盖）。
     """
 
-    def __init__(self, api_key=None, base_url=DEFAULT_BASE_URL, model=DEFAULT_MODEL,
+    def __init__(self, api_key=None, base_url=None, model=None,
                  temperature=0.2, timeout=DEFAULT_TIMEOUT, max_retries=DEFAULT_MAX_RETRIES,
-                 mock=False, input_token_price=DEFAULT_INPUT_TOKEN_PRICE,
-                 output_token_price=DEFAULT_OUTPUT_TOKEN_PRICE,
-                 ledger_path=DEFAULT_LEDGER_PATH, session=None):
-        # api_key 优先级：显式参数 > 仓库根 .env > 环境变量
+                 mock=False, input_token_price=None, output_token_price=None,
+                 ledger_path=DEFAULT_LEDGER_PATH, session=None, provider=None):
+        self.provider = provider or DEFAULT_PROVIDER
+        if self.provider not in PROVIDERS:
+            raise ValueError("未知 provider=%r，可选：%s" % (self.provider, ", ".join(sorted(PROVIDERS))))
+        pconf = PROVIDERS[self.provider]
         env = _load_env_file()
-        self.api_key = api_key or env.get(ENV_KEY) or os.environ.get(ENV_KEY) or ""
-        self.base_url = (base_url or DEFAULT_BASE_URL).rstrip("/")
-        self.model = model or DEFAULT_MODEL
+        self.provider_label = pconf["label"]
+        # api_key 优先级：显式参数 > 仓库根 .env > 环境变量
+        self.api_key = api_key or env.get(pconf["env_key"]) or os.environ.get(pconf["env_key"]) or ""
+        # base_url/model 优先级：显式参数 > env 覆盖 > provider 默认
+        env_prefix = self.provider.upper()
+        env_base = env.get(env_prefix + "_BASE_URL") or os.environ.get(env_prefix + "_BASE_URL") or ""
+        env_model = env.get(env_prefix + "_MODEL") or os.environ.get(env_prefix + "_MODEL") or ""
+        self.base_url = (base_url or env_base or pconf["base_url"]).rstrip("/")
+        self.model = model or env_model or pconf["model"]
         self.temperature = temperature
         self.timeout = timeout
         self.max_retries = max_retries
         self.mock = mock
-        self.input_token_price = float(input_token_price)
-        self.output_token_price = float(output_token_price)
+        self.input_token_price = float(input_token_price if input_token_price is not None else pconf["input_price"])
+        self.output_token_price = float(output_token_price if output_token_price is not None else pconf["output_price"])
+        self.native = bool(pconf.get("native", False))
         self.ledger_path = ledger_path or DEFAULT_LEDGER_PATH
         self.session = session or _new_session()
 
     # ---- 对外接口 ----------------------------------------------------------
 
     def chat(self, messages, temperature=None, tag=None, **kw):
-        """调用 OpenAI 兼容 /chat/completions。
+        """调用聊天补全接口（OpenAI 兼容或 Anthropic 原生）。
 
         返回统一 dict：{"content": str, "input_tokens": int, "output_tokens": int,
         "cost": float, "raw": dict|None, "mode": "real"|"mock"}。
@@ -139,28 +214,17 @@ class LLMClient:
 
     # ---- 内部实现 ----------------------------------------------------------
 
-    def _call_api(self, payload):
-        """真实 HTTP 调用：网络错误 / 5xx / 429 指数退避重试（≤max_retries）；4xx 不重试直接报错。
-
-        返回 (content, raw, input_tokens, output_tokens)。
-        """
-        if not self.api_key:
-            raise RuntimeError(
-                "未配置 MINIMAX_API_KEY（环境变量或仓库根 .env），无法发起真实调用；"
-                "离线调试请用 mock 模式（LLMClient(mock=True) 或 --self-test）。")
-        url = self.base_url + "/chat/completions"
-        headers = {"Content-Type": "application/json", "Authorization": "Bearer " + self.api_key}
-        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    def _post_json(self, url, headers, body, timeout):
+        """POST + 指数退避重试（≤max_retries）；429/5xx 重试，4xx 不重试。返回解析后的 JSON。"""
         last_err = None
         for attempt in range(self.max_retries + 1):
             req = urllib_request.Request(url, data=body, headers=headers, method="POST")
             try:
-                with urllib_request.urlopen(req, timeout=self.timeout) as resp:
+                with urllib_request.urlopen(req, timeout=timeout) as resp:
                     try:
-                        data = json.loads(resp.read().decode("utf-8"))
+                        return json.loads(resp.read().decode("utf-8"))
                     except ValueError as e:
-                        raise RuntimeError("MiniMax API 响应非合法 JSON：%s" % e)
-                return self._parse_response(data)
+                        raise RuntimeError("%s API 响应非合法 JSON：%s" % (self.provider_label, e))
             except urllib_error.HTTPError as e:
                 # 429/5xx：可重试，指数退避后继续
                 if (e.code == 429 or e.code >= 500) and attempt < self.max_retries:
@@ -169,19 +233,65 @@ class LLMClient:
                 detail = e.read().decode("utf-8", errors="replace")[:500]
                 if e.code == 429 or e.code >= 500:
                     raise RuntimeError(
-                        "MiniMax API 服务错误(HTTP %d)，重试 %d 次后仍失败：%s"
-                        % (e.code, self.max_retries, detail))
+                        "%s API 服务错误(HTTP %d)，重试 %d 次后仍失败：%s"
+                        % (self.provider_label, e.code, self.max_retries, detail))
                 # 4xx（401/403 等）：不重试，提示检查 key
                 raise RuntimeError(
-                    "MiniMax API 请求被拒(HTTP %d)：%s\n提示：请检查 MINIMAX_API_KEY 是否正确、"
-                    "账户额度/权限是否可用。" % (e.code, detail))
+                    "%s API 请求被拒(HTTP %d)：%s\n提示：请检查 %s 是否正确、"
+                    "账户额度/权限是否可用。"
+                    % (self.provider_label, e.code, detail, PROVIDERS[self.provider]["env_key"]))
             except (urllib_error.URLError, socket.timeout, TimeoutError) as e:
                 # 网络层错误（DNS/连接超时/socket 读超时等）：可重试
                 last_err = getattr(e, "reason", e)
                 if attempt < self.max_retries:
                     time.sleep(min(1.5 * (2 ** attempt), 20.0))
                     continue
-        raise RuntimeError("MiniMax API 网络错误，重试 %d 次后仍失败：%s" % (self.max_retries, last_err))
+        raise RuntimeError("%s API 网络错误，重试 %d 次后仍失败：%s"
+                           % (self.provider_label, self.max_retries, last_err))
+
+    def _call_api(self, payload):
+        """真实调用：Anthropic 走原生 /messages，其余走 OpenAI 兼容 /chat/completions。
+
+        返回 (content, raw, input_tokens, output_tokens)。
+        """
+        if not self.api_key:
+            raise RuntimeError(
+                "未配置 %s（%s：环境变量或仓库根 .env），无法发起真实调用；"
+                "离线调试请用 mock 模式（LLMClient(mock=True) 或 --self-test）。"
+                % (PROVIDERS[self.provider]["env_key"], self.provider_label))
+        headers = {"Content-Type": "application/json", "Authorization": "Bearer " + self.api_key}
+        if self.native:
+            return self._call_anthropic_api(payload, headers)
+        url = self.base_url + "/chat/completions"
+        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        data = self._post_json(url, headers, body, self.timeout)
+        return self._parse_response(data)
+
+    def _call_anthropic_api(self, payload, headers):
+        """Anthropic 原生 /messages 适配：拆出 system、必填 max_tokens、解析 content 块。"""
+        url = self.base_url + "/messages"
+        headers = dict(headers)
+        headers["x-api-key"] = self.api_key
+        headers["anthropic-version"] = "2023-06-01"
+        system = "\n".join(
+            m.get("content", "") for m in payload.get("messages", [])
+            if m.get("role") == "system" and isinstance(m.get("content"), str))
+        messages = [m for m in payload.get("messages", []) if m.get("role") != "system"]
+        body_dict = {
+            "model": payload.get("model", self.model),
+            "max_tokens": int(payload.get("max_tokens", 4096)),
+            "messages": messages,
+        }
+        if "temperature" in payload:
+            body_dict["temperature"] = payload["temperature"]
+        if system:
+            body_dict["system"] = system
+        for k, v in payload.items():
+            if k not in ("model", "messages", "temperature", "max_tokens"):
+                body_dict[k] = v
+        body = json.dumps(body_dict, ensure_ascii=False).encode("utf-8")
+        data = self._post_json(url, headers, body, self.timeout)
+        return self._parse_anthropic_response(data)
 
     @staticmethod
     def _parse_response(data):
@@ -189,12 +299,23 @@ class LLMClient:
         try:
             msg = data["choices"][0]["message"]
         except (KeyError, IndexError, TypeError):
-            raise RuntimeError("MiniMax API 响应缺少 choices[0].message：%s" % str(data)[:500])
+            raise RuntimeError("OpenAI 兼容响应缺少 choices[0].message：%s" % str(data)[:500])
         content = msg.get("content") or ""
         if isinstance(content, list):
             content = "".join(seg.get("text", "") for seg in content if isinstance(seg, dict))
         usage = data.get("usage") or {}
         return content, data, usage.get("prompt_tokens") or 0, usage.get("completion_tokens") or 0
+
+    @staticmethod
+    def _parse_anthropic_response(data):
+        """从 Anthropic 原生响应提取 content 与 token 用量。"""
+        try:
+            content = "".join(blk.get("text", "") for blk in data.get("content", [])
+                              if isinstance(blk, dict))
+        except (KeyError, TypeError):
+            raise RuntimeError("Anthropic 响应缺少 content 块：%s" % str(data)[:500])
+        usage = data.get("usage") or {}
+        return content, data, usage.get("input_tokens") or 0, usage.get("output_tokens") or 0
 
     def _mock_chat(self, messages):
         """mock 实现：回显消息摘要 + 简单规则响应（便于管线自测与离线调试）。"""
@@ -235,6 +356,7 @@ class LLMClient:
         """把一次调用追加到账本（自动创建目录），返回账本行 dict。"""
         entry = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
+            "provider": self.provider_label,
             "model": self.model,
             "input_tokens": int(input_tokens),
             "output_tokens": int(output_tokens),
@@ -284,9 +406,9 @@ class TokenLedger:
                 "total_tokens": total_in + total_out, "total_cost": round(total_cost, 8)}
 
 
-def self_test(real=False):
+def self_test(real=False, provider=None):
     """自检：跑一次 chat（mock 或真实）+ 记账 + 打印 summary，验证管线通。"""
-    client = LLMClient(mock=not real)
+    client = LLMClient(mock=not real, provider=provider)
     res = client.chat(
         messages=[
             {"role": "system", "content": "你是 PreCex 的 RTL 验证助手。"},
@@ -294,7 +416,7 @@ def self_test(real=False):
         ],
         tag="self-test",
     )
-    print("[self-test] mode=%s" % res["mode"])
+    print("[self-test] provider=%s mode=%s" % (client.provider, res["mode"]))
     print("[self-test] content=%s" % res["content"][:200])
     print("[self-test] in=%d out=%d cost=%.6f" % (res["input_tokens"], res["output_tokens"], res["cost"]))
     s = TokenLedger(client.ledger_path).summary()
@@ -308,12 +430,15 @@ def main(argv=None):
     # 无参数：打印用法
     if not argv:
         print(__doc__)
-        print("用法：python3 llm_client.py [--self-test | --self-test-real]")
+        print("用法：python3 llm_client.py [--self-test [--provider X] [--real]]")
         return 1
-    if argv[0] == "--self-test":
-        return self_test(real=False)
-    if argv[0] == "--self-test-real":
-        return self_test(real=True)
+    provider = None
+    if "--provider" in argv:
+        provider = argv[argv.index("--provider") + 1]
+    if "--self-test" in argv:
+        return self_test(real=("--real" in argv), provider=provider)
+    if "--self-test-real" in argv:
+        return self_test(real=True, provider=provider)
     print("未知参数：%s" % " ".join(argv), file=sys.stderr)
     return 2
 
