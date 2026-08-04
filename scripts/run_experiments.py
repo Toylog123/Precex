@@ -7,6 +7,7 @@
 #   - 输出 experiments/runs/experiments_results.json + .csv（不入库），token 记账由 llm_client 强制
 # 用法：
 #   python3 scripts/run_experiments.py [--samples s04-s37] [--settings A,B,C,D]  # D=FVDebug 式因果图
+#            [--provider minimax|deepseek|openai|gemini|anthropic]  # 默认 minimax；DeepSeek 跨模型重跑用
 #            [--seeds 0,1,2] [--retries 2] [--mock] [--out ...]
 """
 PreCex 主实验批量评测。
@@ -300,6 +301,9 @@ def main(argv=None):
         retries = int(argv[argv.index("--retries") + 1])
     if "--out" in argv:
         out_path = argv[argv.index("--out") + 1]
+    provider = "minimax"
+    if "--provider" in argv:
+        provider = argv[argv.index("--provider") + 1]
     if "--verbose" in argv:
         verbose = True
     verify_cfg = {}
@@ -333,7 +337,7 @@ def main(argv=None):
         settings = keep_st
         seeds = keep_sd
 
-    llm = LLMClient(mock=mock, temperature=0.2)
+    llm = LLMClient(mock=mock, temperature=0.2, provider=provider)
     out_dir = tempfile.mkdtemp(prefix="exp_work_")
     results = []
     total = len(dirs) * len(settings) * len(seeds)

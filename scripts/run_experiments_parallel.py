@@ -57,6 +57,7 @@ def main(argv=None):
     ap.add_argument("--out", default=None)
     ap.add_argument("--detach", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--provider", default="minimax", help="LLM provider（minimax/deepseek/openai/gemini/anthropic）")
     ap.add_argument("--merge", action="store_true")
     args = ap.parse_args(argv)
     workdir = os.path.join(REPO_ROOT, "experiments", "runs")
@@ -92,7 +93,7 @@ def main(argv=None):
         groups[s] = [(s, st, sd) for st in settings for sd in seeds]
     jobs = max(1, min(args.jobs, len(groups)))
     chunks, loads = balance_groups(groups, jobs, weights)
-    print("[plan] samples=%d settings=%s seeds=%s jobs=%d" % (len(samples), ",".join(settings), ",".join(map(str, seeds)), jobs))
+    print("[plan] samples=%d settings=%s seeds=%s jobs=%d provider=%s" % (len(samples), ",".join(settings), ",".join(map(str, seeds)), jobs, args.provider))
     print("[plan] 分片（样本组）分布：")
     for j, chunk in enumerate(chunks):
         sids = sorted({t[0] for t in chunk})
@@ -115,8 +116,8 @@ def main(argv=None):
         body += "export PATH=$HOME/.local/bin:$PATH\n"
         body += "export SMTBMC=$PWD/smoke/yosys-smtbmc-z3.sh\n"
         task_ids = ",".join("%s/%s/%d" % (t[0], t[1], t[2]) for t in chunk)
-        body += "nohup python3 scripts/run_experiments.py --tasks %s --retries %d --out %s > %s 2>&1 &\n" % (
-            task_ids, args.retries, wsl_out, wsl_out + ".log")
+        body += "nohup python3 scripts/run_experiments.py --tasks %s --retries %d --provider %s --out %s > %s 2>&1 &\n" % (
+            task_ids, args.retries, args.provider, wsl_out, wsl_out + ".log")
         with open(sh, "w", encoding="utf-8", newline="\n") as f:
             f.write(body)
         print("[spawn] part %d: %d tasks" % (i, len(chunk)), flush=True)
