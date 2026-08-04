@@ -8,7 +8,11 @@
 
 ## Abstract
 
-*(to be written after cross-section consistency pass)*
+Cross-cycle behavioral defects — RTL bugs where weak simulation passes but formal verification fails — are among the hardest to localize and repair before synthesis. We present PreCex, a fully open-source, counterexample-driven pipeline (iverilog/yosys/SymbiYosys/Z3 + LLM) that converts a failing formal trace into structured evidence, localizes the defective region, generates a minimal patch, and re-verifies it under BMC with a golden-first criterion.
+
+On a 34-sample L3 benchmark across 6 modules and 7 error classes (408 LLM repair runs), all four evidence representations — raw logs, structured evidence, semanticized counterexamples, and FVDebug-style causal graphs — reach 100% repair under BMC. Structured evidence achieves the highest localization precision (61.8%), significantly better than raw logs (47.1%, p=0.0035) and causal graphs (49.0%, p=0.0164), while causal graphs are the cheapest ($1.56 vs $2.72, 43% lower). Mutation analysis kills 88.5% of strong and 81.8% of constant mutants; an independent T2 audit passes 408/408 runs with zero interface or assertion-tampering changes. A criterion-reversal audit shows prove/k-induction misjudges 78 correct repairs on gated sequential assertions, motivating our golden-first BMC criterion — a methodological lesson for automated repair evaluation.
+
+*Keywords: RTL debugging; formal verification; counterexample; LLM repair; mutation analysis*
 
 ---
 
