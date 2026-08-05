@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-"""PreCex 主实验并行调度（分离模式，v0.2 均衡分片）：
+"""PreCex 主实验并行调度（分离模式，v0.3 均衡分片 + 分片旧产物清理）：
    v0.2（2026-08-04）按样本验证耗时权重做贪心均衡分片（慢样本 s36/s37/s33/s25/s28/s27/s17/s34 分散），
    替代 v0.1 的简单轮询；同一样本的全部 (setting,seed) 任务作为一组不拆散；新增 --dry-run。
+   v0.3（2026-08-05）spawn 前清理该分片旧产物（含 .partial.jsonl 断点续跑文件），
+   避免复用旧 partial 导致新任务被跳过（审查发现缺陷）。
 用法: python3 scripts/run_experiments_parallel.py [--samples s04-s37] [--settings A,B,C] [--seeds 0,1,2] [--jobs 4]
       --dry-run 只打印分片规划不启动；--detach nohup 后台；--merge 合并 exp_part_*.json。
 """
@@ -107,6 +109,11 @@ def main(argv=None):
     os.makedirs(shdir, exist_ok=True)
     for i, chunk in enumerate(chunks):
         if not chunk: continue
+        # 清理该分片旧产物（含 partial 断点续跑文件），避免复用旧 partial 导致新任务被跳过
+        for suffix in (".json", ".json.partial.jsonl", ".csv", ".log"):
+            stale = os.path.join(workdir, "exp_part_%d%s" % (i, suffix))
+            if os.path.isfile(stale):
+                os.remove(stale)
         wsl_out = "%s/experiments/runs/exp_part_%d.json" % (WSL_ROOT, i)
         sh = os.path.join(shdir, "part_%d.sh" % i)
         wsl_sh = "%s/experiments/runs/.par_sh/part_%d.sh" % (WSL_ROOT, i)

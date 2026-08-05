@@ -12,7 +12,7 @@
   "hit_assertion": "fifo_sync A1（满时不写）",
   "golden_source": "rtl/fifo_sync/fifo_sync.sv",
   "date": "2026-08-03",
-  "reproduce_cmd": "python3 scripts/bug_injector.py --module fifo_sync --error-type fifo_full --sample-id s40 --variant 2 --param DEPTH=32 --natural-tb --min-fail-step 20 --tb-shallow",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module fifo_sync --error-type fifo_full --sample-id s40 --variant 2 --param DEPTH=32 --natural-tb --min-fail-step 20 --tb-shallow --samples-dir deep",
   "param_override": {
     "DEPTH": "32"
   },

@@ -103,10 +103,12 @@ sby -f verify_golden.sby -d sby_golden                     # 期望 DONE PASS（
   - **待办（future work）**：闭合 edge/handshake 缺口须新增数值型断言（rx_data 帧比对、采样点周期精确性），
     属断言基线变更（红线），不做。数据集维持 34 例定案。
 
-## 7. 深时序专项子集（s38-s40，2026-08-05）
+## 7. 深时序专项子集（samples/deep/s38-s42，2026-08-05）
 
 - **机制**：natural weak tb（不消毒，原始黄金 tb 检查自然放过深缺陷）+ `--min-fail-step 20` 深度门禁 + 可选 `--tb-shallow` 浅覆盖 tb
-- **样本**：s38（uart_tx 帧缺停止位，DIV=4，fail_step=39，natural）、s39（fsm_ctrl 超时提前，TIMEOUT=48，fail_step=51，natural+shallow）、s40（fifo_sync 满时仍写，DEPTH=32，fail_step=35，natural+shallow）
+- **样本**：s38（uart_tx 帧缺停止位，DIV=4，fail_step=39，natural）、s39（fsm_ctrl 超时提前，TIMEOUT=48，fail_step=51，natural+shallow）、s40（fifo_sync 满时仍写，DEPTH=32，fail_step=35，natural+shallow）、s41（uart_tx 帧缺停止位，DIV=8，fail_step=75，natural）、s42（fsm_ctrl 超时提前，TIMEOUT=62，fail_step=65，natural+shallow）
 - **对比旧 34 样本**：旧集 fail_step 中位数 4、>=20 拍仅 3 个；新子集全部 >=35 拍且弱 tb 自然通过
 - **BMC 收敛上限**：fifo DEPTH<=32（90s）、uart DIV<=16-32、fsm TIMEOUT<=48-62；DEPTH=64/DIV=64 超时 >8min
-- **复现**：`python3 scripts/bug_injector.py --module uart_tx --error-type state_trans --sample-id s38 --variant 7 --param CLK_FREQ=400,BAUD=100 --natural-tb --min-fail-step 20` 等（见各 meta.json reproduce_cmd）
+- **复现**：`python3 scripts/bug_injector.py --module uart_tx --error-type state_trans --sample-id s38 --variant 7 --param CLK_FREQ=400,BAUD=100 --natural-tb --min-fail-step 20 --samples-dir deep` 等（见各 meta.json reproduce_cmd，均已带 --samples-dir deep）
+- **目录约定**：深时序样本位于 `samples/deep/`（独立于 BugBench-PS 34 样本 `samples/bugs/`），
+  与主基准分离以保持 bugs=34 不变量（gate2/measure_slim 等工具假设）；LLM 评测结果见 docs/审查-数据集真实性.md 12.3

@@ -1,6 +1,6 @@
 {
   "_doc": "PreCex %s 缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：描述样本标识/错误类型/注入点与复现命令",
-  "sample_id": "s38",
+  "sample_id": "s41",
   "module": "uart_tx",
   "error_type": "状态跳转",
   "error_type_code": "state_trans",
@@ -12,9 +12,9 @@
   "hit_assertion": "uart_tx A4（DATA→STOP 收尾）",
   "golden_source": "rtl/uart_tx/uart_tx.sv",
   "date": "2026-08-03",
-  "reproduce_cmd": "python3 scripts/bug_injector.py --module uart_tx --error-type state_trans --sample-id s38 --variant 7 --param CLK_FREQ=400,BAUD=100 --natural-tb --min-fail-step 20",
+  "reproduce_cmd": "python3 scripts/bug_injector.py --module uart_tx --error-type state_trans --sample-id s41 --variant 7 --param CLK_FREQ=800,BAUD=100 --natural-tb --min-fail-step 20 --samples-dir deep",
   "param_override": {
-    "CLK_FREQ": "400",
+    "CLK_FREQ": "800",
     "BAUD": "100"
   },
   "verification": {
@@ -23,7 +23,7 @@
     "golden_formal_result": "pass",
     "verdict": "L3_VALID",
     "sim_ok": true,
-    "fail_step": 39,
+    "fail_step": 75,
     "tb_mode": "natural",
     "min_fail_step": 20
   }

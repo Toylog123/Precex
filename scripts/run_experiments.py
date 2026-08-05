@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# PreCex - scripts/run_experiments.py 主实验批量评测（M1 数据集 s04-s37）
-# 作者：Toylog | 版本：v0.1 | 功能概述：对 samples/bugs 下 L3 样本批量跑 A/B/C × 3 随机种子评测：
+# PreCex - scripts/run_experiments.py 主实验批量评测（M1 数据集 s04-s37 + 深时序子集 s38+）
+# 作者：Toylog | 版本：v0.2 | 功能概述：对 samples/bugs 与 samples/deep 下 L3 样本批量跑 A/B/C × 3 随机种子评测：
 #   - 证据链：A=cex 原始日志/VCD，B=evidence.json（结构化），C=semantics.json（反例语义化）
 #   - LLM 定位+修复 → evaluator 三通过判定（compile/sim/formal，修复后期望 PASS）
 #   - 指标：loc_top1 / repair_pass / verdict / tokens / cost / attempts
@@ -8,7 +8,7 @@
 # 用法：
 #   python3 scripts/run_experiments.py [--samples s04-s37] [--settings A,B,C,D]  # D=FVDebug 式因果图
 #            [--provider minimax|deepseek|openai|gemini|anthropic]  # 默认 minimax；DeepSeek 跨模型重跑用
-#            [--samples-dir bugs|l2]  # 默认 bugs；L2 假阳性率实验用 l2
+#            [--samples-dir bugs|l2|deep]  # 默认 bugs；L2 假阳性率实验用 l2，深时序子集用 deep
 #            [--seeds 0,1,2] [--retries 2] [--mock] [--out ...]
 """
 PreCex 主实验批量评测。
@@ -35,6 +35,8 @@ import evaluator  # noqa: E402
 
 SAMPLES_BUGS = os.path.join(REPO_ROOT, "samples", "bugs")
 SAMPLES_L2 = os.path.join(REPO_ROOT, "samples", "l2")
+SAMPLES_DEEP = os.path.join(REPO_ROOT, "samples", "deep")
+SAMPLES_DIRS = {"bugs": SAMPLES_BUGS, "l2": SAMPLES_L2, "deep": SAMPLES_DEEP}
 DEFAULT_OUT = os.path.join(REPO_ROOT, "experiments", "runs", "experiments_results.json")
 BUGGY_HEADER_OFFSET = 4
 _SLIM_C = True  # C 证据激进出采样压缩开关（--no-slim-c 关闭，走完整原文）  # buggy.v 头注释偏移（与 bug_injector 一致）：缺陷行号 = inject_line + 4
@@ -315,11 +317,32 @@ def main(argv=None):
         verify_cfg["depth_override"] = int(argv[argv.index("--verify-depth") + 1])
 
     sample_ids = expand_samples(",".join(samples))
-    samples_base = SAMPLES_L2 if "--samples-dir" in argv and argv[argv.index("--samples-dir") + 1] == "l2" else SAMPLES_BUGS
+    samples_dir = "bugs"
+    if "--samples-dir" in argv:
+        samples_dir = argv[argv.index("--samples-dir") + 1]
+        if samples_dir not in SAMPLES_DIRS:
+            raise SystemExit("--samples-dir 必须是 bugs|l2|deep 之一，收到 %r" % samples_dir)
+    samples_base = SAMPLES_DIRS[samples_dir]
+
+    def _resolve_sample(sid):
+        """优先取 --samples-dir 目录；缺失时探测其它已知样本目录（深时序子集在 samples/deep）。"""
+        if os.path.isdir(os.path.join(samples_base, sid)):
+            return os.path.join(samples_base, sid)
+        for d in (SAMPLES_DEEP, SAMPLES_BUGS, SAMPLES_L2):
+            if d == samples_base:
+                continue
+            p = os.path.join(d, sid)
+            if os.path.isdir(p):
+                return p
+        return None
+
     dirs = {}
     for sid in sample_ids:
-        p = os.path.join(samples_base, sid)
-        if os.path.isdir(p):
+        p = _resolve_sample(sid)
+        if p is not None:
+            if os.path.dirname(p) != samples_base:
+                print("note: 样本 %s 位于 %s（--samples-dir=%s 之外，自动解析）"
+                      % (sid, os.path.dirname(p), samples_dir))
             dirs[sid] = p
         else:
             print("warning: 跳过未找到样本 %s" % sid)
@@ -336,6 +359,15 @@ def main(argv=None):
         keep_s = sorted({t[0] for t in task_filter})
         keep_st = sorted({t[1] for t in task_filter})
         keep_sd = sorted({t[2] for t in task_filter})
+        # --tasks 只过滤不扩充 dirs：补充解析 --tasks 点名但初始 dirs 缺失的样本
+        # （例如深样本 s38+ 位于 samples/deep，默认 --samples-dir bugs 解析不到）
+        for sid in keep_s:
+            if sid not in dirs:
+                p = _resolve_sample(sid)
+                if p is not None:
+                    if os.path.dirname(p) != samples_base:
+                        print("note: --tasks 样本 %s 位于 %s（自动解析）" % (sid, os.path.dirname(p)))
+                    dirs[sid] = p
         dirs = {s: dirs[s] for s in keep_s if s in dirs}
         settings = keep_st
         seeds = keep_sd
@@ -344,6 +376,10 @@ def main(argv=None):
     out_dir = tempfile.mkdtemp(prefix="exp_work_")
     results = []
     total = len(dirs) * len(settings) * len(seeds)
+    if total == 0:
+        raise SystemExit("error: 0 任务可运行（请求样本=%s、设置=%s、seeds=%s）；"
+                         "请检查 --samples/--tasks/--samples-dir（深样本用 --samples-dir deep）"
+                         % (sample_ids, settings, seeds))
     idx = 0
     # 增量写入：每完成一条 append 一行到 <out>.partial.jsonl，中断不丢进度；启动时跳过已完成键（断点续跑）
     partial_path = out_path + ".partial.jsonl"

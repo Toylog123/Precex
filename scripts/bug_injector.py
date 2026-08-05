@@ -27,6 +27,7 @@ from evaluator import compile_check, sim_check, formal_check  # noqa: E402  复�
 RTL_DIR = os.path.join(REPO_ROOT, "rtl")
 SAMPLES_DIR = os.path.join(REPO_ROOT, "samples", "bugs")
 L2_SAMPLES_DIR = os.path.join(REPO_ROOT, "samples", "l2")
+SAMPLES_DEEP_DIR = os.path.join(REPO_ROOT, "samples", "deep")
 DATE = "2026-08-03"          # 构造日期（数据集污染检查用）
 FORMAL_TIMEOUT = 900.0       # 注入校验时 formal 超时（sby smtbmc+z3，秒；uart_rx 深度 240 需较长 BMC）
 SIM_TIMEOUT = 120.0          # 弱 tb 仿真超时
@@ -772,6 +773,8 @@ def main(argv=None):
     ap.add_argument("--tb-shallow", action="store_true",
                     help="use rtl/<mod>/tb_<mod>_shallow.sv (shallow-coverage tb, no deep path)")
     ap.add_argument("--level", default="L3", choices=["L3", "L2"], help="样本等级（默认 L3；L2=单周期可观测错误，弱 tb 直接 FAIL）")
+    ap.add_argument("--samples-dir", default=None, choices=["bugs", "l2", "deep"],
+                    help="样本输出目录（默认：L3→samples/bugs，L2→samples/l2；deep→samples/deep 深时序子集）")
     args = ap.parse_args(argv)
 
     if args.list_types:
@@ -897,7 +900,7 @@ def main(argv=None):
     variants = list(err["variants"])
     if args.seed:
         random.Random(args.seed).shuffle(variants)
-    cmd_line = "python3 scripts/bug_injector.py --module %s --error-type %s --sample-id %s%s%s%s%s%s%s%s" % (
+    cmd_line = "python3 scripts/bug_injector.py --module %s --error-type %s --sample-id %s%s%s%s%s%s%s%s%s" % (
         args.module, args.error_type, args.sample_id,
         " --line %d" % args.line if args.line else "",
         " --seed %d" % args.seed if args.seed else "",
@@ -905,11 +908,15 @@ def main(argv=None):
         " --param %s" % args.param if args.param else "",
         " --natural-tb" if args.natural_tb else "",
         " --min-fail-step %d" % args.min_fail_step if args.min_fail_step else "",
-        " --tb-shallow" if args.tb_shallow else "")
+        " --tb-shallow" if args.tb_shallow else "",
+        " --samples-dir %s" % args.samples_dir if args.samples_dir else "")
 
     # 逐 variant 注入 + 校验（dry-run 时仅打印所有可应用 diff，不落盘不校验）
     fails = []
-    sample_dir = os.path.join(L2_SAMPLES_DIR if args.level == "L2" else SAMPLES_DIR, args.sample_id)
+    _OUT_DIRS = {"bugs": SAMPLES_DIR, "l2": L2_SAMPLES_DIR, "deep": SAMPLES_DEEP_DIR}
+    out_root = _OUT_DIRS[args.samples_dir] if args.samples_dir else (
+        L2_SAMPLES_DIR if args.level == "L2" else SAMPLES_DIR)
+    sample_dir = os.path.join(out_root, args.sample_id)
     for i, v in enumerate(variants, 1):
         if args.variant is not None and i != args.variant:
             continue
