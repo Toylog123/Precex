@@ -129,6 +129,10 @@ def run_adaptive(row, depths, timeout, limit):
         files = [os.path.join(workdir, "buggy.v")]
         if tb_top:
             files.append(os.path.join(workdir, "tb_weak.sv"))
+        if meta.get("module") == "uart_rx":
+            up = os.path.join(workdir, "uart_tx.sv")
+            if os.path.isfile(up):
+                files.append(up)
         sim = evaluator.sim_check(files, top=tb_top, out_bin=os.path.join(workdir, "sim.out"), cwd=workdir)
         out["sim_ok"] = sim["ok"]
     except Exception as e:
