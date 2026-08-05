@@ -1,0 +1,68 @@
+{
+  "sample": "s40",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "evidence": "cex_replay",
+    "cex_steps": 37,
+    "first_anomaly_cycle": 34,
+    "key_signal_diffs": [
+      [
+        "count",
+        34
+      ],
+      [
+        "tail",
+        34
+      ],
+      [
+        "full",
+        34
+      ],
+      [
+        "count_d",
+        35
+      ],
+      [
+        "head",
+        35
+      ],
+      [
+        "empty",
+        35
+      ],
+      [
+        "half_full",
+        35
+      ],
+      [
+        "full_d",
+        35
+      ],
+      [
+        "dout",
+        35
+      ]
+    ],
+    "stuck_signals": [
+      "dout",
+      "full",
+      "head"
+    ],
+    "cycles_compared": 36,
+    "inputs_replayed": [
+      "clk",
+      "rst_n",
+      "wr_en",
+      "rd_en",
+      "din"
+    ],
+    "outputs": [
+      "dout",
+      "full",
+      "empty",
+      "half_full"
+    ]
+  },
+  "clk_sig": "clk"
+}

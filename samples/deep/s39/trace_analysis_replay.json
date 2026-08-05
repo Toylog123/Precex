@@ -1,0 +1,42 @@
+{
+  "sample": "s39",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "evidence": "cex_replay",
+    "cex_steps": 53,
+    "first_anomaly_cycle": 50,
+    "key_signal_diffs": [
+      [
+        "timeout_irq",
+        50
+      ],
+      [
+        "state_d",
+        51
+      ],
+      [
+        "step_cnt",
+        51
+      ],
+      [
+        "step_cnt_d",
+        52
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 52,
+    "inputs_replayed": [
+      "clk",
+      "rst_n",
+      "start",
+      "data_in"
+    ],
+    "outputs": [
+      "done",
+      "timeout_irq",
+      "state"
+    ]
+  },
+  "clk_sig": "clk"
+}
