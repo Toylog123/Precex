@@ -109,3 +109,9 @@ samples/**/gc/
 !experiments/runs/e2e_feedback_s39.json
 !experiments/runs/e2e_feedback_s40.json
 
+
+!experiments/runs/parametrize_bmc_s38.json
+!experiments/runs/parametrize_bmc_s39.json
+!experiments/runs/parametrize_bmc_s40.json
+!experiments/runs/limited2c_report.json
+

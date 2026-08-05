@@ -1,0 +1,23 @@
+{
+  "sample": "s40",
+  "module": "fifo_sync",
+  "params": {
+    "DEPTH": "8"
+  },
+  "depth": 64,
+  "buggy": {
+    "rc": 0,
+    "passed": false,
+    "fail_step": 11,
+    "tail_tail": ":52 [verify_bmc] engine_0: Status returned by engine: FAIL\nSBY 19:12:52 [verify_bmc] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)\nSBY 19:12:52 [verify_bmc] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)\nSBY 19:12:52 [verify_bmc] summary: engine_0 (smtbmc z3) returned FAIL\nSBY 19:12:52 [verify_bmc] summary: counterexample trace: verify_bmc/engine_0/trace.vcd\nSBY 19:12:52 [verify_bmc] summary:   failed assertion fifo_sync.$assert$buggy.v:125$111 at buggy.v:125.58-126.36 step 11\nSBY 19:12:52 [verify_bmc] DONE (FAIL, rc=2)\nSBY 19:12:52 The following tasks failed: ['bmc']\n"
+  },
+  "golden": {
+    "rc": 0,
+    "passed": true,
+    "fail_step": null,
+    "tail_tail": "0: ##   0:00:11  Checking assertions in step 63..\nSBY 19:13:04 [verify_bmc] engine_0: ##   0:00:11  Status: passed\nSBY 19:13:04 [verify_bmc] engine_0: finished (returncode=0)\nSBY 19:13:04 [verify_bmc] engine_0: Status returned by engine: pass\nSBY 19:13:04 [verify_bmc] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:11 (11)\nSBY 19:13:04 [verify_bmc] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:12 (12)\nSBY 19:13:04 [verify_bmc] summary: engine_0 (smtbmc z3) returned pass\nSBY 19:13:04 [verify_bmc] summary: engine_0 did not produce any traces\nSBY 19:13:04 [verify_bmc] DONE (PASS, rc=0)\n"
+  },
+  "buggy_fail_step": null,
+  "error": "",
+  "verdict": "CONFIRMED"
+}

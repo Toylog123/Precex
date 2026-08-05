@@ -1,0 +1,86 @@
+{
+  "summary": {
+    "experiment": "2c-limited-mitigation-parametrize-bmc",
+    "date": "2026-08-05",
+    "conclusion": "源头参数化构建（bug_injector --param）的样本可用 BMC 完整周期验证；固定参数旧样本（DIV=434）不可参数化改写（内联断言依赖原始参数语义）",
+    "verdicts": "s38=CONFIRMED,s39=CONFIRMED,s40=CONFIRMED",
+    "buggy_fail_steps": "s38@39,s39@11,s40@11",
+    "all_confirmed": true,
+    "limited_50_root_cause": "s16/s18/s24/s26/s30/s35 在 depth48 PASS 但 depth96 超时；原版 DIV=434 下 depth48 的 PASS 为空转（未覆盖完整帧，一帧约4340拍）",
+    "limited_70_root_cause": "axi_lite_slave(52)+uart_rx(18) 握手大状态空间，depth24/264 即 180s 超时（BMC 引擎固有限制）",
+    "correct_mitigation": "源头用 bug_injector --param 生成参数化样本（断言随模板适配），而非对固定参数样本做参数改写"
+  },
+  "results": [
+    {
+      "sample": "s38",
+      "module": "uart_tx",
+      "params": {
+        "CLK_FREQ": "400",
+        "BAUD": "100",
+        "DATA_W": "8"
+      },
+      "depth": 64,
+      "buggy": {
+        "rc": 0,
+        "passed": false,
+        "fail_step": 39,
+        "tail_tail": "19:12:23 [verify_bmc] summary: engine_0 (smtbmc z3) returned FAIL\nSBY 19:12:23 [verify_bmc] summary: counterexample trace: verify_bmc/engine_0/trace.vcd\nSBY 19:12:23 [verify_bmc] summary:   failed assertion uart_tx.$assert$buggy.v:146$94 at buggy.v:146.34-147.37 step 39\nSBY 19:12:23 [verify_bmc] summary:   failed assertion uart_tx.$assert$buggy.v:158$97 at buggy.v:158.24-158.74 step 39\nSBY 19:12:23 [verify_bmc] summary:   failed assertion uart_tx.$assert$buggy.v:166$99 at buggy.v:166.36-167.37 step 39\nSBY 19:12:23 [verify_bmc] DONE (FAIL, rc=2)\nSBY 19:12:23 The following tasks failed: ['bmc']\n"
+      },
+      "golden": {
+        "rc": 0,
+        "passed": true,
+        "fail_step": null,
+        "tail_tail": "e_0: ##   0:00:07  Checking assertions in step 63..\nSBY 19:12:31 [verify_bmc] engine_0: ##   0:00:07  Status: passed\nSBY 19:12:31 [verify_bmc] engine_0: finished (returncode=0)\nSBY 19:12:31 [verify_bmc] engine_0: Status returned by engine: pass\nSBY 19:12:31 [verify_bmc] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:07 (7)\nSBY 19:12:31 [verify_bmc] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:07 (7)\nSBY 19:12:31 [verify_bmc] summary: engine_0 (smtbmc z3) returned pass\nSBY 19:12:31 [verify_bmc] summary: engine_0 did not produce any traces\nSBY 19:12:31 [verify_bmc] DONE (PASS, rc=0)\n"
+      },
+      "buggy_fail_step": null,
+      "error": "",
+      "verdict": "CONFIRMED"
+    },
+    {
+      "sample": "s39",
+      "module": "fsm_ctrl",
+      "params": {
+        "TIMEOUT": "8"
+      },
+      "depth": 64,
+      "buggy": {
+        "rc": 0,
+        "passed": false,
+        "fail_step": 11,
+        "tail_tail": "2:43 [verify_bmc] engine_0: Status returned by engine: FAIL\nSBY 19:12:43 [verify_bmc] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)\nSBY 19:12:43 [verify_bmc] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)\nSBY 19:12:43 [verify_bmc] summary: engine_0 (smtbmc z3) returned FAIL\nSBY 19:12:43 [verify_bmc] summary: counterexample trace: verify_bmc/engine_0/trace.vcd\nSBY 19:12:43 [verify_bmc] summary:   failed assertion fsm_ctrl.$assert$buggy.v:176$138 at buggy.v:176.40-177.43 step 11\nSBY 19:12:43 [verify_bmc] DONE (FAIL, rc=2)\nSBY 19:12:43 The following tasks failed: ['bmc']\n"
+      },
+      "golden": {
+        "rc": 0,
+        "passed": true,
+        "fail_step": null,
+        "tail_tail": "e_0: ##   0:00:07  Checking assertions in step 63..\nSBY 19:12:51 [verify_bmc] engine_0: ##   0:00:07  Status: passed\nSBY 19:12:51 [verify_bmc] engine_0: finished (returncode=0)\nSBY 19:12:51 [verify_bmc] engine_0: Status returned by engine: pass\nSBY 19:12:51 [verify_bmc] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:07 (7)\nSBY 19:12:51 [verify_bmc] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:07 (7)\nSBY 19:12:51 [verify_bmc] summary: engine_0 (smtbmc z3) returned pass\nSBY 19:12:51 [verify_bmc] summary: engine_0 did not produce any traces\nSBY 19:12:51 [verify_bmc] DONE (PASS, rc=0)\n"
+      },
+      "buggy_fail_step": null,
+      "error": "",
+      "verdict": "CONFIRMED"
+    },
+    {
+      "sample": "s40",
+      "module": "fifo_sync",
+      "params": {
+        "DEPTH": "8"
+      },
+      "depth": 64,
+      "buggy": {
+        "rc": 0,
+        "passed": false,
+        "fail_step": 11,
+        "tail_tail": ":52 [verify_bmc] engine_0: Status returned by engine: FAIL\nSBY 19:12:52 [verify_bmc] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)\nSBY 19:12:52 [verify_bmc] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)\nSBY 19:12:52 [verify_bmc] summary: engine_0 (smtbmc z3) returned FAIL\nSBY 19:12:52 [verify_bmc] summary: counterexample trace: verify_bmc/engine_0/trace.vcd\nSBY 19:12:52 [verify_bmc] summary:   failed assertion fifo_sync.$assert$buggy.v:125$111 at buggy.v:125.58-126.36 step 11\nSBY 19:12:52 [verify_bmc] DONE (FAIL, rc=2)\nSBY 19:12:52 The following tasks failed: ['bmc']\n"
+      },
+      "golden": {
+        "rc": 0,
+        "passed": true,
+        "fail_step": null,
+        "tail_tail": "0: ##   0:00:11  Checking assertions in step 63..\nSBY 19:13:04 [verify_bmc] engine_0: ##   0:00:11  Status: passed\nSBY 19:13:04 [verify_bmc] engine_0: finished (returncode=0)\nSBY 19:13:04 [verify_bmc] engine_0: Status returned by engine: pass\nSBY 19:13:04 [verify_bmc] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:11 (11)\nSBY 19:13:04 [verify_bmc] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:12 (12)\nSBY 19:13:04 [verify_bmc] summary: engine_0 (smtbmc z3) returned pass\nSBY 19:13:04 [verify_bmc] summary: engine_0 did not produce any traces\nSBY 19:13:04 [verify_bmc] DONE (PASS, rc=0)\n"
+      },
+      "buggy_fail_step": null,
+      "error": "",
+      "verdict": "CONFIRMED"
+    }
+  ]
+}
