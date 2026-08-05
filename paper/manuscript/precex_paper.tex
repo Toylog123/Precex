@@ -161,7 +161,7 @@ AssertLLM2 & 断言生成 & --- & --- & --- & 变异驱动 \\
 \label{fig:pipeline}
 \end{figure}
 
-整体架构如图~\ref{fig:pipeline} 所示。PreCex 由四个核心组件与两个支撑元素构成（开源工具链 iverilog、Yosys\cite{yosys} 与 SymbiYosys\cite{sby}）。\textbf{EvidenceEngine} 将 cex.log 解析为统一 JSON 结构（错误类型、模块、文件、行号、代码片段、信号、触发条件、失败阶段与失败步）。\textbf{CexSemantizer} 将 VCD 转换为周期事件表、状态轨迹、故障锥与自然语言摘要（window=8 压缩）。\textbf{LocalRepairer} 以设计、断言与证据为输入（DeepSeek v4-flash，temperature 0），输出定位与最小统一 diff，重试不超过两轮；\textbf{每次失败尝试的 diff 与失败原因被注入下一轮 prompt}（历史修复记忆，见 \S\ref{sec:feedback}），明确要求 LLM 分析上次为何失败并避免重复该模式，避免“开环重试”重复同一错误补丁。\textbf{Verifier} 执行三关验证：iverilog 编译零错误、弱测试平台仿真全绿、sby smtbmc+z3 BMC 无反例（主判据），并叠加 golden 双重校验；工具链适配由断言安全子集（Gate-1 收敛）与前置兼容性预检（scripts/check\_rtl\_compat.py，见 \S\ref{sec:toolchain}）保障，工具解析失败按 INCONCLUSIVE 记录而非崩溃。支撑元素为实验变量控制组件与 BugBench-PS 数据集资产。
+整体架构如图~\ref{fig:pipeline} 所示。PreCex 由四个核心组件与两个支撑元素构成（开源工具链 iverilog、Yosys\cite{yosys} 与 SymbiYosys\cite{sby}）。\textbf{EvidenceEngine} 将 cex.log 解析为统一 JSON 结构（错误类型、模块、文件、行号、代码片段、信号、触发条件、失败阶段与失败步）。\textbf{CexSemantizer} 将 VCD 转换为周期事件表、状态轨迹、故障锥与自然语言摘要（window=8 压缩）。\textbf{LocalRepairer} 以设计、断言与证据为输入（DeepSeek v4-flash，temperature 0.2），输出定位与最小统一 diff，重试不超过两轮；\textbf{每次失败尝试的 diff 与失败原因被注入下一轮 prompt}（历史修复记忆，见 \S\ref{sec:feedback}），明确要求 LLM 分析上次为何失败并避免重复该模式，避免“开环重试”重复同一错误补丁。\textbf{Verifier} 执行三关验证：iverilog 编译零错误、弱测试平台仿真全绿、sby smtbmc+z3 BMC 无反例（主判据），并叠加 golden 双重校验；工具链适配由断言安全子集（Gate-1 收敛）与前置兼容性预检（scripts/check\_rtl\_compat.py，见 \S\ref{sec:toolchain}）保障，工具解析失败按 INCONCLUSIVE 记录而非崩溃。支撑元素为实验变量控制组件与 BugBench-PS 数据集资产。
 
 \subsection{证据引擎与反例语义化}
 
