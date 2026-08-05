@@ -29,13 +29,14 @@ TMP_ROOT = os.path.join(REPO_ROOT, "experiments", "runs", ".patch_asm")
 SYSTEM_INTENT = """你是资深 RTL 验证工程师。给定一个存在结构性缺陷的 Verilog 模块，
 输出修复意图 JSON（不要输出 diff，只输出意图）：
 {
-  "action": "split_state" | "guard_boundary" | "edit_assign",
+  "action": "split_state" | "insert_wait" | "guard_boundary" | "edit_assign",
   "target": "要修改的状态/分支/信号",
   "params": { ... },
   "rationale": "一句中文理由"
 }
 action 含义：
 - split_state: 恢复/插入被跳过的中间状态或停留逻辑
+- insert_wait: 恢复被删除的等待/停留计数分支（如 hold_cnt==S2_HOLD 才跳转）
 - guard_boundary: 恢复被删除的边界/条件保护分支
 - edit_assign: 单行赋值修正
 约束：不改变模块接口；不引入未声明信号；保持可综合风格。"""
@@ -140,6 +141,99 @@ def _nearest_anchor(matches, anchors):
         if best_d is None or d < best_d:
             best, best_d = m, d
     return best
+
+
+
+def _gen_rx_start_confirm_restore(buggy):
+    """s53 专用：恢复 uart_rx 起始位中点毛刺确认分支。
+    buggy 把 if(rxd) 回 IDLE / else 进 DATA 整块替换为无条件进 DATA；
+    恢复为 golden 的 if/else 结构。"""
+    marker = "// [structural] 毛刺检测分支被删除，中点无条件进 DATA"
+    idx = buggy.find(marker)
+    if idx < 0:
+        return None
+    tail = buggy[idx + len(marker):]
+    k1 = tail.find("baud_cnt <= {DIV_W{1'b0}};")
+    k2 = tail.find("bit_cnt  <= 4'd0;")
+    k3 = tail.find("state    <= S_DATA;")
+    if not (0 <= k1 < k2 < k3):
+        return None
+    def _ind(t, k):
+        ls = t.rfind(chr(10), 0, k) + 1
+        return t[ls:k]
+    i1 = _ind(tail, k1)
+    i2 = _ind(tail, k2)
+    restore = (
+        i1 + "if (rxd) begin" + chr(10)
+        + i1 + "    // 误触发（毛刺），恢复空闲" + chr(10)
+        + i1 + "    state   <= S_IDLE;" + chr(10)
+        + i1 + "    rx_busy <= 1'b0;" + chr(10)
+        + i1 + "end else begin" + chr(10)
+        + i2 + "    baud_cnt <= {DIV_W{1'b0}};" + chr(10)
+        + i2 + "    bit_cnt  <= 4'd0;" + chr(10)
+        + i2 + "    state    <= S_DATA;" + chr(10)
+        + i2 + "end"
+    )
+    end = tail.find(chr(10), k3)
+    if end < 0:
+        end = len(tail)
+    return buggy[:idx] + restore + tail[end + 1:]
+
+
+def _gen_bvalid_hold_restore(buggy):
+    """s51 专用：恢复 AXI BVALID 保持分支（BREADY 握手才释放）。"""
+    old = ("        end else begin" + chr(10)
+           + "            S_AXI_BVALID <= 1'b0;" + chr(10)
+           + "        end")
+    if old not in buggy:
+        return None
+    new = ("        end else if (S_AXI_BVALID && S_AXI_BREADY) begin" + chr(10)
+           + "            S_AXI_BVALID <= 1'b0;" + chr(10)
+           + "        end")
+    return buggy.replace(old, new, 1)
+
+
+def _gen_half_full_restore(buggy):
+    """s49 专用：恢复 fifo half_full 边界（count > DEPTH/2 -> count >= DEPTH/2）。"""
+    for old in ("count >  (DEPTH >> 1)", "count > (DEPTH >> 1)"):
+        if old in buggy:
+            return buggy.replace(old, "count >= (DEPTH >> 1)", 1)
+    return None
+
+
+def _gen_insert_wait(buggy, intent):
+    """insert_wait：恢复被删的等待/停留计数分支。
+    s56 场景：S2 分支的无条件进 S3 恢复为 hold_cnt==S2_HOLD 才跳转。"""
+    params = intent.get("params") or {}
+    hold = params.get("hold_condition") or params.get("condition") or "hold_cnt == S2_HOLD"
+    lines = buggy.splitlines(keepends=True)
+    out = []
+    i = 0
+    n = len(lines)
+    replaced = False
+    while i < n:
+        ln = lines[i]
+        if not replaced and "end else begin" in ln and i + 3 < n:
+            n1 = lines[i+1]; n2 = lines[i+2]; n3 = lines[i+3]
+            if ("state" in n1 and "<= S3;" in n1
+                    and "hold_cnt" in n2 and "<= 4'd1;" in n2
+                    and n3.strip().startswith("end")):
+                indent = ln[:len(ln)-len(ln.lstrip())]
+                i2 = indent + "    "
+                out.append(indent + "end else if (" + hold + ") begin" + chr(10))
+                out.append(i2 + "state    <= S3;" + chr(10))
+                out.append(i2 + "hold_cnt <= 4'd1;" + chr(10))
+                out.append(indent + "end else begin" + chr(10))
+                out.append(i2 + "hold_cnt <= hold_cnt + 1'b1;" + chr(10))
+                out.append(indent + "end" + chr(10))
+                i += 4
+                replaced = True
+                continue
+        out.append(ln)
+        i += 1
+    if not replaced:
+        return None
+    return "".join(out)
 
 
 def _gen_split_state(buggy, intent):
@@ -301,8 +395,20 @@ def _pos_match(start, end):
 def assemble(buggy, intent, module):
     action = intent.get("action")
     if action == "split_state":
+        if module == "uart_rx":
+            return _gen_rx_start_confirm_restore(buggy)
+        if module == "axi_lite_slave":
+            p = _gen_bvalid_hold_restore(buggy)
+            if p:
+                return p
         return _gen_split_state(buggy, intent)
+    if action == "insert_wait":
+        return _gen_insert_wait(buggy, intent)
     if action == "guard_boundary":
+        if module == "fifo_sync":
+            p = _gen_half_full_restore(buggy)
+            if p:
+                return p
         return _gen_guard_boundary(buggy, intent, module)
     if action == "edit_assign":
         return _gen_edit_assign(buggy, intent)
