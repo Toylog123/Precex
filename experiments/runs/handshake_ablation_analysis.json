@@ -1,0 +1,385 @@
+{
+  "samples": {
+    "s15": [
+      {
+        "setting": "B",
+        "rows": [
+          {
+            "seed": 0,
+            "line": 57,
+            "buggy_line": 61,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "S_IDLE 的 tx_start 分支在 shreg 与 bit_cnt 之间缺少 txd<=1'b0，进入 S_START 后 txd 仍为高，击穿 A1。"
+          },
+          {
+            "seed": 1,
+            "line": 60,
+            "buggy_line": 61,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "S_IDLE检测tx_start进入S_START时未将txd拉低，导致START状态txd保持高，违反A1断言。"
+          },
+          {
+            "seed": 2,
+            "line": 55,
+            "buggy_line": 61,
+            "strict": false,
+            "win4": false,
+            "root_cause": true,
+            "repair": true,
+            "reason": "S_IDLE 的 tx_start 分支缺少起始位立即拉低 txd 的赋值，导致进入 START 时 txd 仍为高，违反 A1。"
+          }
+        ],
+        "strict": 0,
+        "win4": 2,
+        "root_cause": 3,
+        "repair": 3
+      },
+      {
+        "setting": "v21",
+        "rows": [
+          {
+            "seed": 0,
+            "line": 57,
+            "buggy_line": 61,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "A1 在 state==S_START 时要求 txd 为低，但 S_IDLE 的 tx_start 分支漏掉了当拍拉低 txd 的起始位握手赋值，导致进入 START 的首拍 t"
+          },
+          {
+            "seed": 1,
+            "line": 55,
+            "buggy_line": 61,
+            "strict": false,
+            "win4": false,
+            "root_cause": false,
+            "repair": true,
+            "reason": "S_IDLE检测tx_start时未立即将txd置低，导致进入S_START的当拍txd仍为高，不满足A1（START时txd==0）。"
+          },
+          {
+            "seed": 2,
+            "line": 57,
+            "buggy_line": 61,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "S_IDLE 的 tx_start 握手分支缺少对 txd 的立即拉低赋值，导致进入 START 状态时 txd 仍为高，违反 A1。"
+          }
+        ],
+        "strict": 0,
+        "win4": 2,
+        "root_cause": 2,
+        "repair": 3
+      },
+      {
+        "setting": "BH",
+        "rows": [
+          {
+            "seed": 0,
+            "line": 60,
+            "buggy_line": 61,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "S_IDLE 中 tx_start 分支缺少 txd 立即拉低，导致进入 START 后首个周期 txd 仍为高，违反 A1。"
+          },
+          {
+            "seed": 1,
+            "line": 60,
+            "buggy_line": 61,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "S_IDLE 的 tx_start 分支未同拍将 txd 拉低，导致进入 START 后首个沿仍保持高电平，违反 A1。"
+          },
+          {
+            "seed": 2,
+            "line": 51,
+            "buggy_line": 61,
+            "strict": false,
+            "win4": false,
+            "root_cause": true,
+            "repair": true,
+            "reason": "S_IDLE 的 tx_start 分支缺少 txd<=1'b0，导致进入 START 后首拍 A1 断言仍见 txd=1；应与 state<=S_START 同拍拉低 txd。"
+          }
+        ],
+        "strict": 0,
+        "win4": 2,
+        "root_cause": 3,
+        "repair": 3
+      }
+    ],
+    "s17": [
+      {
+        "setting": "B",
+        "rows": [
+          {
+            "seed": 0,
+            "line": 116,
+            "buggy_line": 120,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "写响应通道 BVALID 释放分支被删除，BREADY 握手后 BVALID 不拉低，导致写响应重复有效。"
+          },
+          {
+            "seed": 1,
+            "line": 116,
+            "buggy_line": 120,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "写响应通道中 BVALID 的释放分支被删除，导致 BVALID 在 BREADY 握手后无法拉低，违反 A3 断言。"
+          },
+          {
+            "seed": 2,
+            "line": 123,
+            "buggy_line": 120,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "写响应 BVALID 释放分支中的赋值被注释删除，BREADY 握手后 BVALID 无法拉低，导致 A3 对应的写响应悬挂反例。"
+          }
+        ],
+        "strict": 0,
+        "win4": 3,
+        "root_cause": 3,
+        "repair": 3
+      },
+      {
+        "setting": "v21",
+        "rows": [
+          {
+            "seed": 0,
+            "line": 123,
+            "buggy_line": 120,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "写响应通道 BVALID 释放分支缺失：在 BVALID&&BREADY 时未将 BVALID 拉低，造成写响应重复握手，需恢复 S_AXI_BVALID <= 1'b0。"
+          },
+          {
+            "seed": 1,
+            "line": 123,
+            "buggy_line": 120,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "写响应通道 BVALID 释放分支被注释掉，BREADY 握手后无法拉低 BVALID，导致 BVALID 常驻并击穿写通道握手断言。"
+          },
+          {
+            "seed": 2,
+            "line": 123,
+            "buggy_line": 120,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "写响应通道在 BVALID 与 BREADY 同时有效时缺少释放赋值，导致 BVALID 永不拉低，违反 AXI 写响应握手协议。"
+          }
+        ],
+        "strict": 0,
+        "win4": 3,
+        "root_cause": 3,
+        "repair": 3
+      },
+      {
+        "setting": "BH",
+        "rows": [
+          {
+            "seed": 0,
+            "line": 121,
+            "buggy_line": 120,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "写响应通道的 BREADY 释放分支被清空，BVALID 在握手后未拉低，最终违反 A3（BVALID 有效时 aw_done/w_done 必须成立）。"
+          },
+          {
+            "seed": 1,
+            "line": 122,
+            "buggy_line": 120,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "证据显示 BVALID 在 BREADY 应答后从不释放，而写响应 always 中 BVALID 的释放分支被注释为空，导致 aw_done/w_done 已释放后 BVALID"
+          },
+          {
+            "seed": 2,
+            "line": 123,
+            "buggy_line": 120,
+            "strict": false,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "写响应通道在 BVALID 与 BREADY 握手成功后未释放 BVALID（释放分支被删除），导致写响应持续有效并触发形式验证失败。"
+          }
+        ],
+        "strict": 0,
+        "win4": 3,
+        "root_cause": 3,
+        "repair": 3
+      }
+    ],
+    "s25": [
+      {
+        "setting": "B",
+        "rows": [
+          {
+            "seed": 0,
+            "line": 142,
+            "buggy_line": 142,
+            "strict": true,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "读数据通道复位分支将 RVALID 置 1，导致复位释放沿 RVALID 非 0，违反 A8 断言。"
+          },
+          {
+            "seed": 1,
+            "line": 142,
+            "buggy_line": 142,
+            "strict": true,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "复位时 RVALID 被错误置为 1，导致复位释放沿 A8 断言要求 RVALID 为 0 时失败。"
+          },
+          {
+            "seed": 2,
+            "line": 142,
+            "buggy_line": 142,
+            "strict": true,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "读数据通道复位分支将 S_AXI_RVALID 置为 1，导致复位释放沿 RVALID 仍为高，违反 A8（复位释放输出必须为 0）。"
+          }
+        ],
+        "strict": 3,
+        "win4": 3,
+        "root_cause": 3,
+        "repair": 3
+      },
+      {
+        "setting": "v21",
+        "rows": [
+          {
+            "seed": 0,
+            "line": 142,
+            "buggy_line": 142,
+            "strict": true,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "A8 要求复位释放当拍 RVALID 为 0，而读数据通道复位分支将 RVALID 置 1，导致复位释放后 RVALID 仍为高。"
+          },
+          {
+            "seed": 1,
+            "line": 142,
+            "buggy_line": 142,
+            "strict": true,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "复位分支错误地将 RVALID 置 1，导致复位释放沿 A8 断言失败；黄金应为 0。"
+          },
+          {
+            "seed": 2,
+            "line": 142,
+            "buggy_line": 142,
+            "strict": true,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "读数据通道复位分支将 RVALID 错误置 1，导致复位释放沿 A8 断言失败（形式反例）。"
+          }
+        ],
+        "strict": 3,
+        "win4": 3,
+        "root_cause": 3,
+        "repair": 3
+      },
+      {
+        "setting": "BH",
+        "rows": [
+          {
+            "seed": 0,
+            "line": 142,
+            "buggy_line": 142,
+            "strict": true,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "读数据通道复位分支将 RVALID 初始化为 1，复位释放当拍不满足 A8 断言（所有 valid/ready 必须为 0），导致形式验证失败。"
+          },
+          {
+            "seed": 1,
+            "line": 142,
+            "buggy_line": 142,
+            "strict": true,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "复位分支将 RVALID 错误置 1，导致复位释放当拍 A8 断言失败，应置 0。"
+          },
+          {
+            "seed": 2,
+            "line": 142,
+            "buggy_line": 142,
+            "strict": true,
+            "win4": true,
+            "root_cause": true,
+            "repair": true,
+            "reason": "复位分支将 S_AXI_RVALID 错误置为 1，复位释放沿不满足 A8（所有 valid/ready 必须为 0），并导致读通道卡住。"
+          }
+        ],
+        "strict": 3,
+        "win4": 3,
+        "root_cause": 3,
+        "repair": 3
+      }
+    ]
+  },
+  "overall": {
+    "B": {
+      "n": 9,
+      "strict": 3,
+      "win4": 8,
+      "root_cause": 9,
+      "repair": 9
+    },
+    "v21": {
+      "n": 9,
+      "strict": 3,
+      "win4": 8,
+      "root_cause": 8,
+      "repair": 9
+    },
+    "BH": {
+      "n": 9,
+      "strict": 3,
+      "win4": 8,
+      "root_cause": 9,
+      "repair": 9
+    }
+  },
+  "note": "strict=精确行命中；win4=距离 buggy_inject_line<=四行（删除/插入锚点歧义修正）；root_cause=reason 关键词判根因命中；B=冻结基线（experiments_results_ds_full3 setting=B）"
+}

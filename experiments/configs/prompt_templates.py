@@ -70,12 +70,16 @@ def build_prompt(setting, design, assertions, evidence_text, meta=None, history=
         ev_label = "【证据段 A：原始反例日志/反例原文（未结构化处理）】"
     elif setting == "B":
         ev_label = "【证据段 B：结构化证据 JSON（EvidenceEngine 输出）】"
+    elif setting == "BT":
+        ev_label = "【证据段 B+T：结构化证据 + TraceAnalyzer 动态切片】"
+    elif setting == "BH":
+        ev_label = "【证据段 B+H：结构化证据 + 握手协议分析（动态切片 + 违规检测 + 协议提示）】"
     elif setting == "D":
         ev_label = "【证据段 D：FVDebug 式因果图（失败断言 + 根因节点 + 因果链状态轨迹，确定性提取）】"
     elif setting == "C":
         ev_label = "【证据段 C：反例语义化（周期事件表+状态轨迹+故障锥+NL 摘要）】"
     else:
-        raise ValueError("setting 必须是 A/B/C")
+        raise ValueError("setting 必须是 A/B/C/BT/BH")
     prompt = (
         head + ev_label + chr(10) + "[证据内容开始]" + chr(10)
         + evidence_text + chr(10) + "[证据内容结束]" + chr(10) + chr(10)
@@ -126,10 +130,73 @@ def build_evidence_text(setting, sample_dir):
             return "（evidence.json 缺失）"
         with open(p, "r", encoding="utf-8") as f:
             return f.read()
+    if setting == "BH":
+        p = os.path.join(sample_dir, "evidence.json")
+        if not os.path.isfile(p):
+            return "\uff08evidence.json \u7f3a\u5931\uff09"
+        with open(p, "r", encoding="utf-8") as f:
+            body_b = f.read()
+        try:
+            import json as _json
+            import os as _os
+            import cex_diff as _cd
+            meta_p = _os.path.join(sample_dir, "meta.json")
+            meta = {}
+            if _os.path.isfile(meta_p):
+                with open(meta_p, "r", encoding="utf-8") as f:
+                    meta = _json.load(f)
+            old_vcd = _os.path.join(sample_dir, "cex.vcd")
+            old_log = _os.path.join(sample_dir, "cex.log")
+            clk = _cd.MODULE_CLK.get(meta.get("module"), "clk")
+            old_fail, _ = _cd.extract_fail_step(old_log)
+            r = _cd.analyze(old_vcd, None, clk, old_fail, None, module=meta.get("module"))
+            hs_feat = r.get("handshake_old") or {}
+            viols = _cd.module_handshake_violations(hs_feat, meta.get("module") or "")
+            note = _cd.HANDSHAKE_NOTE.get(meta.get("module") or "")
+            rows = []
+            for pk, f in sorted(hs_feat.items()):
+                rows.append("%s: %s" % (pk, _json.dumps(f, ensure_ascii=False)))
+            hs_text = chr(10).join(rows)
+            if viols:
+                hs_text += chr(10) + "\u534f\u8bae\u8fdd\u89c4\uff1a" + "\uff1b".join(viols)
+            if note:
+                hs_text += chr(10) + "\u534f\u8bae\u63d0\u793a\uff1a" + note
+        except Exception as e:
+            hs_text = "\uff08\u63e1\u624b\u5206\u6790\u5931\u8d25\uff1a%s\uff09" % repr(e)[:80]
+        return body_b + chr(10) + chr(10) + "\u3010\u63e1\u624b\u534f\u8bae\u5206\u6790\uff08TraceAnalyzer \u52a8\u6001\u5207\u7247 + \u534f\u8bae\u68c0\u6d4b\uff09\u3011" + chr(10) + hs_text
+    if setting == "BT":
+        p = os.path.join(sample_dir, "evidence.json")
+        if not os.path.isfile(p):
+            return "（evidence.json 缺失）"
+        with open(p, "r", encoding="utf-8") as f:
+            body_b = f.read()
+        ta_path = os.path.join(sample_dir, "trace_analysis_replay.json")
+        if not os.path.isfile(ta_path):
+            ta_path = os.path.join(sample_dir, "trace_analysis.json")
+        ta_text = ""
+        if os.path.isfile(ta_path):
+            try:
+                import json as _json
+                with open(ta_path, "r", encoding="utf-8") as f:
+                    ta = _json.load(f)
+                an = ta.get("analysis") or {}
+                rows = []
+                if "first_anomaly_cycle" in an:
+                    rows.append("first_anomaly_cycle=%s" % an["first_anomaly_cycle"])
+                if "cycles_compared" in an:
+                    rows.append("cycles_compared=%s" % an["cycles_compared"])
+                ks = (an.get("key_signal_diffs") or [])[:20]
+                rows.append("key_signal_diffs=%s" % _json.dumps(ks, ensure_ascii=False))
+                ss = (an.get("stuck_signals") or [])[:10]
+                rows.append("stuck_signals=%s" % _json.dumps(ss, ensure_ascii=False))
+                ta_text = " | ".join(rows)
+            except Exception as e:
+                ta_text = "（trace_analysis 解析失败: %s）" % e
+        return body_b + chr(10) + chr(10) + "【TraceAnalyzer 动态切片摘要】" + chr(10) + ta_text
     if setting == "C":
         p = os.path.join(sample_dir, "semantics.json")
         if not os.path.isfile(p):
             return "（semantics.json 缺失）"
         with open(p, "r", encoding="utf-8") as f:
             return f.read()
-    raise ValueError("setting 必须是 A/B/C")
+    raise ValueError("setting 必须是 A/B/C/BT/BH")

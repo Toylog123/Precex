@@ -1,0 +1,34 @@
+{
+  "summary": {
+    "total": 1,
+    "ok": 1,
+    "patched": 1,
+    "cost": 0.0006
+  },
+  "results": [
+    {
+      "sample": "s56",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "insert_wait",
+        "target": "S2 状态中当前无条件跳转至 S3 的 else 分支",
+        "params": {
+          "exit_condition": "hold_cnt == S2_HOLD",
+          "exit_next_state": "S3",
+          "hold_next_state": "S2",
+          "hold_cnt_action": "保持原停留计数，未满时 hold_cnt <= hold_cnt + 1'b1；满足 exit_condition 时 hold_cnt <= 4'd1"
+        },
+        "rationale": "恢复 S2 状态被删除的停留计数等待逻辑，使 S2 必须停留满 S2_HOLD 拍才能跳转至 S3，满足强断言 A8。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.00057624,
+      "tokens": 3423,
+      "llm_content": "{\n  \"action\": \"insert_wait\",\n  \"target\": \"S2 状态中当前无条件跳转至 S3 的 else 分支\",\n  \"params\": {\n    \"exit_condition\": \"hold_cnt == S2_HOLD\",\n    \"exit_next_state\": \"S3\",\n    \"hold_next_state\": \"S2\",\n    \"hold_cnt_action\": \"保持原停留计数，未满时 hold_cnt <= hold_cnt + 1'b1；满足 exit_condition 时 hold_cnt <= 4'd1\"\n  },\n  \"rationale\": \"恢复 S2 状态被删除的停留计数等待逻辑，使 S2 必须停留满 S2_HOLD 拍才能跳转至 S3，满足强断言 A8。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    }
+  ]
+}

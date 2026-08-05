@@ -61,7 +61,7 @@ def _cex_diff_diagnosis(sample_dir, ev, meta):
     try:
         old_fail, old_assert = cex_diff.extract_fail_step(old_log)
         new_fail, _ = cex_diff.extract_fail_step(new_log)
-        r = cex_diff.analyze(old_vcd, new_vcd, clk, old_fail, new_fail)
+        r = cex_diff.analyze(old_vcd, new_vcd, clk, old_fail, new_fail, module=meta.get("module"))
         return cex_diff.diagnosis_text(meta.get("sample_id", ""), r, old_assert)
     except Exception as e:
         return "（差分诊断失败：%s）" % repr(e)[:80]
@@ -256,6 +256,67 @@ def _build_evidence_text(setting, sample_dir):
             return "（evidence.json 缺失）"
         with open(p, "r", encoding="utf-8") as f:
             return f.read()
+    if setting == "BH":
+        # B 证据全文 + 握手协议分析（1d 握手专项：首轮注入，非仅重试）
+        p = os.path.join(sample_dir, "evidence.json")
+        if not os.path.isfile(p):
+            return "\uff08evidence.json \u7f3a\u5931\uff09"
+        with open(p, "r", encoding="utf-8") as f:
+            body_b = f.read()
+        try:
+            meta_p = os.path.join(sample_dir, "meta.json")
+            meta = {}
+            if os.path.isfile(meta_p):
+                with open(meta_p, "r", encoding="utf-8") as f:
+                    meta = json.load(f)
+            old_vcd = os.path.join(sample_dir, "cex.vcd")
+            old_log = os.path.join(sample_dir, "cex.log")
+            clk = cex_diff.MODULE_CLK.get(meta.get("module"), "clk")
+            old_fail, _ = cex_diff.extract_fail_step(old_log)
+            r = cex_diff.analyze(old_vcd, None, clk, old_fail, None, module=meta.get("module"))
+            hs_feat = r.get("handshake_old") or {}
+            viols = cex_diff.module_handshake_violations(hs_feat, meta.get("module") or "")
+            note = cex_diff.HANDSHAKE_NOTE.get(meta.get("module") or "")
+            rows = []
+            for pk, f in sorted(hs_feat.items()):
+                rows.append("%s: %s" % (pk, json.dumps(f, ensure_ascii=False)))
+            hs_text = chr(10).join(rows)
+            if viols:
+                hs_text += chr(10) + "\u534f\u8bae\u8fdd\u89c4\uff1a" + "\uff1b".join(viols)
+            if note:
+                hs_text += chr(10) + "\u534f\u8bae\u63d0\u793a\uff1a" + note
+        except Exception as e:
+            hs_text = "\uff08\u63e1\u624b\u5206\u6790\u5931\u8d25\uff1a%s\uff09" % repr(e)[:80]
+        return body_b + chr(10) + chr(10) + "\u3010\u63e1\u624b\u534f\u8bae\u5206\u6790\uff08TraceAnalyzer \u52a8\u6001\u5207\u7247 + \u534f\u8bae\u68c0\u6d4b\uff09\u3011" + chr(10) + hs_text
+    if setting == "BT":
+        # B 证据全文 + TraceAnalyzer 动态切片摘要（T 增量；配对消融 B vs B+T）
+        p = os.path.join(sample_dir, "evidence.json")
+        if not os.path.isfile(p):
+            return "（evidence.json 缺失）"
+        with open(p, "r", encoding="utf-8") as f:
+            body_b = f.read()
+        ta_path = os.path.join(sample_dir, "trace_analysis_replay.json")
+        if not os.path.isfile(ta_path):
+            ta_path = os.path.join(sample_dir, "trace_analysis.json")
+        ta_text = ""
+        if os.path.isfile(ta_path):
+            try:
+                with open(ta_path, "r", encoding="utf-8") as f:
+                    ta = json.load(f)
+                an = ta.get("analysis") or {}
+                rows = []
+                if "first_anomaly_cycle" in an:
+                    rows.append("first_anomaly_cycle=%s" % an["first_anomaly_cycle"])
+                if "cycles_compared" in an:
+                    rows.append("cycles_compared=%s" % an["cycles_compared"])
+                ks = (an.get("key_signal_diffs") or [])[:20]
+                rows.append("key_signal_diffs=%s" % json.dumps(ks, ensure_ascii=False))
+                ss = (an.get("stuck_signals") or [])[:10]
+                rows.append("stuck_signals=%s" % json.dumps(ss, ensure_ascii=False))
+                ta_text = " | ".join(rows)
+            except Exception as e:
+                ta_text = "（trace_analysis 解析失败: %s）" % e
+        return body_b + chr(10) + chr(10) + "【TraceAnalyzer 动态切片摘要】" + chr(10) + ta_text
     if setting == "C":
         p = os.path.join(sample_dir, "semantics.json")
         if not os.path.isfile(p):
@@ -326,7 +387,7 @@ def _build_evidence_text(setting, sample_dir):
         parts.append("### 触发条件")
         parts.append(str(sem.get("trigger_condition") or ev.get("trigger_condition") or "?"))
         return "\n".join(parts)
-    raise ValueError("setting 必须是 A/B/C")
+    raise ValueError("setting 必须是 A/B/C/BT/BH")
 
 
 def main(argv=None):
