@@ -9,7 +9,9 @@ LEAK = os.path.join(REPO, 'experiments/runs/experiments_results_ds_full3.json')
 def load_leakfix():
     rows = []
     for f in sorted(glob.glob(os.path.join(REPO, 'experiments/runs/leakfix_[0-9].json'))):
-        try: rows += json.load(open(f, encoding='utf-8'))
+        try:
+            d = json.load(open(f, encoding='utf-8'))
+            rows += d.get('results', d) if isinstance(d, dict) else d
         except Exception as e: print('skip', f, repr(e)[:60])
     return rows
 def load_old():
