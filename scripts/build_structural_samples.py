@@ -122,6 +122,15 @@ STRUCTURAL = {
             "template": "guard_boundary",
             "strong_assert": "timeout_guard",
         },
+        {
+            "desc": "删除 S2 停留计数分支（hold_cnt==S2_HOLD 判断改无条件跳 S3，停留不足，修复需重建等待逻辑 insert_wait）",
+            "fn": "fsm_s2_hold_remove",
+            "args": [],
+            "hit": "fsm_ctrl 强断言 A8（S2 停留不足 S2_HOLD 拍不得离开）",
+            "error_type": "状态跳转", "error_type_code": "state_trans",
+            "template": "insert_wait",
+            "strong_assert": "wait_guard",
+        },
     ],
     "uart_tx": [
         {
@@ -177,6 +186,33 @@ STRUCTURAL = {
 }
 
 
+
+def _fsm_s2_hold_remove(src):
+    # insert_wait：删除 S2 停留计数分支（hold_cnt==S2_HOLD 判断改无条件进 S3），
+    # S2 只停留 1 拍即跳 S3，修复需重建停留等待逻辑（wait_guard 强断言抓停留不足）
+    idx = src.find("S2: begin")
+    if idx < 0:
+        return None
+    sub = src[idx:]
+    old = (
+        "                    end else if (hold_cnt == S2_HOLD) begin" + chr(10)
+        + "                        state    <= S3;" + chr(10)
+        + "                        hold_cnt <= 4'd1;" + chr(10)
+        + "                    end else begin" + chr(10)
+        + "                        hold_cnt <= hold_cnt + 1'b1;" + chr(10)
+        + "                    end"
+    )
+    new = (
+        "                    end else begin" + chr(10)
+        + "                        state    <= S3;" + chr(10)
+        + "                        hold_cnt <= 4'd1;" + chr(10)
+        + "                    end"
+    )
+    if old not in sub:
+        return None
+    return src[:idx] + sub.replace(old, new, 1)
+
+
 def _rx_start_confirm_remove(src):
     # uart_rx START 中点确认删除：把 if(rxd)毛刺回IDLE/else进DATA 整块替换为无条件进 DATA
     i0 = src.find('                        if (rxd) begin')
@@ -222,6 +258,8 @@ def _apply_template(golden, tpl):
         buggy = _timeout_remove(golden)
     elif fn == "rx_start_confirm_remove":
         buggy = _rx_start_confirm_remove(golden)
+    elif fn == "fsm_s2_hold_remove":
+        buggy = _fsm_s2_hold_remove(golden)
     elif fn == "bvalid_hold_remove":
         buggy = _bvalid_hold_remove(golden)
     elif fn == "half_full_rewrite":
@@ -307,6 +345,22 @@ def _build_sample(module, tpl, sample_id, out_dir, timeout):
             golden_inline = golden_inline.replace(
                 "    // 环境约束：初始拍处于复位",
                 guard + "    // 环境约束：初始拍处于复位")
+        # [structural] A8 强断言：S2 停留不足 S2_HOLD 拍不得离开（insert_wait 模板）
+        if tpl.get("strong_assert") == "wait_guard":
+            guard_w = (
+                chr(10) + "    // [structural] A8 强断言：S2 停留不足 S2_HOLD 拍不得离开" + chr(10)
+                + "    always @(posedge clk) begin" + chr(10)
+                + "        if (rst_n && (state_d == S2) && (hold_cnt_d < S2_HOLD) && (state != S_IDLE)) begin" + chr(10)
+                + "            assert (state == S2);" + chr(10)
+                + "        end" + chr(10)
+                + "    end" + chr(10)
+            )
+            buggy_inline = buggy_inline.replace(
+                "    // 环境约束：初始拍处于复位",
+                guard_w + "    // 环境约束：初始拍处于复位")
+            golden_inline = golden_inline.replace(
+                "    // 环境约束：初始拍处于复位",
+                guard_w + "    // 环境约束：初始拍处于复位")
         top_mod, _params, _ports = bug_injector._module_info(golden)
         tb_top = bug_injector._TB_MODULE.search(tb)
         tb_top = tb_top.group(1) if tb_top else None
@@ -387,6 +441,7 @@ def main(argv=None):
     ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--timeout", type=float, default=180.0)
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--template", default=None)
     args = ap.parse_args(argv)
     os.makedirs(args.out_dir, exist_ok=True)
     tasks = []
@@ -395,6 +450,8 @@ def main(argv=None):
             continue
         for i, tpl in enumerate(tpls):
             if args.smoke and i > 0:
+                continue
+            if args.template and tpl.get("fn") != args.template:
                 continue
             tasks.append((module, tpl))
     existing = set()

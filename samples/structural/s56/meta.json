@@ -1,0 +1,26 @@
+{
+  "_doc": "PreCex L3 结构性缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：结构级缺陷（跳转目标改写/保护分支删除），修复需结构性重写",
+  "sample_id": "s56",
+  "module": "fsm_ctrl",
+  "error_type": "状态跳转",
+  "error_type_code": "state_trans",
+  "level": "L3",
+  "inject_line": 1,
+  "buggy_inject_line": 5,
+  "inject_desc": "删除 S2 停留计数分支（hold_cnt==S2_HOLD 判断改无条件跳 S3，停留不足，修复需重建等待逻辑 insert_wait）",
+  "diff": "structural: 删除 S2 停留计数分支（hold_cnt==S2_HOLD 判断改无条件跳 S3，停留不足，修复需重建等待逻辑 insert_wait）",
+  "hit_assertion": "fsm_ctrl 强断言 A8（S2 停留不足 S2_HOLD 拍不得离开）",
+  "golden_source": "rtl/fsm_ctrl/fsm_ctrl.sv",
+  "date": "2026-08-05",
+  "reproduce_cmd": "python3 scripts/build_structural_samples.py --module fsm_ctrl",
+  "param_override": null,
+  "verification": {
+    "compile_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID",
+    "sim_ok": true,
+    "structural_template": "insert_wait"
+  },
+  "structural_template": "insert_wait"
+}
