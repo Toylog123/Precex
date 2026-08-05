@@ -63,7 +63,13 @@ python3 scripts/audit_paper_numbers.py
 # 10) 论文图表重建（数据驱动，从 experiments/runs 读取）
 python3 scripts/make_paper_figs.py
 
-# 11) 组装投稿包并校验完整性（SHA256SUMS 由脚本自动生成）
+# 11a) 最小补丁后验验证（可选，delta-debugging；需 WSL 工具链）
+python3 scripts/minimize_patch.py --sample samples/deep/s40 --diff-file /tmp/patch.diff
+
+# 11b) 工具链适配性预检（可选，SVA/不可综合结构 fail-fast）
+python3 scripts/check_rtl_compat.py --dir samples/bugs/s04
+
+# 12) 组装投稿包并校验完整性（SHA256SUMS 由脚本自动生成）
 python3 scripts/build_submission_package.py
 cd submission_package && sha256sum -c verification/SHA256SUMS && cd ..
 # 同时生成 ZIP（可选）：python3 scripts/build_submission_package.py --zip
