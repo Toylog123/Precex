@@ -1,0 +1,72 @@
+{
+  "note": "2a 跨模型仲裁：MiniMax-M3 + DeepSeek v4-flash，每模型 3 温度（0.2/0.5/0.8），multi_candidate.py 同协议（golden-first BMC 验证，仲裁分排序）。",
+  "minimax_file": "experiments/runs/multi_candidate_real_hard.json",
+  "deepseek_file": "experiments/runs/multi_candidate_ds_hard.json",
+  "rows": [
+    {
+      "sample": "s07",
+      "setting": "B",
+      "minimax_temps_pass": [
+        0.5
+      ],
+      "deepseek_temps_pass": [
+        0.2,
+        0.5,
+        0.8
+      ],
+      "single_model_max_temps": 3,
+      "single_model_any_pass": true,
+      "multi_model_any_pass": true,
+      "n_candidates": 6
+    },
+    {
+      "sample": "s15",
+      "setting": "B",
+      "minimax_temps_pass": [
+        0.5
+      ],
+      "deepseek_temps_pass": [
+        0.5
+      ],
+      "single_model_max_temps": 1,
+      "single_model_any_pass": true,
+      "multi_model_any_pass": true,
+      "n_candidates": 6
+    },
+    {
+      "sample": "s17",
+      "setting": "B",
+      "minimax_temps_pass": [],
+      "deepseek_temps_pass": [
+        0.2
+      ],
+      "single_model_max_temps": 1,
+      "single_model_any_pass": true,
+      "multi_model_any_pass": true,
+      "n_candidates": 6
+    },
+    {
+      "sample": "s35",
+      "setting": "B",
+      "minimax_temps_pass": [
+        0.5
+      ],
+      "deepseek_temps_pass": [
+        0.2,
+        0.8
+      ],
+      "single_model_max_temps": 2,
+      "single_model_any_pass": true,
+      "multi_model_any_pass": true,
+      "n_candidates": 6
+    }
+  ],
+  "summary": {
+    "n": 4,
+    "single_model_any_pass_groups": 4,
+    "multi_model_any_pass_groups": 4,
+    "multi_model_gain": 0,
+    "single_model_rate": 1.0,
+    "multi_model_rate": 1.0
+  }
+}

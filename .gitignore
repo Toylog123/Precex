@@ -96,3 +96,7 @@ samples/**/gc/
 !experiments/runs/bt_ablation_ds_bt3.json
 !experiments/runs/bt_vs_b_analysis.json
 !experiments/runs/cross_model_arbitration.json
+
+!experiments/runs/multi_candidate_ds_hard.json
+!experiments/runs/multi_candidate_ds_bh_hard.json
+!experiments/runs/cross_model_arbitration.json

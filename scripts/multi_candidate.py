@@ -56,6 +56,10 @@ def _evidence_text(setting, sample_dir):
     if setting == "B":
         p = os.path.join(sample_dir, "evidence.json")
         return open(p, encoding="utf-8").read() if os.path.isfile(p) else "（evidence.json 缺失）"
+    if setting == "BH":
+        # B 全文 + 握手协议分析（复用 prompt_templates 的 BH 组装）
+        import run_experiments as RE
+        return RE._build_evidence_text("BH", sample_dir)
     if setting == "C":
         p = os.path.join(sample_dir, "semantics.json")
         return open(p, encoding="utf-8").read() if os.path.isfile(p) else "（semantics.json 缺失）"
