@@ -37,6 +37,9 @@ python3 scripts/build_evidence.py --samples s04-s37 --real --window 8
 python3 scripts/run_experiments_parallel.py --samples s04-s37 --settings A,B,C --seeds 0,1,2 --jobs 8 --detach
 python3 scripts/run_experiments_parallel.py --merge --out experiments/runs/experiments_results_parallel.json
 
+# 3a) ground-truth 隔离回归审计（2026-08-05 泄漏修复后强制；PASS 才能用实验数字）
+python3 scripts/audit_ground_truth.py
+
 # 3b) 深时序专项子集（samples/deep/s38-s42，可选；深样本生成需注入器 --samples-dir deep）
 python3 scripts/run_experiments.py --samples s38-s42 --samples-dir deep --settings A,B --seeds 0,1,2 --provider deepseek
 
