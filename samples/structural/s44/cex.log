@@ -25,58 +25,58 @@
 ##   0:00:00  Checking assertions in step 11..
 ##   0:00:00  Checking assumptions in step 12..
 ##   0:00:00  Checking assertions in step 12..
-##   0:00:00  Checking assumptions in step 13..
-##   0:00:00  Checking assertions in step 13..
-##   0:00:00  Checking assumptions in step 14..
-##   0:00:00  Checking assertions in step 14..
-##   0:00:00  Checking assumptions in step 15..
-##   0:00:00  Checking assertions in step 15..
-##   0:00:00  Checking assumptions in step 16..
-##   0:00:00  Checking assertions in step 16..
-##   0:00:00  Checking assumptions in step 17..
-##   0:00:00  Checking assertions in step 17..
-##   0:00:00  Checking assumptions in step 18..
-##   0:00:00  Checking assertions in step 18..
-##   0:00:00  Checking assumptions in step 19..
-##   0:00:00  Checking assertions in step 19..
-##   0:00:00  Checking assumptions in step 20..
-##   0:00:00  Checking assertions in step 20..
-##   0:00:00  Checking assumptions in step 21..
-##   0:00:00  Checking assertions in step 21..
-##   0:00:01  Checking assumptions in step 22..
-##   0:00:01  Checking assertions in step 22..
-##   0:00:01  Checking assumptions in step 23..
-##   0:00:01  Checking assertions in step 23..
-##   0:00:01  Checking assumptions in step 24..
-##   0:00:01  Checking assertions in step 24..
-##   0:00:01  Checking assumptions in step 25..
-##   0:00:01  Checking assertions in step 25..
-##   0:00:01  Checking assumptions in step 26..
-##   0:00:01  Checking assertions in step 26..
-##   0:00:01  Checking assumptions in step 27..
-##   0:00:01  Checking assertions in step 27..
-##   0:00:01  Checking assumptions in step 28..
-##   0:00:01  Checking assertions in step 28..
-##   0:00:01  Checking assumptions in step 29..
-##   0:00:01  Checking assertions in step 29..
-##   0:00:02  Checking assumptions in step 30..
-##   0:00:02  Checking assertions in step 30..
-##   0:00:02  Checking assumptions in step 31..
-##   0:00:02  Checking assertions in step 31..
-##   0:00:02  Checking assumptions in step 32..
-##   0:00:02  Checking assertions in step 32..
-##   0:00:02  Checking assumptions in step 33..
-##   0:00:02  Checking assertions in step 33..
-##   0:00:02  Checking assumptions in step 34..
-##   0:00:02  Checking assertions in step 34..
-##   0:00:02  Checking assumptions in step 35..
-##   0:00:02  Checking assertions in step 35..
-##   0:00:03  Checking assumptions in step 36..
-##   0:00:03  Checking assertions in step 36..
-##   0:00:03  BMC failed!
-##   0:00:03  Assert failed in fsm_ctrl: buggy.v:191.75-192.37 ($assert$buggy.v:191$145)
-##   0:00:03  Writing trace to VCD file: engine_0/trace.vcd
-##   0:00:03  Writing trace to Verilog testbench: engine_0/trace_tb.v
-##   0:00:03  Writing trace to constraints file: engine_0/trace.smtc
-##   0:00:03  Writing trace to Yosys witness file: engine_0/trace.yw
-##   0:00:04  Status: failed
+##   0:00:01  Checking assumptions in step 13..
+##   0:00:01  Checking assertions in step 13..
+##   0:00:01  Checking assumptions in step 14..
+##   0:00:01  Checking assertions in step 14..
+##   0:00:01  Checking assumptions in step 15..
+##   0:00:01  Checking assertions in step 15..
+##   0:00:01  Checking assumptions in step 16..
+##   0:00:01  Checking assertions in step 16..
+##   0:00:02  Checking assumptions in step 17..
+##   0:00:02  Checking assertions in step 17..
+##   0:00:02  Checking assumptions in step 18..
+##   0:00:02  Checking assertions in step 18..
+##   0:00:03  Checking assumptions in step 19..
+##   0:00:03  Checking assertions in step 19..
+##   0:00:03  Checking assumptions in step 20..
+##   0:00:03  Checking assertions in step 20..
+##   0:00:04  Checking assumptions in step 21..
+##   0:00:04  Checking assertions in step 21..
+##   0:00:04  Checking assumptions in step 22..
+##   0:00:04  Checking assertions in step 22..
+##   0:00:05  Checking assumptions in step 23..
+##   0:00:05  Checking assertions in step 23..
+##   0:00:05  Checking assumptions in step 24..
+##   0:00:05  Checking assertions in step 24..
+##   0:00:06  Checking assumptions in step 25..
+##   0:00:06  Checking assertions in step 25..
+##   0:00:07  Checking assumptions in step 26..
+##   0:00:07  Checking assertions in step 26..
+##   0:00:08  Checking assumptions in step 27..
+##   0:00:08  Checking assertions in step 27..
+##   0:00:09  Checking assumptions in step 28..
+##   0:00:09  Checking assertions in step 28..
+##   0:00:10  Checking assumptions in step 29..
+##   0:00:10  Checking assertions in step 29..
+##   0:00:11  Checking assumptions in step 30..
+##   0:00:11  Checking assertions in step 30..
+##   0:00:12  Checking assumptions in step 31..
+##   0:00:12  Checking assertions in step 31..
+##   0:00:13  Checking assumptions in step 32..
+##   0:00:13  Checking assertions in step 32..
+##   0:00:14  Checking assumptions in step 33..
+##   0:00:14  Checking assertions in step 33..
+##   0:00:15  Checking assumptions in step 34..
+##   0:00:15  Checking assertions in step 34..
+##   0:00:16  Checking assumptions in step 35..
+##   0:00:17  Checking assertions in step 35..
+##   0:00:17  Checking assumptions in step 36..
+##   0:00:18  Checking assertions in step 36..
+##   0:00:18  BMC failed!
+##   0:00:18  Assert failed in fsm_ctrl: buggy.v:214.75-215.37 ($assert$buggy.v:214$153)
+##   0:00:18  Writing trace to VCD file: engine_0/trace.vcd
+##   0:00:18  Writing trace to Verilog testbench: engine_0/trace_tb.v
+##   0:00:18  Writing trace to constraints file: engine_0/trace.smtc
+##   0:00:18  Writing trace to Yosys witness file: engine_0/trace.yw
+##   0:00:19  Status: failed

@@ -1,0 +1,104 @@
+{
+  "summary": {
+    "total": 4,
+    "ok": 3,
+    "patched": 3,
+    "cost": 0.0028
+  },
+  "results": [
+    {
+      "sample": "s43",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "split_state",
+        "target": "S1 状态中 hold_cnt == S1_HOLD 的跳转分支",
+        "params": {
+          "from_state": "S1",
+          "buggy_next_state": "S3",
+          "correct_next_state": "S2",
+          "state_variable": "state",
+          "hold_condition": "hold_cnt == S1_HOLD",
+          "preserve_s2_stay_logic": true,
+          "s2_to_s3_condition": "hold_cnt == S2_HOLD"
+        },
+        "rationale": "S1 停留满后必须先进入 S2 中间状态完成 S2_HOLD 停留，再进入 S3，不能直接跳转 S3，以恢复合法状态序列 S1->S2->S3。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.0008920800000000002,
+      "tokens": 4513,
+      "llm_content": "```json\n{\n  \"action\": \"split_state\",\n  \"target\": \"S1 状态中 hold_cnt == S1_HOLD 的跳转分支\",\n  \"params\": {\n    \"from_state\": \"S1\",\n    \"buggy_next_state\": \"S3\",\n    \"correct_next_state\": \"S2\",\n    \"state_variable\": \"state\",\n    \"hold_condition\": \"hold_cnt == S1_HOLD\",\n    \"preserve_s2_stay_logic\": true,\n    \"s2_to_s3_condition\": \"hold_cnt == S2_HOLD\"\n  },\n  \"rationale\": \"S1 停留满后必须先进入 S2 中间状态完成 S2_HOLD 停留，再进入 S3，不能直接跳转 S3，以恢复合法状态序列 S1->S2->S3。\"\n}\n```",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s44",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "guard_boundary",
+        "target": "state 状态转移逻辑（S1/S2/S3 超时保护分支）",
+        "params": {
+          "condition": "step_cnt >= TIMEOUT",
+          "next_state": "S_IDLE",
+          "timeout_irq": "1'b1",
+          "hold_cnt": "4'd0",
+          "priority": "每个非空闲状态内最高优先级"
+        },
+        "rationale": "恢复被删除的超时保护分支，step_cnt 超阈值时强制回 IDLE 并产生 timeout_irq，避免边界回绕击穿 A8。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.00063952,
+      "tokens": 3787,
+      "llm_content": "{\n  \"action\": \"guard_boundary\",\n  \"target\": \"state 状态转移逻辑（S1/S2/S3 超时保护分支）\",\n  \"params\": {\n    \"condition\": \"step_cnt >= TIMEOUT\",\n    \"next_state\": \"S_IDLE\",\n    \"timeout_irq\": \"1'b1\",\n    \"hold_cnt\": \"4'd0\",\n    \"priority\": \"每个非空闲状态内最高优先级\"\n  },\n  \"rationale\": \"恢复被删除的超时保护分支，step_cnt 超阈值时强制回 IDLE 并产生 timeout_irq，避免边界回绕击穿 A8。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s45",
+      "ok": false,
+      "error": "assemble fail (no change)",
+      "intent": {
+        "action": "edit_assign",
+        "target": "state (S_DATA 分支 bit_cnt==DATA_W-1 时的跳转目标)",
+        "params": {
+          "signal": "state",
+          "old_value": "S_IDLE",
+          "new_value": "S_STOP",
+          "context": "S_DATA 状态下 bit_cnt == DATA_W - 1 时"
+        },
+        "rationale": "数据位最后一拍错误跳转到 S_IDLE，破坏了 DATA→STOP 的合法跳转并丢失停止位，应改回 S_STOP 以满足 A4 断言。"
+      },
+      "patched": false,
+      "verdict": null,
+      "cost": 0.00064344,
+      "tokens": 3791,
+      "llm_content": "{\n  \"action\": \"edit_assign\",\n  \"target\": \"state (S_DATA 分支 bit_cnt==DATA_W-1 时的跳转目标)\",\n  \"params\": {\n    \"signal\": \"state\",\n    \"old_value\": \"S_IDLE\",\n    \"new_value\": \"S_STOP\",\n    \"context\": \"S_DATA 状态下 bit_cnt == DATA_W - 1 时\"\n  },\n  \"rationale\": \"数据位最后一拍错误跳转到 S_IDLE，破坏了 DATA→STOP 的合法跳转并丢失停止位，应改回 S_STOP 以满足 A4 断言。\"\n}"
+    },
+    {
+      "sample": "s46",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "guard_boundary",
+        "target": "count 的同步更新逻辑",
+        "params": {
+          "description": "在 always @(posedge clk or negedge rst_n) 的复位后分支中恢复 count 的增量守恒更新：count <= count + (can_wr ? 1'b1 : 1'b0) - (can_rd ? 1'b1 : 1'b0); 使同拍读写时 count 保持不变，仅写时 +1，仅读时 -1。"
+        },
+        "rationale": "count 更新逻辑被删除导致 A4 断言失败，需恢复同拍读写时 count 守恒的边界保护分支。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.0006150200000000001,
+      "tokens": 3576,
+      "llm_content": "{\n  \"action\": \"guard_boundary\",\n  \"target\": \"count 的同步更新逻辑\",\n  \"params\": {\n    \"description\": \"在 always @(posedge clk or negedge rst_n) 的复位后分支中恢复 count 的增量守恒更新：count <= count + (can_wr ? 1'b1 : 1'b0) - (can_rd ? 1'b1 : 1'b0); 使同拍读写时 count 保持不变，仅写时 +1，仅读时 -1。\"\n  },\n  \"rationale\": \"count 更新逻辑被删除导致 A4 断言失败，需恢复同拍读写时 count 守恒的边界保护分支。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "summary": {
+    "total": 4,
+    "ok": 2,
+    "patched": 3,
+    "cost": 0.0027
+  },
+  "results": [
+    {
+      "sample": "s43",
+      "ok": false,
+      "error": "assemble fail (no change)",
+      "intent": {
+        "action": "edit_assign",
+        "target": "S1分支中 hold_cnt==S1_HOLD 时的 state <= S3",
+        "params": {
+          "signal": "state",
+          "from": "S3",
+          "to": "S2",
+          "location": "case S1, hold_cnt == S1_HOLD branch"
+        },
+        "rationale": "修复S1越过中间状态S2直接跳转S3的非法跳转，恢复正常序列。"
+      },
+      "patched": false,
+      "verdict": null,
+      "cost": 0.0006468000000000001,
+      "tokens": 3637,
+      "llm_content": "{\n  \"action\": \"edit_assign\",\n  \"target\": \"S1分支中 hold_cnt==S1_HOLD 时的 state <= S3\",\n  \"params\": {\n    \"signal\": \"state\",\n    \"from\": \"S3\",\n    \"to\": \"S2\",\n    \"location\": \"case S1, hold_cnt == S1_HOLD branch\"\n  },\n  \"rationale\": \"修复S1越过中间状态S2直接跳转S3的非法跳转，恢复正常序列。\"\n}"
+    },
+    {
+      "sample": "s44",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "guard_boundary",
+        "target": "S1/S2/S3 状态中的超时保护分支（step_cnt >= TIMEOUT）",
+        "params": {
+          "condition": "step_cnt >= TIMEOUT",
+          "next_state": "S_IDLE",
+          "timeout_irq": "1'b1",
+          "placement": "在每个非空闲状态 case 分支的最前方优先判断"
+        },
+        "rationale": "恢复被删除的全局超时边界保护，确保 step_cnt 超过阈值后状态回绕到 IDLE 并拉高 timeout_irq，满足强断言 A8。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.00086072,
+      "tokens": 4577,
+      "llm_content": "{\n  \"action\": \"guard_boundary\",\n  \"target\": \"S1/S2/S3 状态中的超时保护分支（step_cnt >= TIMEOUT）\",\n  \"params\": {\n    \"condition\": \"step_cnt >= TIMEOUT\",\n    \"next_state\": \"S_IDLE\",\n    \"timeout_irq\": \"1'b1\",\n    \"placement\": \"在每个非空闲状态 case 分支的最前方优先判断\"\n  },\n  \"rationale\": \"恢复被删除的全局超时边界保护，确保 step_cnt 超过阈值后状态回绕到 IDLE 并拉高 timeout_irq，满足强断言 A8。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s45",
+      "ok": false,
+      "error": "",
+      "intent": {
+        "action": "split_state",
+        "target": "S_DATA",
+        "params": {
+          "current_state": "S_DATA",
+          "condition": "baud_tick && (bit_cnt == DATA_W-1)",
+          "missing_next_state": "S_STOP",
+          "wrong_next_state": "S_IDLE"
+        },
+        "rationale": "数据位最后一拍跳过 STOP 直接回 IDLE，导致帧缺停止位且 A4 断言击穿，需改回进入 S_STOP 保持一个位周期。"
+      },
+      "patched": true,
+      "verdict": "FAIL",
+      "cost": 0.0004942000000000001,
+      "tokens": 3258,
+      "llm_content": "{\n  \"action\": \"split_state\",\n  \"target\": \"S_DATA\",\n  \"params\": {\n    \"current_state\": \"S_DATA\",\n    \"condition\": \"baud_tick && (bit_cnt == DATA_W-1)\",\n    \"missing_next_state\": \"S_STOP\",\n    \"wrong_next_state\": \"S_IDLE\"\n  },\n  \"rationale\": \"数据位最后一拍跳过 STOP 直接回 IDLE，导致帧缺停止位且 A4 断言击穿，需改回进入 S_STOP 保持一个位周期。\"\n}",
+      "formal": "fail",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s46",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "guard_boundary",
+        "target": "count 更新逻辑（时序 always 块内）",
+        "params": {
+          "condition": "can_wr && can_rd 时 count 保持不变；仅 can_wr 时 count 加1；仅 can_rd 时 count 减1；否则保持不变",
+          "assignment": "count <= (can_wr && can_rd) ? count : (can_wr ? count + 1'b1 : (can_rd ? count - 1'b1 : count));"
+        },
+        "rationale": "恢复被删除的同拍读写 count 守恒保护分支，使 count 增量严格等于 can_wr - can_rd，满足 A4 断言。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.0007152600000000001,
+      "tokens": 3934,
+      "llm_content": "{\n  \"action\": \"guard_boundary\",\n  \"target\": \"count 更新逻辑（时序 always 块内）\",\n  \"params\": {\n    \"condition\": \"can_wr && can_rd 时 count 保持不变；仅 can_wr 时 count 加1；仅 can_rd 时 count 减1；否则保持不变\",\n    \"assignment\": \"count <= (can_wr && can_rd) ? count : (can_wr ? count + 1'b1 : (can_rd ? count - 1'b1 : count));\"\n  },\n  \"rationale\": \"恢复被删除的同拍读写 count 守恒保护分支，使 count 增量严格等于 can_wr - can_rd，满足 A4 断言。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    }
+  ]
+}

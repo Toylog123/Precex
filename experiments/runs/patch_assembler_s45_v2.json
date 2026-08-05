@@ -1,0 +1,34 @@
+{
+  "summary": {
+    "total": 1,
+    "ok": 0,
+    "patched": 1,
+    "cost": 0.0007
+  },
+  "results": [
+    {
+      "sample": "s45",
+      "ok": false,
+      "error": "",
+      "intent": {
+        "action": "split_state",
+        "target": "S_DATA 状态中 bit_cnt==DATA_W-1 时的状态跳转分支",
+        "params": {
+          "from_state": "S_DATA",
+          "buggy_next_state": "S_IDLE",
+          "correct_next_state": "S_STOP",
+          "condition": "baud_tick && bit_cnt == DATA_W-1"
+        },
+        "rationale": "恢复数据位结束进入 STOP 状态的跳转，满足 A4 合法跳转约束并保留 UART 帧的停止位。"
+      },
+      "patched": true,
+      "verdict": "FAIL",
+      "cost": 0.00071232,
+      "tokens": 4037,
+      "llm_content": "{\n  \"action\": \"split_state\",\n  \"target\": \"S_DATA 状态中 bit_cnt==DATA_W-1 时的状态跳转分支\",\n  \"params\": {\n    \"from_state\": \"S_DATA\",\n    \"buggy_next_state\": \"S_IDLE\",\n    \"correct_next_state\": \"S_STOP\",\n    \"condition\": \"baud_tick && bit_cnt == DATA_W-1\"\n  },\n  \"rationale\": \"恢复数据位结束进入 STOP 状态的跳转，满足 A4 合法跳转约束并保留 UART 帧的停止位。\"\n}",
+      "formal": "fail",
+      "sim": true,
+      "compile": true
+    }
+  ]
+}

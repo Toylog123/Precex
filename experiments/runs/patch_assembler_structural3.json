@@ -1,0 +1,109 @@
+{
+  "summary": {
+    "total": 4,
+    "ok": 4,
+    "patched": 4,
+    "cost": 0.0036
+  },
+  "results": [
+    {
+      "sample": "s43",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "split_state",
+        "target": "S1 状态跳转逻辑",
+        "params": {
+          "from_state": "S1",
+          "missing_transition": "S1 -> S2",
+          "current_buggy_transition": "S1 -> S3",
+          "inserted_intermediate_state": "S2",
+          "condition": "hold_cnt == S1_HOLD && data_in != 8'hAA && step_cnt < TIMEOUT"
+        },
+        "rationale": "恢复被跳过的 S2 中间状态，使 S1 停留满后先进入 S2 而非直接跳 S3，满足合法状态跳转约束。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.00041524000000000004,
+      "tokens": 2810,
+      "llm_content": "{\n  \"action\": \"split_state\",\n  \"target\": \"S1 状态跳转逻辑\",\n  \"params\": {\n    \"from_state\": \"S1\",\n    \"missing_transition\": \"S1 -> S2\",\n    \"current_buggy_transition\": \"S1 -> S3\",\n    \"inserted_intermediate_state\": \"S2\",\n    \"condition\": \"hold_cnt == S1_HOLD && data_in != 8'hAA && step_cnt < TIMEOUT\"\n  },\n  \"rationale\": \"恢复被跳过的 S2 中间状态，使 S1 停留满后先进入 S2 而非直接跳 S3，满足合法状态跳转约束。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s44",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "guard_boundary",
+        "target": "S1/S2/S3 非空闲状态下的超时保护分支",
+        "params": {
+          "restore": "在每个非空闲状态分支中优先插入超时判断",
+          "condition": "step_cnt >= TIMEOUT",
+          "priority": "位于 data_in 和 hold_cnt 条件之前",
+          "next_state": "S_IDLE",
+          "pulse": "timeout_irq",
+          "clear": "hold_cnt <= 4'd0"
+        },
+        "rationale": "恢复被删除的超时边界保护，使 step_cnt 达到阈值后强制回到 IDLE 并拉高 timeout_irq，以满足强断言 A8。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.00077,
+      "tokens": 4253,
+      "llm_content": "```json\n{\n  \"action\": \"guard_boundary\",\n  \"target\": \"S1/S2/S3 非空闲状态下的超时保护分支\",\n  \"params\": {\n    \"restore\": \"在每个非空闲状态分支中优先插入超时判断\",\n    \"condition\": \"step_cnt >= TIMEOUT\",\n    \"priority\": \"位于 data_in 和 hold_cnt 条件之前\",\n    \"next_state\": \"S_IDLE\",\n    \"pulse\": \"timeout_irq\",\n    \"clear\": \"hold_cnt <= 4'd0\"\n  },\n  \"rationale\": \"恢复被删除的超时边界保护，使 step_cnt 达到阈值后强制回到 IDLE 并拉高 timeout_irq，以满足强断言 A8。\"\n}\n```",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s45",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "split_state",
+        "target": "S_DATA 状态中数据位结束时的状态跳转目标",
+        "params": {
+          "from_state": "S_DATA",
+          "condition": "baud_tick && bit_cnt == DATA_W - 1",
+          "incorrect_next_state": "S_IDLE",
+          "correct_next_state": "S_STOP"
+        },
+        "rationale": "数据位最后一拍完成后应进入 STOP 状态，而不是直接跳回 IDLE，否则缺失停止位并破坏 DATA→STOP 合法跳转。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.00058128,
+      "tokens": 3569,
+      "llm_content": "{\n  \"action\": \"split_state\",\n  \"target\": \"S_DATA 状态中数据位结束时的状态跳转目标\",\n  \"params\": {\n    \"from_state\": \"S_DATA\",\n    \"condition\": \"baud_tick && bit_cnt == DATA_W - 1\",\n    \"incorrect_next_state\": \"S_IDLE\",\n    \"correct_next_state\": \"S_STOP\"\n  },\n  \"rationale\": \"数据位最后一拍完成后应进入 STOP 状态，而不是直接跳回 IDLE，否则缺失停止位并破坏 DATA→STOP 合法跳转。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s46",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "guard_boundary",
+        "target": "count 更新逻辑中的同拍读写分支",
+        "params": {
+          "condition": "can_wr && can_rd",
+          "assignment": "count <= count;",
+          "position": "在 can_wr / can_rd 独立分支之前插入该保护分支",
+          "intent": "恢复被删除的同时读写 count 守恒分支，避免同拍读写时 count 被错误加一"
+        },
+        "rationale": "重建同拍读写时 count 不变的守卫分支，满足 A4 count 增量守恒断言。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.00182994,
+      "tokens": 7915,
+      "llm_content": "```json\n{\n  \"action\": \"guard_boundary\",\n  \"target\": \"count 更新逻辑中的同拍读写分支\",\n  \"params\": {\n    \"condition\": \"can_wr && can_rd\",\n    \"assignment\": \"count <= count;\",\n    \"position\": \"在 can_wr / can_rd 独立分支之前插入该保护分支\",\n    \"intent\": \"恢复被删除的同时读写 count 守恒分支，避免同拍读写时 count 被错误加一\"\n  },\n  \"rationale\": \"重建同拍读写时 count 不变的守卫分支，满足 A4 count 增量守恒断言。\"\n}\n```",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    }
+  ]
+}

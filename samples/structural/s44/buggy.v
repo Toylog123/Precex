@@ -54,14 +54,37 @@ module fsm_ctrl #(
                 // 阶段1：停留 S1_HOLD 拍；data_in==0xAA 时停留等待（触发超时保护）
                 S1: begin
                     step_cnt <= step_cnt + 1'b1;
+                    if (data_in == 8'hAA) begin
+                        hold_cnt    <= hold_cnt;  // 等待条件（卡住，直到超时）
+                    end else if (hold_cnt == S1_HOLD) begin
+                        state    <= S2;
+                        hold_cnt <= 4'd1;
+                    end else begin
+                        hold_cnt <= hold_cnt + 1'b1;
+                    end
                 end
                 // 阶段2：停留 S2_HOLD 拍；data_in==0xFF 时异常跳回空闲
                 S2: begin
                     step_cnt <= step_cnt + 1'b1;
+                    if (data_in == 8'hFF) begin
+                        state    <= S_IDLE;       // 异常数据，提前终止
+                        hold_cnt <= 4'd0;
+                    end else if (hold_cnt == S2_HOLD) begin
+                        state    <= S3;
+                        hold_cnt <= 4'd1;
+                    end else begin
+                        hold_cnt <= hold_cnt + 1'b1;
+                    end
                 end
                 // 阶段3：停留 S3_HOLD 拍后完成
                 S3: begin
                     step_cnt <= step_cnt + 1'b1;
+                    if (hold_cnt == S3_HOLD) begin
+                        state    <= S_IDLE;
+                        done     <= 1'b1;         // 序列完成
+                    end else begin
+                        hold_cnt <= hold_cnt + 1'b1;
+                    end
                 end
             endcase
         end

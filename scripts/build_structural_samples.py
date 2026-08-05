@@ -84,14 +84,22 @@ def _jump_rewrite(src, old_line, new_line):
 
 
 def _timeout_remove(src):
-    """把三处 if (step_cnt >= TIMEOUT) begin ... end else 分支删除（超时保护整体移除）。"""
+    """把每处 `if (step_cnt>=TIMEOUT) begin ... end else if(X)` 改写为 `if(X)`（只去掉超时保护前缀，保留原 else-if 链）。
+
+    golden:  if (step_cnt >= TIMEOUT) begin S_IDLE; timeout_irq; end else if (data_in==AA) begin ...
+    buggy:   if (data_in==AA) begin ...           # 超时保护缺失，原逻辑保留
+    """
+    pat = re.compile(
+        r"if \(step_cnt >= TIMEOUT\) begin\n"
+        r"(\s*state       <= S_IDLE;\n)"
+        r"(\s*timeout_irq <= 1'b1;      // 超时保护\n)"
+        r"(\s*)end else if "
+    )
     out = src
-    # S1/S2/S3 三处；每次删除后重新匹配（其余位置不变）
     for _ in range(3):
-        before = out
-        out = _branch_remove(out, "if (step_cnt >= TIMEOUT) begin")
-        if out is None:
-            return before
+        if not pat.search(out):
+            break
+        out = pat.sub(r"if ", out, count=1)
     return out
 
 

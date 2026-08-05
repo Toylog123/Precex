@@ -68,6 +68,9 @@ experiments/runs/*
 !experiments/runs/l2_false_positive_analysis.json
 !experiments/runs/cross_model_ds_vs_minimax.json
 !experiments/runs/verify_timing.json
+!experiments/runs/patch_assembler_*.json
+!experiments/runs/patch_assembler_s45_v3.json
+
 !experiments/runs/nonllm_baselines.json
 !experiments/runs/module_interaction.json
 !experiments/runs/settings_compare.csv

@@ -1,0 +1,35 @@
+{
+  "summary": {
+    "total": 1,
+    "ok": 1,
+    "patched": 1,
+    "cost": 0.0008
+  },
+  "results": [
+    {
+      "sample": "s45",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "split_state",
+        "target": "S_DATA 分支中 bit_cnt==DATA_W-1 的跳转目标",
+        "params": {
+          "from_state": "S_DATA",
+          "wrong_next_state": "S_IDLE",
+          "correct_next_state": "S_STOP",
+          "condition": "baud_tick && (bit_cnt == DATA_W-1)",
+          "txd_at_transition": "1'b1"
+        },
+        "rationale": "数据位最后一拍必须进入 STOP 状态输出停止位，而不是直接跳回 IDLE，否则破坏 A4 的 DATA→STOP 合法跳转并导致帧缺停止位。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.0008153600000000001,
+      "tokens": 4405,
+      "llm_content": "{\n  \"action\": \"split_state\",\n  \"target\": \"S_DATA 分支中 bit_cnt==DATA_W-1 的跳转目标\",\n  \"params\": {\n    \"from_state\": \"S_DATA\",\n    \"wrong_next_state\": \"S_IDLE\",\n    \"correct_next_state\": \"S_STOP\",\n    \"condition\": \"baud_tick && (bit_cnt == DATA_W-1)\",\n    \"txd_at_transition\": \"1'b1\"\n  },\n  \"rationale\": \"数据位最后一拍必须进入 STOP 状态输出停止位，而不是直接跳回 IDLE，否则破坏 A4 的 DATA→STOP 合法跳转并导致帧缺停止位。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    }
+  ]
+}
