@@ -113,6 +113,48 @@ def _weaken_tb(tb_src, error_type):
     return new
 
 
+def _parse_fail_step(log_text):
+    """Extract counterexample step from sby engine log (same as evidence_engine)."""
+    if not log_text:
+        return None
+    m = re.search(r"failed assertion .*?step (\d+)", log_text)
+    if m:
+        return int(m.group(1))
+    steps = [int(x) for x in re.findall(r"Checking assertions in step (\d+)", log_text)]
+    if steps:
+        return max(steps)
+    m2 = re.search(r"at step (\d+)", log_text)
+    return int(m2.group(1)) if m2 else None
+
+
+def _check_param_consistency(tb_src, param_map):
+    """Param consistency: when --param overrides test params, uut instantiation in tb
+    must match tb localparam declarations (prevent s35-class mismatch)."""
+    if not param_map:
+        return True, {}
+    bad = []
+    locals_ = {}
+    pat_l = r"^\s*(?:local)?param\w*\s+(\w+)\s*=\s*([^,;\n]+)\s*;"
+    for m in re.finditer(pat_l, tb_src, re.M):
+        locals_[m.group(1)] = m.group(2).strip()
+    inst = {}
+    pat_i = r"\.( \w+)\s*\(\s*([^)]+?)\s*\)"
+    for m in re.finditer(pat_i, tb_src):
+        inst[m.group(1)] = m.group(2).strip()
+    for name in param_map:
+        want = param_map[name]
+        lv = locals_.get(name)
+        iv = inst.get(name)
+        if lv is not None and iv is not None:
+            if lv != want or iv != want:
+                bad.append("%s: localparam=%s inst=%s want=%s" % (name, lv, iv, want))
+        elif iv is not None and iv != want:
+            bad.append("%s: inst=%s want=%s" % (name, iv, want))
+    if bad:
+        return False, {"stage": "param_mismatch", "detail": "; ".join(bad)}
+    return True, {}
+
+
 def _apply_params(src, param_map):
     """把源码中的参数声明值替换为测试用小值（--param 覆写）。"
 
@@ -124,7 +166,7 @@ def _apply_params(src, param_map):
     for name, val in param_map.items():
         # 声明行（parameter/localparam NAME = <value>）
         src = re.sub(
-            r"(?m)^(\s*(?:local)?parameter\s+%s\s*=\s*)[^,;]+(;?)" % re.escape(name),
+            r"(?m)^(\s*(?:local)?param\w*\s+%s\s*=\s*)[^,;\n]+(;?)" % re.escape(name),
             r"\g<1>%s\g<2>" % val, src)
         # 实例化参数 .NAME(<expr>) 或 .NAME(NAME)
         src = re.sub(
@@ -501,7 +543,7 @@ def _inline_assert(design_src, assert_src, module):
 
 
 # ---- 三通过校验（复用 evaluator 三函数）----
-def _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, module, top_mod):
+def _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, module, top_mod, min_fail_step=0):
     """对临时样本目录跑三通过判定。返回 (ok, 明细 dict)。"""
     buggy = os.path.join(tmp_dir, "buggy.v")
     tb = os.path.join(tmp_dir, "tb_weak.sv")
@@ -525,6 +567,12 @@ def _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, module, top_
                           design_dir=os.path.join(work_dir, "sby_work"))
     if formal["result"] != "fail":
         return False, {"stage": "formal", "result": formal["result"], "detail": formal["log_tail"][-400:]}
+    fail_step = _parse_fail_step(formal.get("log_tail") or "")
+    if fail_step is not None and min_fail_step and fail_step < min_fail_step:
+        return False, {"stage": "depth", "fail_step": fail_step,
+                       "min_fail_step": min_fail_step,
+                       "detail": "fail_step %d < min %d" % (fail_step, min_fail_step)}
+    
     # golden dual-check: same sby on golden.v, expect formal=PASS (non-vacuous)
     golden_sby = os.path.join(tmp_dir, "verify_golden.sby")
     with open(golden_sby, "w", encoding="utf-8") as f:
@@ -534,7 +582,7 @@ def _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, module, top_
     if golden_formal["result"] not in ("pass", "prove"):
         return False, {"stage": "golden", "result": golden_formal["result"], "detail": golden_formal["log_tail"][-400:]}
     return True, {"stage": "all", "formal": formal, "golden_formal": golden_formal,
-        "sby_work": os.path.join(work_dir, "sby_work")}
+        "sby_work": os.path.join(work_dir, "sby_work"), "fail_step": fail_step}
 
 
 def _validate_l2_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, module, top_mod):
@@ -597,9 +645,21 @@ def _copy_cex(sby_work, sample_dir):
 
 
 # ---- 样本落盘 ----
+def _verification_meta(level, extra=None):
+    ver = {"compile_ok": True, "formal_result": "fail", "golden_formal_result": "pass",
+           "verdict": "L3_VALID" if level == "L3" else "L2_VALID"}
+    if level == "L3":
+        ver["sim_ok"] = True
+    else:
+        ver["sim_fail"] = True
+    if extra:
+        ver.update({k: v for k, v in extra.items() if v is not None})
+    return ver
+
+
 def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertions_src,
                   tb_src, top_mod, tb_top, depth, variant, line_no, diff, verify, cmd_line,
-                  param_map=None, level="L3"):
+                  param_map=None, level="L3", extra_verification=None):
     param_map = param_map or {}
     """生成 7 件套（buggy/golden/弱tb/cex.vcd/cex.log/meta.json/evidence.json/notes.md）+ verify.sby。
     断言已内联于 buggy.v/golden.v（不再生成独立 assertions.sv / formal_top.sv）。"""
@@ -644,7 +704,7 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
         "golden_source": "rtl/%s/%s.sv" % (module, module),
         "date": DATE, "reproduce_cmd": cmd_line,
         "param_override": param_map or None,
-        "verification": ({"compile_ok": True, "sim_ok": True, "formal_result": "fail", "golden_formal_result": "pass", "verdict": "L3_VALID"} if level == "L3" else {"compile_ok": True, "sim_fail": True, "formal_result": "fail", "golden_formal_result": "pass", "verdict": "L2_VALID"}),
+        "verification": _verification_meta(level, extra_verification),
     }
     with open(os.path.join(sample_dir, "meta.json"), "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
@@ -705,6 +765,12 @@ def main(argv=None):
     ap.add_argument("--seed", type=int, default=0, help="variant 尝试顺序随机种子（默认 0=声明顺序）")
     ap.add_argument("--param", default="", help="测试参数覆写，逗号分隔如 CLK_FREQ=400,BAUD=100（用于 uart 小 DIV 深时序样本）")
     ap.add_argument("--dry-run", action="store_true", help="仅打印将应用的 diff，不落盘不校验")
+    ap.add_argument("--natural-tb", action="store_true",
+                    help="L3 natural weak tb: keep original tb checks (no sanitize); sim must pass")
+    ap.add_argument("--min-fail-step", type=int, default=0,
+                    help="reject L3 candidates whose counterexample step < N (deep timing gate)")
+    ap.add_argument("--tb-shallow", action="store_true",
+                    help="use rtl/<mod>/tb_<mod>_shallow.sv (shallow-coverage tb, no deep path)")
     ap.add_argument("--level", default="L3", choices=["L3", "L2"], help="样本等级（默认 L3；L2=单周期可观测错误，弱 tb 直接 FAIL）")
     args = ap.parse_args(argv)
 
@@ -748,14 +814,27 @@ def main(argv=None):
     golden = open(golden_path, encoding="utf-8").read()
     assertions = open(assert_path, encoding="utf-8").read()
     tb = open(tb_path, encoding="utf-8").read()
+    if args.tb_shallow:
+        shallow_path = os.path.join(mod_dir, "tb_%s_shallow.sv" % args.module)
+        if not os.path.isfile(shallow_path):
+            print("error: --tb-shallow 要求浅覆盖 tb 文件：%s" % shallow_path, file=sys.stderr)
+            return 1
+        tb = open(shallow_path, encoding="utf-8").read()
+        tb_path = shallow_path
     if param_map:
         golden = _apply_params(golden, param_map)
         tb = _apply_params(tb, param_map)
+    ok_params, param_detail = _check_param_consistency(tb, param_map)
+    if not ok_params:
+        print("error: param consistency check failed: %s" % param_detail["detail"], file=sys.stderr)
+        return 1
     if args.level == "L2":
-        # L2 单周期错误：用原始 tb 强检查（弱 tb 应能抓到缺陷），不做 L3 式清洗
+        # L2 single-cycle: use original tb strong checks (weak tb must catch bug)
         pass
     else:
-        tb = _weaken_tb(tb, args.error_type)   # L3 弱 tb 清洗：剥离会击穿本类缺陷的仿真检查行
+        # natural-tb: no sanitize (original tb checks retained); legacy: sanitize
+        if not args.natural_tb:
+            tb = _weaken_tb(tb, args.error_type)
     tb = _strip_tb_assert(tb)              # 剥离断言模块实例化（断言已内联）
     # 内联断言到设计（golden/buggy 均含内联断言块 + initial 初值 + 复位静默环境约束）
     def _finalize(design_src):
@@ -799,15 +878,34 @@ def main(argv=None):
         except ValueError:
             pass
 
+    # parameter-aware depth: fifo DEPTH / fsm TIMEOUT deep-timing samples
+    if param_map and args.module == "fifo_sync":
+        try:
+            dep = int(param_map.get("DEPTH", 8))
+            depth = dep + 8
+            print("   parameterized depth: DEPTH=%d -> depth=%d" % (dep, depth))
+        except ValueError:
+            pass
+    elif param_map and args.module == "fsm_ctrl":
+        try:
+            tmo = int(param_map.get("TIMEOUT", 32))
+            depth = tmo + 8
+            print("   parameterized depth: TIMEOUT=%d -> depth=%d" % (tmo, depth))
+        except ValueError:
+            pass
+
     variants = list(err["variants"])
     if args.seed:
         random.Random(args.seed).shuffle(variants)
-    cmd_line = "python3 scripts/bug_injector.py --module %s --error-type %s --sample-id %s%s%s%s%s" % (
+    cmd_line = "python3 scripts/bug_injector.py --module %s --error-type %s --sample-id %s%s%s%s%s%s%s%s" % (
         args.module, args.error_type, args.sample_id,
         " --line %d" % args.line if args.line else "",
         " --seed %d" % args.seed if args.seed else "",
         " --variant %d" % args.variant if args.variant else "",
-        " --param %s" % args.param if args.param else "")
+        " --param %s" % args.param if args.param else "",
+        " --natural-tb" if args.natural_tb else "",
+        " --min-fail-step %d" % args.min_fail_step if args.min_fail_step else "",
+        " --tb-shallow" if args.tb_shallow else "")
 
     # 逐 variant 注入 + 校验（dry-run 时仅打印所有可应用 diff，不落盘不校验）
     fails = []
@@ -845,15 +943,22 @@ def main(argv=None):
             sby_file = os.path.join(tmp_dir, "verify.sby")
             with open(sby_file, "w", encoding="utf-8") as f:
                 f.write(_gen_sby(args.module, top_mod, depth))
-            ok, detail = (_validate_l2_candidate if args.level == "L2" else _validate_candidate)(tmp_dir, tb_top, sby_file, depth, work_dir, args.module, top_mod)
+            if args.level == "L2":
+                ok, detail = _validate_l2_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, args.module, top_mod)
+            else:
+                ok, detail = _validate_candidate(tmp_dir, tb_top, sby_file, depth, work_dir, args.module, top_mod, min_fail_step=args.min_fail_step)
             if not ok:
                 fails.append((v, detail))
                 print("  校验失败（%s），尝试下一变体…" % detail["stage"])
                 continue
             # 三通过成立 → 落盘样本 + 拷贝 cex 证据
+            extra_ver = {"fail_step": detail.get("fail_step"),
+                         "tb_mode": ("natural+shallow" if args.natural_tb else "shallow") if args.tb_shallow else ("natural" if args.natural_tb else "sanitized"),
+                         "min_fail_step": args.min_fail_step}
             _write_sample(sample_dir, args.module, args.sample_id, golden_inline, buggy_inline, assertions,
                           tb, top_mod, tb_top, depth, v, line_no, diff,
-                          {"err_name": err["name"], "code": args.error_type}, cmd_line, param_map, args.level)
+                          {"err_name": err["name"], "code": args.error_type}, cmd_line, param_map, args.level,
+                          extra_ver)
             copied = _copy_cex(detail["sby_work"], sample_dir)
             tag = "L3 三通过" if args.level == "L3" else "L2 双检（弱 tb FAIL + formal fail）"
             print("  校验通过 [%s]：compile ✓ sim ✓ formal=fail ✓  → 样本 %s 已产出（cex: %s）"

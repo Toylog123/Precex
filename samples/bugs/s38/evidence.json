@@ -1,0 +1,30 @@
+{
+  "schema_ver": "v1.0",
+  "evidence_source": "sby_bmc",
+  "sample_id": "s38",
+  "error_type": "状态跳转",
+  "inject_line": 78,
+  "inject_desc": "uart_tx 数据位结束跳过 STOP 直接回 IDLE（帧缺停止位，击穿 A4）",
+  "module": "uart_tx",
+  "file": "s38/buggy.v",
+  "line": 163,
+  "code_slice": " 159:                 S_DATA:  assert ((state == S_DATA)  || (state == S_STOP));  // 数据位续传或收尾\n 160:                 S_STOP:  assert ((state == S_STOP)  || (state == S_IDLE));  // 停止位停留或回空闲\n 161:             endcase\n 162:         end\n 163:     end\n 164: \n 165:     // A5 忙标志与状态一致：tx_busy 有效期间不得处于 IDLE\n 166:     always @(posedge clk) begin\n 167:         if (rst_n && tx_busy) begin",
+  "signals": {
+    "clk": "input",
+    "rst_n": "input",
+    "tx_start": "input",
+    "tx_data": "input",
+    "txd": "output",
+    "tx_busy": "output"
+  },
+  "trigger_condition": "(state == S_IDLE)  || (state == S_START)",
+  "fail_stage": "bmc_depth_39",
+  "fail_step": 39,
+  "failed_assert_id": "99",
+  "x_state_warn": false,
+  "x_state": {
+    "count": 0,
+    "signals": []
+  },
+  "raw_trace_ref": "samples/bugs/s38/cex.vcd"
+}
