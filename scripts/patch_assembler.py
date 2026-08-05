@@ -19,12 +19,39 @@ sys.path.insert(0, os.path.join(REPO_ROOT, "agents", "cex_semantizer"))
 from llm_client import LLMClient  # noqa: E402
 import evaluator  # noqa: E402
 import trace_analyzer as ta  # noqa: E402
+import top_audit  # noqa: E402
 from run_prestudy import apply_unified_diff  # noqa: E402
 
 SAMPLES_STRUCT = os.path.join(REPO_ROOT, "samples", "structural")
 SAMPLES_BUGS = os.path.join(REPO_ROOT, "samples", "bugs")
 SAMPLES_DEEP = os.path.join(REPO_ROOT, "samples", "deep")
 TMP_ROOT = os.path.join(REPO_ROOT, "experiments", "runs", ".patch_asm")
+
+
+def _top_audit_one(sample_dir, work_dir, module, tb_top, timeout):
+    """第四通过：修复后 RTL vs golden 接口行为签名对比（同激励 VCD）。
+    返回 {"audit": bool|None, "audit_error": str, "audit_detail": {...}}；
+    match=True 表示输出端口逐周期一致，False 表示不一致，None 表示审计未能执行。"""
+    try:
+        golden_vcd = os.path.join(ta.TRACE_ROOT, os.path.basename(sample_dir) + "_g", "trace.vcd")
+        if not os.path.isfile(golden_vcd):
+            golden_vcd = ta._generate_vcd(sample_dir, "golden.v", tb_top,
+                                          os.path.basename(sample_dir) + "_g", timeout)
+        if not golden_vcd or not os.path.isfile(golden_vcd):
+            return {"audit": None, "audit_error": "no_golden_vcd"}
+        repaired_vcd = os.path.join(work_dir, "trace.vcd")
+        if not os.path.isfile(repaired_vcd):
+            repaired_vcd = ta._generate_vcd(work_dir, "buggy.v", tb_top,
+                                            os.path.basename(sample_dir) + "_e2e_ta", timeout)
+        if not repaired_vcd or not os.path.isfile(repaired_vcd):
+            return {"audit": None, "audit_error": "no_repaired_vcd"}
+        clk = ta.MODULE_CLK.get(module, "clk")
+        out_sigs = top_audit.MODULE_OUTPUT_SIGS.get(module, [])
+        detail = top_audit._signature_compare(golden_vcd, repaired_vcd, out_sigs, clk)
+        return {"audit": detail.get("match"), "audit_error": "",
+                "audit_detail": detail}
+    except Exception as e:
+        return {"audit": None, "audit_error": repr(e)[:200], "audit_detail": {}}
 
 SYSTEM_INTENT = """你是资深 RTL 验证工程师。给定一个存在结构性缺陷的 Verilog 模块，
 输出修复意图 JSON（不要输出 diff，只输出意图）：
@@ -776,10 +803,12 @@ def run_e2e(sample_id, llm, mock, timeout, evidence="BH", max_rounds=3,
         out["rounds"] = rnd
         round_rec = {"round": rnd, "candidates": [], "ok": False, "diag": ""}
         any_patch = False
+        last_work = None
+        diag = ""
         for temp in temps:
             out["attempts"] += 1
             rec = {"temp": temp, "ok": False, "intent": None, "error": "",
-                   "cost": 0.0, "tokens": 0}
+                   "cost": 0.0, "tokens": 0, "audit": None, "audit_error": ""}
             prompt = build_intent_prompt(sample_dir, cex, evidence_setting=evidence)
             if history:
                 hist_lines = ["【上次修复历史（反馈循环）】"]
@@ -827,44 +856,70 @@ def run_e2e(sample_id, llm, mock, timeout, evidence="BH", max_rounds=3,
             tb_src = open(os.path.join(work, "tb_weak.sv"), encoding="utf-8").read()
             m = re.search(r"module\s+(tb_\w+)", tb_src)
             tb_top = m.group(1) if m else None
+            last_work = work
             ev = evaluator.evaluate(work, {"run_formal": True, "formal_timeout": timeout,
                                            "tb_top": tb_top, "keep_tmp": True})
             rec["verdict"] = ev["verdict"]
             rec["formal"] = ev["formal"].get("result")
             rec["sim"] = ev["sim"].get("ok")
             rec["compile"] = ev["compile"].get("ok")
-            rec["ok"] = ev["verdict"] == "PASS"
+            # 第四通过：top-audit 接口行为签名
+            ta_res = _top_audit_one(sample_dir, work, module, tb_top, timeout)
+            rec["audit"] = ta_res["audit"]
+            rec["audit_error"] = ta_res["audit_error"]
+            rec["audit_detail"] = ta_res["audit_detail"]
+            rec["ok"] = ev["verdict"] == "PASS" and ta_res["audit"] is True
             round_rec["candidates"].append(rec)
             if rec["ok"]:
+                round_rec["ok"] = True
                 out["ok"] = True
                 out["verdict"] = "PASS"
                 out["patched"] = True
                 out["rounds_detail"].append(round_rec)
                 return out
-        if any_patch:
+        # 差分诊断：取最后一个实际验证过的候选（any_patch 保证 ev 已求值）
+        if any_patch and last_work:
             try:
-                tmp = ev.get("tmpdir")
-                if tmp:
-                    new_vcd = os.path.join(tmp, "sby_out", "engine_0", "trace.vcd")
-                    new_log = os.path.join(tmp, "sby_out", "engine_0", "logfile.txt")
-                    if os.path.isfile(new_vcd):
-                        import cex_diff
-                        clk = cex_diff.MODULE_CLK.get(module, "clk")
-                        old_fail, old_assert = cex_diff.extract_fail_step(cxp)
-                        new_fail, _ = cex_diff.extract_fail_step(new_log)
-                        r = cex_diff.analyze(new_vcd, new_vcd, clk, old_fail, new_fail, module=module)
-                        round_rec["diag"] = cex_diff.diagnosis_text(sample_id, r, old_assert)
+                tmp = ev.get("tmpdir") or last_work
+                new_vcd = os.path.join(tmp, "sby_out", "engine_0", "trace.vcd")
+                new_log = os.path.join(tmp, "sby_out", "engine_0", "logfile.txt")
+                if not os.path.isfile(new_vcd):
+                    new_vcd = os.path.join(last_work, "sby_out", "engine_0", "trace.vcd")
+                    new_log = os.path.join(last_work, "sby_out", "engine_0", "logfile.txt")
+                if os.path.isfile(new_vcd):
+                    import cex_diff
+                    clk = cex_diff.MODULE_CLK.get(module, "clk")
+                    old_fail, old_assert = cex_diff.extract_fail_step(cxp)
+                    new_fail, _ = cex_diff.extract_fail_step(new_log)
+                    r = cex_diff.analyze(new_vcd, new_vcd, clk, old_fail, new_fail, module=module)
+                    diag = cex_diff.diagnosis_text(sample_id, r, old_assert)
             except Exception as e:
-                round_rec["diag"] = "（差分诊断失败：%s）" % repr(e)[:80]
+                diag = "（差分诊断失败：%s）" % repr(e)[:80]
+        round_rec["diag"] = diag
+        # 反馈循环：所有失败候选（含 patch 成功但验证失败）都必须进入 history，
+        # 否则第二轮 LLM 看不到「补丁生效但 formal 仍失败」的最关键反馈。
         for cand in round_rec["candidates"]:
-            if cand.get("error"):
+            if not cand.get("ok"):
+                failure = cand.get("error") or ""
+                if not failure:
+                    verdict = cand.get("verdict")
+                    audit = cand.get("audit")
+                    if verdict and verdict != "PASS":
+                        failure = "验证失败 verdict=%s formal=%s sim=%s" % (
+                            verdict, cand.get("formal"), cand.get("sim"))
+                    elif audit is not True:
+                        failure = "top-audit 接口签名不一致 audit=%s err=%s" % (
+                            audit, cand.get("audit_error", "")[:80])
+                    else:
+                        failure = "补丁验证失败（verdict=%s audit=%s）" % (verdict, audit)
                 history.append({"round": rnd, "temp": cand.get("temp"),
-                                "failure": cand["error"][:200],
-                                "diag": round_rec.get("diag", "")})
+                                "failure": failure[:300],
+                                "diag": diag})
         out["rounds_detail"].append(round_rec)
         if not any_patch:
             history.append({"round": rnd, "temp": "all", "failure": "所有候选意图均未组装出有效补丁",
-                            "diag": round_rec.get("diag", "")})
+                            "diag": diag})
+        round_rec["history"] = list(history)
     return out
 
 def main(argv=None):
