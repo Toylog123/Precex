@@ -327,7 +327,7 @@ def _build_evidence_text(setting, sample_dir):
                 ta_text = " | ".join(rows)
             except Exception as e:
                 ta_text = "（trace_analysis 解析失败: %s）" % e
-    return body_b + chr(10) + chr(10) + "【TraceAnalyzer 动态切片摘要】" + chr(10) + ta_text
+        return body_b + chr(10) + chr(10) + "【TraceAnalyzer 动态切片摘要】" + chr(10) + ta_text
     if setting == "C":
         p = os.path.join(sample_dir, "semantics.json")
         if not os.path.isfile(p):
