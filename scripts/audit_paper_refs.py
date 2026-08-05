@@ -84,21 +84,26 @@ def main():
     fails += not check("no bare % in body", not bare_pct, "lines=%s" % bare_pct)
 
     # 6) abstract cn/en key numbers consistent
+    m_abs = re.search(r"\\begin{abstract}(.*?)\\end{abstract}", tex, re.S)
+    cn_abs = m_abs.group(1) if m_abs else tex
     pairs = [
-        ("408", "408"),
-        ("61\\.8", "61\\.8"),
-        ("47\\.1", "47\\.1"),
-        ("49\\.0", "49\\.0"),
+        ("306", "306"),
+        ("64\\.7", "64\\.7"),
+        ("59\\.8", "59\\.8"),
+        ("55\\.9", "55\\.9"),
         ("88\\.5", "88\\.5"),
         ("81\\.8", "81\\.8"),
         ("91\\.7", "91\\.7"),
-        ("306", "306"),
+        ("68", "68"),
         ("78", "78"),
-        ("43", "43"),
+        ("0\\.40", "0\\.40"),
+        ("0\\.60", "0\\.60"),
+        ("56\\.9", "56\\.9"),
+        ("0\\.37", "0\\.37"),
     ]
     mism = []
     for cn, e in pairs:
-        has_c = re.search(cn, tex) is not None
+        has_c = re.search(cn, cn_abs) is not None
         has_e = re.search(e, en) is not None
         if has_c != has_e:
             mism.append(cn + " cn=" + str(has_c) + " en=" + str(has_e))
