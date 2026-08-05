@@ -1,0 +1,21 @@
+# PreCex - L3 样本 (module=uart_tx) SymbiYosys 配置：对 buggy 版运行 BMC，期望 Assert failed
+# 作者：Toylog | 版本：v0.2 | 功能概述：read -sv -formal 单文件（断言已内联于 buggy.v）+ prep -top 设计模块 + smtbmc(z3) BMC，depth 96
+# 运行方式（WSL）：export PATH=$HOME/.local/bin:$PATH; export SMTBMC=/mnt/d/BaiduSyncdisk/02_Precex/smoke/yosys-smtbmc-z3.sh;
+#   sby -f verify.sby -d <workdir>    # 期望 DONE FAIL（counterexample）
+
+[tasks]
+bmc
+
+[options]
+bmc: mode bmc
+bmc: depth 96
+
+[engines]
+bmc: smtbmc z3
+
+[script]
+read -sv -formal buggy.v
+prep -top uart_tx
+
+[files]
+buggy.v
