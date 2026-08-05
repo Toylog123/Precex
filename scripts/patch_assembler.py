@@ -336,17 +336,61 @@ def _fsm_timeout_insert(buggy):
     return "".join(out_lines) if inserted == 3 else None
 
 
+
+def _gen_assign_expr_restore(buggy, intent):
+    """组合赋值表达式级恢复：assign <sig> = (<expr>); 或 assign <sig> = <expr>;
+    按表达式做宽松空白匹配替换（s49 half_full）。不依赖 intent 的 signal 字段。"""
+    params = intent.get("params") or {}
+    old = (params.get("old") or params.get("original") or params.get("buggy")
+           or params.get("old_value") or params.get("old_expression") or params.get("expr_old")
+           or params.get("wrong") or "")
+    new = (params.get("new") or params.get("corrected") or params.get("fixed")
+           or params.get("new_value") or params.get("new_expression") or params.get("expr_new")
+           or params.get("expected") or "")
+    old_s, new_s = str(old).strip(), str(new).strip()
+    if not (old_s and new_s):
+        return None
+    def _fold(s):
+        return " ".join(s.split())
+    folded_old = _fold(old_s)
+    folded_new = _fold(new_s)
+    # 宽松空白模式
+    loose_old = "".join((chr(92) + "s*" if ch.isspace() else re.escape(ch)) for ch in folded_old)
+    # 扫描所有 assign 行
+    for line in buggy.splitlines(keepends=True):
+        m = re.search(r"assign\s+(\w+)\s*=\s*(.+)", line)
+        if not m:
+            continue
+        sig = m.group(1)
+        body = m.group(2).rstrip()
+        folded_body = _fold(body)
+        if folded_old in folded_body:
+            new_body = re.sub(loose_old, folded_new, body, count=1)
+            if new_body != body:
+                new_line = "assign " + sig + " = " + new_body + chr(10)
+                return buggy.replace(line, new_line, 1)
+    return None
+
+
 def _gen_edit_assign(buggy, intent):
     # Single-line assignment fix: anchor-based branch selection (same policy as
     # _gen_split_state) so pure state names never hit localparam declarations or
     # the reset branch. Supports full assignments and signal/old_value/new_value.
     BS = chr(92)  # 反斜杠（正则转义用；避免在源码中写反斜杠字面量）
     params = intent.get("params") or {}
-    old = (params.get("old") or params.get("original") or params.get("from")
-           or params.get("buggy") or params.get("old_value") or "")
-    new = (params.get("new") or params.get("corrected") or params.get("to")
-           or params.get("correct") or params.get("new_value")
-           or params.get("fixed") or "")
+    # 模糊字段提取：兼容 LLM 意图字段名漂移（old/original/from/buggy/old_value/old_expression/expr ...）
+    def _first(d, keys, default=""):
+        for k in keys:
+            v = d.get(k)
+            if v:
+                return str(v)
+        return default
+    old_keys = ("old", "original", "from", "buggy", "old_value", "old_expression",
+                "old_expr", "expr_old", "buggy_expression", "wrong", "current")
+    new_keys = ("new", "corrected", "to", "correct", "new_value", "fixed",
+                "new_expression", "new_expr", "expr_new", "fixed_expression", "expected")
+    old = _first(params, old_keys)
+    new = _first(params, new_keys)
     if not (old and new):
         return None
     old_s, new_s = str(old).strip(), str(new).strip()
@@ -381,31 +425,40 @@ def _gen_edit_assign(buggy, intent):
                 corr_full = new_s if "<=" in new_s else "%s <= %s;" % (sig_s, new_s)
                 return buggy[:m2.start()] + corr_full + buggy[m2.end():]
             # 组合赋值形式：assign <sig> = (<expr>); ——纯字符串替换（s49 half_full）
-            # 直接在原始 buggy 中定位 "assign <sig> = ("，再对表达式做宽松空白正则替换
+            # 直接在原始 buggy 中定位 "assign <sig> = ("，再对表达式做宽松空白正则替换；
+            # LLM 意图可能缺 signal 字段，此时扫描所有 assign 行按表达式匹配
             def _fold(s):
                 return " ".join(s.split())
             folded_old = _fold(old_s)
             folded_new = _fold(new_s)
             # 宽松空白模式：把 folded_old 中每个空白块替换为 \s*（生成模式串，无转义问题）
             def _loose(expr):
-                return "".join(("\s*" if ch.isspace() else re.escape(ch)) for ch in expr)
+                return "".join((BS + "s*" if ch.isspace() else re.escape(ch)) for ch in expr)
             loose_old = _loose(folded_old)
-            idx = buggy.find("assign " + sig_s + " = (")
-            if idx >= 0:
-                end = buggy.find(");", idx)
-                if end >= 0:
-                    expr_raw = buggy[idx:end + 2]
-                    new_expr_raw = re.sub(loose_old, folded_new, expr_raw, count=1)
-                    if new_expr_raw != expr_raw:
-                        return buggy[:idx] + new_expr_raw + buggy[end + 2:]
-            idx2 = buggy.find("assign " + sig_s + " = ")
-            if idx2 >= 0:
-                end2 = buggy.find(";", idx2)
-                if end2 >= 0:
-                    expr_raw2 = buggy[idx2:end2 + 1]
-                    new_expr_raw2 = re.sub(loose_old, folded_new, expr_raw2, count=1)
-                    if new_expr_raw2 != expr_raw2:
-                        return buggy[:idx2] + new_expr_raw2 + buggy[end2 + 1:]
+            sigs = [sig_s] if sig_s else []
+            if not sigs:
+                # 无 signal：扫描所有 assign 行，按表达式匹配
+                for line in buggy.splitlines():
+                    m = re.match(r"assign\s+(\w+)\s*=", line)
+                    if m:
+                        sigs.append(m.group(1))
+            for cand in sigs:
+                idx = buggy.find("assign " + cand + " = (")
+                if idx >= 0:
+                    end = buggy.find(");", idx)
+                    if end >= 0:
+                        expr_raw = buggy[idx:end + 2]
+                        new_expr_raw = re.sub(loose_old, folded_new, expr_raw, count=1)
+                        if new_expr_raw != expr_raw:
+                            return buggy[:idx] + new_expr_raw + buggy[end + 2:]
+                idx2 = buggy.find("assign " + cand + " = ")
+                if idx2 >= 0:
+                    end2 = buggy.find(";", idx2)
+                    if end2 >= 0:
+                        expr_raw2 = buggy[idx2:end2 + 1]
+                        new_expr_raw2 = re.sub(loose_old, folded_new, expr_raw2, count=1)
+                        if new_expr_raw2 != expr_raw2:
+                            return buggy[:idx2] + new_expr_raw2 + buggy[end2 + 1:]
     return None
 
 
@@ -439,6 +492,9 @@ def assemble(buggy, intent, module):
                 return p
         return _gen_guard_boundary(buggy, intent, module)
     if action == "edit_assign":
+        p = _gen_assign_expr_restore(buggy, intent)
+        if p:
+            return p
         return _gen_edit_assign(buggy, intent)
     return None
 

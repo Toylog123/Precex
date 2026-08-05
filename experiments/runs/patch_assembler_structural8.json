@@ -1,0 +1,202 @@
+{
+  "summary": {
+    "total": 8,
+    "ok": 8,
+    "patched": 8,
+    "cost": 0.006
+  },
+  "results": [
+    {
+      "sample": "s43",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "split_state",
+        "target": "S1 分支中的状态跳转目标（state <= S3 的跳转逻辑）",
+        "params": {
+          "from": "S1",
+          "wrong_target": "S3",
+          "correct_target": "S2",
+          "note": "需恢复 S1 到 S2 的中间状态跳转，使状态序列保持 IDLE->S1->S2->S3->done，并保留 S2 的停留与异常跳转逻辑"
+        },
+        "rationale": "修复由 S1 直接跳 S3 导致的非法状态跳转，恢复被跳过的 S2 中间状态以符合合法状态序列。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.00044814000000000003,
+      "tokens": 2945,
+      "llm_content": "{\n  \"action\": \"split_state\",\n  \"target\": \"S1 分支中的状态跳转目标（state <= S3 的跳转逻辑）\",\n  \"params\": {\n    \"from\": \"S1\",\n    \"wrong_target\": \"S3\",\n    \"correct_target\": \"S2\",\n    \"note\": \"需恢复 S1 到 S2 的中间状态跳转，使状态序列保持 IDLE->S1->S2->S3->done，并保留 S2 的停留与异常跳转逻辑\"\n  },\n  \"rationale\": \"修复由 S1 直接跳 S3 导致的非法状态跳转，恢复被跳过的 S2 中间状态以符合合法状态序列。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s44",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "guard_boundary",
+        "target": "S1/S2/S3 状态分支中缺失的 step_cnt>=TIMEOUT 超时保护逻辑",
+        "params": {
+          "insertion_points": [
+            "S1",
+            "S2",
+            "S3"
+          ],
+          "condition": "step_cnt >= TIMEOUT",
+          "next_state": "S_IDLE",
+          "timeout_irq": "1'b1",
+          "hold_cnt": "4'd0"
+        },
+        "rationale": "删除全部超时保护分支后，step_cnt 会持续递增直至回绕，导致 A8 失败；需恢复边界保护分支，在 step_cnt 达到 TIMEOUT 时强制回 IDLE 并拉高 timeout_irq。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.0008815800000000002,
+      "tokens": 4669,
+      "llm_content": "{\n  \"action\": \"guard_boundary\",\n  \"target\": \"S1/S2/S3 状态分支中缺失的 step_cnt>=TIMEOUT 超时保护逻辑\",\n  \"params\": {\n    \"insertion_points\": [\"S1\", \"S2\", \"S3\"],\n    \"condition\": \"step_cnt >= TIMEOUT\",\n    \"next_state\": \"S_IDLE\",\n    \"timeout_irq\": \"1'b1\",\n    \"hold_cnt\": \"4'd0\"\n  },\n  \"rationale\": \"删除全部超时保护分支后，step_cnt 会持续递增直至回绕，导致 A8 失败；需恢复边界保护分支，在 step_cnt 达到 TIMEOUT 时强制回 IDLE 并拉高 timeout_irq。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s45",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "split_state",
+        "target": "S_DATA 状态中 bit_cnt==DATA_W-1 时的跳转分支",
+        "params": {
+          "condition": "baud_tick && bit_cnt == DATA_W-1",
+          "buggy_next_state": "S_IDLE",
+          "expected_next_state": "S_STOP",
+          "restore_state": "S_STOP",
+          "note": "数据位结束后必须先进入 S_STOP 输出停止位，再从 S_STOP 返回 S_IDLE"
+        },
+        "rationale": "数据位最后一拍被错误地直接跳回 S_IDLE，跳过了必须的 S_STOP 中间状态，导致帧缺少停止位并违反 A4 状态跳转断言。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.0010145800000000002,
+      "tokens": 5134,
+      "llm_content": "{\n  \"action\": \"split_state\",\n  \"target\": \"S_DATA 状态中 bit_cnt==DATA_W-1 时的跳转分支\",\n  \"params\": {\n    \"condition\": \"baud_tick && bit_cnt == DATA_W-1\",\n    \"buggy_next_state\": \"S_IDLE\",\n    \"expected_next_state\": \"S_STOP\",\n    \"restore_state\": \"S_STOP\",\n    \"note\": \"数据位结束后必须先进入 S_STOP 输出停止位，再从 S_STOP 返回 S_IDLE\"\n  },\n  \"rationale\": \"数据位最后一拍被错误地直接跳回 S_IDLE，跳过了必须的 S_STOP 中间状态，导致帧缺少停止位并违反 A4 状态跳转断言。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s46",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "guard_boundary",
+        "target": "count 更新逻辑（时序 always 块内）",
+        "params": {
+          "restore_branch": "if (can_wr && can_rd) count <= count; else if (can_wr) count <= count + 1'b1; else if (can_rd) count <= count - 1'b1; else count <= count;",
+          "purpose": "同拍读写时 count 保持不变，仅写时 +1，仅读时 -1"
+        },
+        "rationale": "恢复被删除的同拍读写 count 守恒保护分支，使 count 满足增量守恒断言 A4。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.00121492,
+      "tokens": 5736,
+      "llm_content": "{\n  \"action\": \"guard_boundary\",\n  \"target\": \"count 更新逻辑（时序 always 块内）\",\n  \"params\": {\n    \"restore_branch\": \"if (can_wr && can_rd) count <= count; else if (can_wr) count <= count + 1'b1; else if (can_rd) count <= count - 1'b1; else count <= count;\",\n    \"purpose\": \"同拍读写时 count 保持不变，仅写时 +1，仅读时 -1\"\n  },\n  \"rationale\": \"恢复被删除的同拍读写 count 守恒保护分支，使 count 满足增量守恒断言 A4。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s49",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "edit_assign",
+        "target": "half_full 赋值逻辑",
+        "params": {
+          "signal": "half_full",
+          "original": "count > (DEPTH >> 1)",
+          "fixed": "count >= (DEPTH >> 1)"
+        },
+        "rationale": "半满标志应包含等于 DEPTH/2 的情况，需将严格大于改为大于等于以匹配断言。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.00047208000000000005,
+      "tokens": 3149,
+      "llm_content": "{\n  \"action\": \"edit_assign\",\n  \"target\": \"half_full 赋值逻辑\",\n  \"params\": {\n    \"signal\": \"half_full\",\n    \"original\": \"count > (DEPTH >> 1)\",\n    \"fixed\": \"count >= (DEPTH >> 1)\"\n  },\n  \"rationale\": \"半满标志应包含等于 DEPTH/2 的情况，需将严格大于改为大于等于以匹配断言。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true,
+      "assemble_note": "edit_assign 表达式级恢复（assign_expr_restore），s49 四通过 PASS"
+    },
+    {
+      "sample": "s51",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "split_state",
+        "target": "写响应通道 S_AXI_BVALID 状态控制（always 块）",
+        "params": {
+          "insert_hold_branch": "else if (S_AXI_BVALID && !S_AXI_BREADY) S_AXI_BVALID <= 1'b1;",
+          "clear_condition": "S_AXI_BVALID && S_AXI_BREADY",
+          "order": "保持分支需放在默认清零分支之前"
+        },
+        "rationale": "恢复 BVALID 置位后等待 BREADY 的保持状态，避免未握手完成就被清零。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.0008887200000000001,
+      "tokens": 4622,
+      "llm_content": "{\n  \"action\": \"split_state\",\n  \"target\": \"写响应通道 S_AXI_BVALID 状态控制（always 块）\",\n  \"params\": {\n    \"insert_hold_branch\": \"else if (S_AXI_BVALID && !S_AXI_BREADY) S_AXI_BVALID <= 1'b1;\",\n    \"clear_condition\": \"S_AXI_BVALID && S_AXI_BREADY\",\n    \"order\": \"保持分支需放在默认清零分支之前\"\n  },\n  \"rationale\": \"恢复 BVALID 置位后等待 BREADY 的保持状态，避免未握手完成就被清零。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s53",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "split_state",
+        "target": "S_START 状态中 baud_cnt == (HALF-1) 的分支",
+        "params": {
+          "split_branch": "在 baud_cnt==(HALF-1) 时，增加对 rxd 的判定：若 rxd==1（毛刺），则保持/返回 S_IDLE 并复位 baud_cnt；若 rxd==0（真起始位），才进入 S_DATA"
+        },
+        "rationale": "恢复被删除的起始位中点毛刺确认分支，确保只有中点采样为低时才进入数据接收，满足 A2 断言。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.00044968000000000004,
+      "tokens": 2960,
+      "llm_content": "{\n  \"action\": \"split_state\",\n  \"target\": \"S_START 状态中 baud_cnt == (HALF-1) 的分支\",\n  \"params\": {\n    \"split_branch\": \"在 baud_cnt==(HALF-1) 时，增加对 rxd 的判定：若 rxd==1（毛刺），则保持/返回 S_IDLE 并复位 baud_cnt；若 rxd==0（真起始位），才进入 S_DATA\"\n  },\n  \"rationale\": \"恢复被删除的起始位中点毛刺确认分支，确保只有中点采样为低时才进入数据接收，满足 A2 断言。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    },
+    {
+      "sample": "s56",
+      "ok": true,
+      "error": "",
+      "intent": {
+        "action": "insert_wait",
+        "target": "S2 状态分支",
+        "params": {
+          "state": "S2",
+          "guard": "hold_cnt == S2_HOLD",
+          "true_next": "state <= S3; hold_cnt <= 4'd1;",
+          "false_next": "hold_cnt <= hold_cnt + 1'b1;"
+        },
+        "rationale": "S2 当前无条件跳转到 S3，导致停留计数不足 S2_HOLD 就离开，违反强断言 A8，需恢复停留计数分支，待 hold_cnt 达到 S2_HOLD 才允许跳转。"
+      },
+      "patched": true,
+      "verdict": "PASS",
+      "cost": 0.0006287400000000001,
+      "tokens": 3608,
+      "llm_content": "{\n  \"action\": \"insert_wait\",\n  \"target\": \"S2 状态分支\",\n  \"params\": {\n    \"state\": \"S2\",\n    \"guard\": \"hold_cnt == S2_HOLD\",\n    \"true_next\": \"state <= S3; hold_cnt <= 4'd1;\",\n    \"false_next\": \"hold_cnt <= hold_cnt + 1'b1;\"\n  },\n  \"rationale\": \"S2 当前无条件跳转到 S3，导致停留计数不足 S2_HOLD 就离开，违反强断言 A8，需恢复停留计数分支，待 hold_cnt 达到 S2_HOLD 才允许跳转。\"\n}",
+      "formal": "pass",
+      "sim": true,
+      "compile": true
+    }
+  ]
+}

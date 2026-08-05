@@ -1,0 +1,29 @@
+{
+  "summary": {
+    "total": 1,
+    "ok": 0,
+    "patched": 0,
+    "cost": 0.0005
+  },
+  "results": [
+    {
+      "sample": "s49",
+      "ok": false,
+      "error": "assemble fail (no change)",
+      "intent": {
+        "action": "edit_assign",
+        "target": "half_full 赋值语句 (assign half_full = (count > (DEPTH >> 1)))",
+        "params": {
+          "old_expression": "count > (DEPTH >> 1)",
+          "new_expression": "count >= (DEPTH >> 1)"
+        },
+        "rationale": "半满标志应使用 >= 边界，恢复为 count >= DEPTH/2 以满足断言 A5。"
+      },
+      "patched": false,
+      "verdict": null,
+      "cost": 0.00046900000000000007,
+      "tokens": 3138,
+      "llm_content": "{\n  \"action\": \"edit_assign\",\n  \"target\": \"half_full 赋值语句 (assign half_full = (count > (DEPTH >> 1)))\",\n  \"params\": {\n    \"old_expression\": \"count > (DEPTH >> 1)\",\n    \"new_expression\": \"count >= (DEPTH >> 1)\"\n  },\n  \"rationale\": \"半满标志应使用 >= 边界，恢复为 count >= DEPTH/2 以满足断言 A5。\"\n}"
+    }
+  ]
+}
