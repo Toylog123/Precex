@@ -1,0 +1,41 @@
+{
+  "sample": "s16",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 5,
+    "key_signal_diffs": [
+      [
+        "state",
+        5
+      ],
+      [
+        "baud_cnt",
+        5
+      ],
+      [
+        "state_d",
+        6
+      ],
+      [
+        "txd",
+        6
+      ],
+      [
+        "baud_tick",
+        437
+      ],
+      [
+        "bit_cnt",
+        439
+      ],
+      [
+        "tx_busy",
+        3911
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 17384
+  },
+  "clk_sig": "clk"
+}

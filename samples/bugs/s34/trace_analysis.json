@@ -1,0 +1,17 @@
+{
+  "sample": "s34",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 33,
+    "key_signal_diffs": [
+      [
+        "S_AXI_RDATA",
+        33
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 37
+  },
+  "clk_sig": "ACLK"
+}

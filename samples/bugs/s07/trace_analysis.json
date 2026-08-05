@@ -1,0 +1,33 @@
+{
+  "sample": "s07",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 13,
+    "key_signal_diffs": [
+      [
+        "step_cnt",
+        13
+      ],
+      [
+        "step_cnt_d",
+        14
+      ],
+      [
+        "state",
+        47
+      ],
+      [
+        "timeout_irq",
+        47
+      ],
+      [
+        "state_d",
+        48
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 67
+  },
+  "clk_sig": "clk"
+}

@@ -1,0 +1,25 @@
+{
+  "sample": "s19",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 42,
+    "key_signal_diffs": [
+      [
+        "count",
+        42
+      ],
+      [
+        "count_d",
+        43
+      ],
+      [
+        "half_full",
+        46
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 51
+  },
+  "clk_sig": "clk"
+}

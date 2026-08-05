@@ -1,0 +1,41 @@
+{
+  "sample": "s21",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 38,
+    "key_signal_diffs": [
+      [
+        "count",
+        38
+      ],
+      [
+        "head",
+        38
+      ],
+      [
+        "empty",
+        38
+      ],
+      [
+        "half_full",
+        38
+      ],
+      [
+        "dout",
+        38
+      ],
+      [
+        "count_d",
+        39
+      ],
+      [
+        "empty_d",
+        39
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 51
+  },
+  "clk_sig": "clk"
+}

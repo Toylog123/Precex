@@ -1,0 +1,21 @@
+{
+  "sample": "s20",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 4,
+    "key_signal_diffs": [
+      [
+        "tail",
+        4
+      ],
+      [
+        "dout",
+        22
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 51
+  },
+  "clk_sig": "clk"
+}

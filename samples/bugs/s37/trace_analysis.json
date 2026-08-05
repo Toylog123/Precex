@@ -1,0 +1,37 @@
+{
+  "sample": "s37",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 13,
+    "key_signal_diffs": [
+      [
+        "state",
+        13
+      ],
+      [
+        "state_d",
+        14
+      ],
+      [
+        "bit_cnt",
+        29
+      ],
+      [
+        "rx_busy",
+        157
+      ],
+      [
+        "rx_data",
+        157
+      ],
+      [
+        "rx_valid",
+        157
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 802
+  },
+  "clk_sig": "clk"
+}

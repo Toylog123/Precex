@@ -1,0 +1,17 @@
+{
+  "sample": "s26",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 1,
+    "key_signal_diffs": [
+      [
+        "rx_busy",
+        1
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 21493
+  },
+  "clk_sig": "clk"
+}

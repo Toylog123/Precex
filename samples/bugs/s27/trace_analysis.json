@@ -1,0 +1,35 @@
+{
+  "sample": "s27",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 8,
+    "key_signal_diffs": [
+      [
+        "reg1",
+        8
+      ],
+      [
+        "reg2",
+        8
+      ],
+      [
+        "reg0",
+        12
+      ],
+      [
+        "reg3",
+        16
+      ],
+      [
+        "S_AXI_RDATA",
+        24
+      ]
+    ],
+    "stuck_signals": [
+      "reg1"
+    ],
+    "cycles_compared": 37
+  },
+  "clk_sig": "ACLK"
+}

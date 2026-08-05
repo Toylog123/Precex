@@ -1,0 +1,41 @@
+{
+  "sample": "s06",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 1,
+    "key_signal_diffs": [
+      [
+        "empty",
+        1
+      ],
+      [
+        "empty_d",
+        4
+      ],
+      [
+        "count",
+        36
+      ],
+      [
+        "head",
+        36
+      ],
+      [
+        "dout",
+        36
+      ],
+      [
+        "count_d",
+        37
+      ],
+      [
+        "half_full",
+        46
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 51
+  },
+  "clk_sig": "clk"
+}

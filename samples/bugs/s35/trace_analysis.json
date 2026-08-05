@@ -1,0 +1,33 @@
+{
+  "sample": "s35",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 40,
+    "key_signal_diffs": [
+      [
+        "state",
+        40
+      ],
+      [
+        "state_d",
+        41
+      ],
+      [
+        "tx_busy",
+        41
+      ],
+      [
+        "baud_cnt",
+        41
+      ],
+      [
+        "baud_tick",
+        43
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 17384
+  },
+  "clk_sig": "clk"
+}

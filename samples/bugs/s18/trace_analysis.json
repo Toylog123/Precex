@@ -1,0 +1,41 @@
+{
+  "sample": "s18",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 5,
+    "key_signal_diffs": [
+      [
+        "state",
+        5
+      ],
+      [
+        "state_d",
+        6
+      ],
+      [
+        "bit_cnt",
+        439
+      ],
+      [
+        "rx_busy",
+        3911
+      ],
+      [
+        "rx_data",
+        3911
+      ],
+      [
+        "rx_valid",
+        3911
+      ],
+      [
+        "baud_cnt",
+        8686
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 17373
+  },
+  "clk_sig": "clk"
+}

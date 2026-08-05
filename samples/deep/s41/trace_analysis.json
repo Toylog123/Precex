@@ -1,0 +1,33 @@
+{
+  "sample": "s41",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 76,
+    "key_signal_diffs": [
+      [
+        "state",
+        76
+      ],
+      [
+        "state_d",
+        77
+      ],
+      [
+        "tx_busy",
+        77
+      ],
+      [
+        "baud_cnt",
+        77
+      ],
+      [
+        "baud_tick",
+        83
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 344
+  },
+  "clk_sig": "clk"
+}

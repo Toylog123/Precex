@@ -1,0 +1,19 @@
+{
+  "sample": "s17",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 6,
+    "key_signal_diffs": [
+      [
+        "S_AXI_BVALID",
+        6
+      ]
+    ],
+    "stuck_signals": [
+      "S_AXI_BVALID"
+    ],
+    "cycles_compared": 53
+  },
+  "clk_sig": "ACLK"
+}

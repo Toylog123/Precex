@@ -99,14 +99,20 @@ class VcdParser:
         # 每周期事件：取 [edge_t, next_edge_t) 内该信号最后一次值
         cycle_starts = [0] + edges
         self.cycle_events = []
+        cursors = {vid: 0 for vid in self.values}
         for ci, t0 in enumerate(cycle_starts):
             t1 = cycle_starts[ci + 1] if ci + 1 < len(cycle_starts) else None
             events = []
             for vid, changes in self.values.items():
+                j = cursors[vid]
+                n = len(changes)
+                while j < n and changes[j][0] < t0:
+                    j += 1
                 last = None
-                for (t, v) in changes:
-                    if t >= t0 and (t1 is None or t < t1):
-                        last = v
+                while j < n and (t1 is None or changes[j][0] < t1):
+                    last = changes[j][1]
+                    j += 1
+                cursors[vid] = j
                 if last is not None:
                     events.append({"sig": self.id2sig.get(vid, vid), "val": last})
             self.cycle_events.append({"cycle": ci, "time": t0, "events": events})

@@ -1,0 +1,21 @@
+{
+  "sample": "s11",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 5,
+    "key_signal_diffs": [
+      [
+        "cnt",
+        5
+      ],
+      [
+        "cnt_d",
+        6
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 620
+  },
+  "clk_sig": "clk"
+}

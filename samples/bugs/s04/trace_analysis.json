@@ -1,0 +1,17 @@
+{
+  "sample": "s04",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 10,
+    "key_signal_diffs": [
+      [
+        "half_full",
+        10
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 51
+  },
+  "clk_sig": "clk"
+}

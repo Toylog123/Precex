@@ -1,0 +1,29 @@
+{
+  "sample": "s28",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 4,
+    "key_signal_diffs": [
+      [
+        "reg0",
+        4
+      ],
+      [
+        "reg2",
+        12
+      ],
+      [
+        "S_AXI_RDATA",
+        24
+      ],
+      [
+        "reg1",
+        28
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 37
+  },
+  "clk_sig": "ACLK"
+}

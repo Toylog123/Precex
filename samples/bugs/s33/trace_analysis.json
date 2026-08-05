@@ -1,0 +1,12 @@
+{
+  "sample": "s33",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": null,
+    "key_signal_diffs": [],
+    "stuck_signals": [],
+    "cycles_compared": 53
+  },
+  "clk_sig": "ACLK"
+}

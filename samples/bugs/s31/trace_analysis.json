@@ -1,0 +1,21 @@
+{
+  "sample": "s31",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 610,
+    "key_signal_diffs": [
+      [
+        "alu_out",
+        610
+      ],
+      [
+        "alu_out_d",
+        611
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 620
+  },
+  "clk_sig": "clk"
+}

@@ -1,0 +1,53 @@
+{
+  "sample": "s23",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 20,
+    "key_signal_diffs": [
+      [
+        "count",
+        20
+      ],
+      [
+        "tail",
+        20
+      ],
+      [
+        "full",
+        20
+      ],
+      [
+        "count_d",
+        21
+      ],
+      [
+        "full_d",
+        21
+      ],
+      [
+        "dout",
+        22
+      ],
+      [
+        "half_full",
+        30
+      ],
+      [
+        "empty",
+        36
+      ],
+      [
+        "empty_d",
+        37
+      ],
+      [
+        "head",
+        38
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 51
+  },
+  "clk_sig": "clk"
+}

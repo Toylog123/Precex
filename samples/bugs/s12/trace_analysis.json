@@ -1,0 +1,21 @@
+{
+  "sample": "s12",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 1,
+    "key_signal_diffs": [
+      [
+        "head",
+        1
+      ],
+      [
+        "dout",
+        22
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 51
+  },
+  "clk_sig": "clk"
+}

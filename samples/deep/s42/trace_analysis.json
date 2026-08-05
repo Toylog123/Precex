@@ -1,0 +1,12 @@
+{
+  "sample": "s42",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": null,
+    "key_signal_diffs": [],
+    "stuck_signals": [],
+    "cycles_compared": 50
+  },
+  "clk_sig": "clk"
+}

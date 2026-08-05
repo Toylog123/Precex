@@ -1,0 +1,25 @@
+{
+  "sample": "s25",
+  "ok": true,
+  "error": "",
+  "analysis": {
+    "first_anomaly_cycle": 1,
+    "key_signal_diffs": [
+      [
+        "S_AXI_RVALID",
+        1
+      ],
+      [
+        "S_AXI_ARREADY",
+        24
+      ],
+      [
+        "S_AXI_RDATA",
+        24
+      ]
+    ],
+    "stuck_signals": [],
+    "cycles_compared": 37
+  },
+  "clk_sig": "ACLK"
+}
