@@ -1,0 +1,346 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""PreCex - scripts/build_structural_samples.py 结构性缺陷样本构造 (WP3)
+
+从 rtl 黄金基线生成"结构级"缺陷变体——改写跳转目标/删除保护分支等，
+复用 bug_injector 的断言内联+环境约束+三通过校验+7件套落盘管线。
+
+用法（WSL）:
+  python3 scripts/build_structural_samples.py --module fsm_ctrl --smoke
+  python3 scripts/build_structural_samples.py          # 全部模板
+"""
+from __future__ import annotations
+import argparse, json, os, re, shutil, subprocess, sys, tempfile
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(REPO_ROOT, "scripts"))
+sys.path.insert(0, os.path.join(REPO_ROOT, "harness"))
+import bug_injector  # noqa: E402
+import evaluator  # noqa: E402
+
+RTL_DIR = os.path.join(REPO_ROOT, "rtl")
+SAMPLES_DIR = os.path.join(REPO_ROOT, "samples", "structural")
+SAMPLES_BUGS = os.path.join(REPO_ROOT, "samples", "bugs")
+SAMPLES_DEEP = os.path.join(REPO_ROOT, "samples", "deep")
+
+# ---- 结构级模板：改写跳转/删除保护，diff >= 3 行 ----
+
+
+def _block_remove(src, marker, keep_comment=True):
+    """删除 marker 所在整块（begin/end 平衡）。"""
+    lines = src.splitlines(keepends=True)
+    start = None
+    for i, ln in enumerate(lines):
+        if marker in ln and "begin" in ln:
+            start = i
+            break
+    if start is None:
+        return None
+    depth = 0
+    end = start
+    for i in range(start, len(lines)):
+        depth += lines[i].count("begin") - lines[i].count("end")
+        if depth <= 0:
+            end = i
+            break
+    del_start = start - 1 if keep_comment and start > 0 and "//" in lines[start - 1] else start
+    del lines[del_start:end + 1]
+    return "".join(lines)
+
+
+def _branch_remove(src, cond_marker):
+    """删除 if (cond) begin ... end [else] 分支。"""
+    lines = src.splitlines(keepends=True)
+    start = None
+    for i, ln in enumerate(lines):
+        if cond_marker in ln and "begin" in ln:
+            start = i
+            break
+    if start is None:
+        return None
+    depth = 0
+    end = start
+    for i in range(start, len(lines)):
+        depth += lines[i].count("begin") - lines[i].count("end")
+        if depth <= 0:
+            end = i
+            break
+    j = end
+    while j + 1 < len(lines) and lines[j + 1].strip().startswith("//"):
+        j += 1
+    if j + 1 < len(lines) and lines[j + 1].strip().startswith("else"):
+        del lines[start:j + 1]
+    else:
+        del lines[start:end + 1]
+    return "".join(lines)
+
+
+def _jump_rewrite(src, old_line, new_line):
+    idx = src.find(old_line)
+    if idx < 0:
+        return None
+    return src[:idx] + new_line + src[idx + len(old_line):]
+
+
+def _timeout_remove(src):
+    """把三处 if (step_cnt >= TIMEOUT) begin ... end else 分支删除（超时保护整体移除）。"""
+    out = src
+    # S1/S2/S3 三处；每次删除后重新匹配（其余位置不变）
+    for _ in range(3):
+        before = out
+        out = _branch_remove(out, "if (step_cnt >= TIMEOUT) begin")
+        if out is None:
+            return before
+    return out
+
+
+STRUCTURAL = {
+    "fsm_ctrl": [
+        {
+            "desc": "S1 停留满后跳转目标 S2 改 S3（跳过 S2 停留，修复需重建 S2 中间态/停留逻辑 split_state）",
+            "fn": "jump_rewrite",
+            "args": ["state    <= S2;", "state    <= S3;"],
+            "hit": "fsm_ctrl A1（状态跳转合法性：S1->S3 非法）",
+            "error_type": "状态跳转", "error_type_code": "state_trans",
+            "template": "split_state",
+        },
+        {
+            "desc": "删除全部超时保护分支（step_cnt>=TIMEOUT 保护移除，修复需重插 guard_boundary）",
+            "fn": "timeout_remove",
+            "args": [],
+            "hit": "fsm_ctrl 强断言 A8（step_cnt 超阈值后必须回 IDLE）",
+            "error_type": "边界回绕", "error_type_code": "boundary_wrap",
+            "template": "guard_boundary",
+            "strong_assert": "timeout_guard",
+        },
+    ],
+    "uart_tx": [
+        {
+            "desc": "数据位结束跳转目标 S_STOP 改 S_IDLE（帧缺停止位，修复需重建 STOP 状态 split_state）",
+            "fn": "jump_rewrite_re",
+            "args": [r"state\s*<=\s*S_STOP;", "state    <= S_IDLE;"],
+            "hit": "uart_tx A4（DATA→STOP 收尾）",
+            "error_type": "状态跳转", "error_type_code": "state_trans",
+            "template": "split_state",
+            "param_override": {"CLK_FREQ": "400", "BAUD": "100"},
+        },
+    ],
+    "fifo_sync": [
+        {
+            "desc": "删除同拍读写 count 守恒分支（同时读写时 count 仍 +1，修复需重建守恒保护 guard_boundary）",
+            "fn": "branch_remove",
+            "args": ["if (can_wr && can_rd) begin"],
+            "hit": "fifo_sync A4（count 增量守恒）",
+            "error_type": "FIFO 满空", "error_type_code": "fifo_full",
+            "template": "guard_boundary",
+        },
+    ],
+}
+
+
+def _apply_template(golden, tpl):
+    fn = tpl["fn"]
+    if fn == "jump_rewrite":
+        buggy = _jump_rewrite(golden, tpl["args"][0], tpl["args"][1])
+    elif fn == "jump_rewrite_re":
+        m = re.search(tpl["args"][0], golden)
+        if not m:
+            return None, "jump_rewrite_re target not found"
+        buggy = golden[:m.start()] + tpl["args"][1] + golden[m.end():]
+    elif fn == "timeout_remove":
+        buggy = _timeout_remove(golden)
+    elif fn == "block_remove":
+        buggy = _block_remove(golden, tpl["args"][0])
+    elif fn == "branch_remove":
+        buggy = _branch_remove(golden, tpl["args"][0])
+    else:
+        return None, "unknown fn"
+    if buggy is None:
+        return None, "template match failed"
+    if buggy == golden:
+        return None, "template produced identical source"
+    return buggy, None
+
+
+def _build_sample(module, tpl, sample_id, out_dir, timeout):
+    """复用 bug_injector 管线：内联断言+环境约束 → 三通过校验 → 7件套落盘。"""
+    res = {"sample": sample_id, "module": module, "ok": False, "error": "", "template": tpl["template"]}
+    try:
+        golden = open(os.path.join(RTL_DIR, module, module + ".sv"), encoding="utf-8").read()
+        assertions = open(os.path.join(RTL_DIR, module, "assertions.sv"), encoding="utf-8").read()
+        tb = open(os.path.join(RTL_DIR, module, "tb_" + module + ".sv"), encoding="utf-8").read()
+        param_override = tpl.get("param_override")
+        if param_override:
+            golden = bug_injector._apply_params(golden, param_override)
+            assertions = bug_injector._apply_params(assertions, param_override)
+            tb = bug_injector._apply_params(tb, param_override)
+        buggy, err = _apply_template(golden, tpl)
+        if buggy is None:
+            res["error"] = err
+            return res
+        tb = bug_injector._weaken_tb(tb, tpl["error_type_code"])
+        tb = bug_injector._strip_tb_assert(tb)
+        # 内联断言 + 环境约束（复用 bug_injector 的 _finalize 逻辑）
+        def _finalize(design_src):
+            src = bug_injector._inline_assert(design_src, assertions, module)
+            clk_name, rst_name, quiet_inputs = bug_injector.RESET_SILENCE.get(
+                module, ("clk", "rst_n", []))
+            if quiet_inputs:
+                lines = [
+                    "\n    // 环境约束：初始拍处于复位（%s==0），复位释放沿（0->1）输入静默，"
+                    "与弱 tb 复位行为一致；设计内部状态由复位分支初始化（避免 initial 覆盖注入缺陷）" % rst_name,
+                    "    initial assume (!%s);" % rst_name,
+                    "    always @(posedge %s) begin" % clk_name,
+                    "        if (!%s) begin" % rst_name,
+                ]
+                for sig in quiet_inputs:
+                    lines.append("            assume (!%s);" % sig)
+                lines += ["        end", "    end", ""]
+                src = src.replace("endmodule", "\n".join(lines) + "\nendmodule\n")
+            for gclk, gexpr in bug_injector.GLOBAL_ASSUME.get(module, []):
+                ga = (
+                    "\n    // 环境约束：%s（断言依赖的环境假设，避免与缺陷无关的假反例）\n"
+                    "    always @(posedge %s) assume (%s);\n" % (gexpr, gclk, gexpr))
+                src = src.replace("endmodule", ga + "\nendmodule\n")
+            return src
+        golden_inline = _finalize(golden)
+        buggy_inline = _finalize(buggy)
+        # 强断言注入：超时保护必须存在（step_cnt 超阈值后下一拍必须回 IDLE）
+        if tpl.get("strong_assert") == "timeout_guard":
+            guard = (
+                "\n    // [structural] A8 强断言：非空闲且 step_cnt 达阈值后下一拍必须回 IDLE\n"
+                "    always @(posedge clk) begin\n"
+                "        if (rst_n && (state_d != S_IDLE) && (step_cnt_d >= TIMEOUT)) begin\n"
+                "            assert (state == S_IDLE);\n"
+                "        end\n"
+                "    end\n"
+            )
+            # 插在 A6 之前（endmodule 前的最后一个 always 之前）
+            buggy_inline = buggy_inline.replace(
+                "    // 环境约束：初始拍处于复位",
+                guard + "    // 环境约束：初始拍处于复位")
+            golden_inline = golden_inline.replace(
+                "    // 环境约束：初始拍处于复位",
+                guard + "    // 环境约束：初始拍处于复位")
+        top_mod, _params, _ports = bug_injector._module_info(golden)
+        tb_top = bug_injector._TB_MODULE.search(tb)
+        tb_top = tb_top.group(1) if tb_top else None
+        depth = bug_injector.MODULE_DEPTH.get(module, 24)
+        if param_override and module == "uart_tx":
+            try:
+                clk = int(param_override.get("CLK_FREQ", 50000000))
+                baud = int(param_override.get("BAUD", 115200))
+                div = max(1, clk // baud)
+                depth = 10 * div + 16
+            except ValueError:
+                pass
+        sby_file = os.path.join(out_dir, sample_id, "verify.sby")
+        os.makedirs(os.path.join(out_dir, sample_id), exist_ok=True)
+        with open(sby_file, "w", encoding="utf-8") as f:
+            f.write(bug_injector._gen_sby(module, top_mod, depth))
+        tmp_dir = tempfile.mkdtemp(prefix="struct_")
+        work_dir = tempfile.mkdtemp(prefix="sby_work_")
+        try:
+            for name, data in (("buggy.v", buggy_inline), ("golden.v", golden_inline),
+                               ("tb_weak.sv", tb)):
+                with open(os.path.join(tmp_dir, name), "w", encoding="utf-8") as f:
+                    f.write(data)
+            if module == "uart_rx":
+                shutil.copy(os.path.join(RTL_DIR, "uart_tx", "uart_tx.sv"), os.path.join(tmp_dir, "uart_tx.sv"))
+            t_sby = os.path.join(tmp_dir, "verify.sby")
+            with open(t_sby, "w", encoding="utf-8") as f:
+                f.write(bug_injector._gen_sby(module, top_mod, depth))
+            ok, detail = bug_injector._validate_candidate(
+                tmp_dir, tb_top, t_sby, depth, work_dir, module, top_mod)
+            res["compile"] = True
+            res["sim"] = detail.get("stage") != "sim"
+            res["formal"] = "fail" if ok else detail.get("stage")
+            if not ok:
+                res["error"] = "validate fail: %s" % json.dumps(detail, ensure_ascii=False)[:200]
+                return res
+            # 生成 diff 文本（golden vs buggy 原始设计，供 meta/复现）
+            diff = "".join(
+                "+ " + l if i in {0} else l for i, l in enumerate([])
+            ) or ""
+            # 用 git-style 简化 diff：直接记录模板描述
+            cmd_line = ("python3 scripts/build_structural_samples.py --module %s" % module)
+            sample_dir = os.path.join(out_dir, sample_id)
+            bug_injector._write_sample(
+                sample_dir, module, sample_id, golden_inline, buggy_inline, assertions,
+                tb, top_mod, tb_top, depth,
+                {"desc": tpl["desc"], "hit": tpl["hit"], "template": tpl["template"]},
+                1, diff,
+                {"err_name": tpl["error_type"], "code": tpl["error_type_code"]},
+                cmd_line, None, "L3",
+                {"structural_template": tpl["template"]})
+            copied = bug_injector._copy_cex(detail["sby_work"], sample_dir)
+            # 修正 _write_sample 生成的 meta（_doc %s 未格式化 / diff 空 / date 旧）
+            meta_p = os.path.join(sample_dir, "meta.json")
+            if os.path.isfile(meta_p):
+                meta = json.load(open(meta_p, encoding="utf-8"))
+                meta["_doc"] = ("PreCex L3 结构性缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | "
+                                "功能概述：结构级缺陷（跳转目标改写/保护分支删除），修复需结构性重写")
+                meta["diff"] = "structural: %s" % tpl["desc"]
+                meta["date"] = "2026-08-05"
+                meta["structural_template"] = tpl["template"]
+                with open(meta_p, "w", encoding="utf-8") as f:
+                    json.dump(meta, f, ensure_ascii=False, indent=2)
+            res["ok"] = True
+            res["copied_cex"] = copied
+        finally:
+            shutil.rmtree(tmp_dir, ignore_errors=True)
+            shutil.rmtree(work_dir, ignore_errors=True)
+    except Exception as e:
+        res["error"] = repr(e)[:250]
+    return res
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--module", default=None)
+    ap.add_argument("--out-dir", default=SAMPLES_DIR)
+    ap.add_argument("--jobs", type=int, default=4)
+    ap.add_argument("--timeout", type=float, default=180.0)
+    ap.add_argument("--smoke", action="store_true")
+    args = ap.parse_args(argv)
+    os.makedirs(args.out_dir, exist_ok=True)
+    tasks = []
+    for module, tpls in STRUCTURAL.items():
+        if args.module and module != args.module:
+            continue
+        for i, tpl in enumerate(tpls):
+            if args.smoke and i > 0:
+                continue
+            tasks.append((module, tpl))
+    existing = set()
+    for base in (SAMPLES_BUGS, SAMPLES_DEEP, args.out_dir):
+        if os.path.isdir(base):
+            for d in os.listdir(base):
+                m = re.match(r"^s(\d+)$", d)
+                if m:
+                    existing.add(int(m.group(1)))
+    nxt = 43
+    if existing:
+        nxt = max(nxt, max(existing) + 1)
+    results = []
+    with ThreadPoolExecutor(max_workers=args.jobs) as ex:
+        futs = []
+        for module, tpl in tasks:
+            sid = "s%02d" % nxt
+            nxt += 1
+            futs.append(ex.submit(_build_sample, module, tpl, sid, args.out_dir, args.timeout))
+        for fu in as_completed(futs):
+            r = fu.result()
+            results.append(r)
+            print("[%s] %s/%s ok=%s compile=%s sim=%s formal=%s err=%s" % (
+                r["sample"], r["module"], r["template"], r["ok"],
+                r.get("compile"), r.get("sim"), r.get("formal"),
+                (r.get("error") or "")[:100]), flush=True)
+    ok = sum(1 for r in results if r["ok"])
+    print("== done: ok=%d/%d ==" % (ok, len(results)), flush=True)
+    return 0 if ok == len(results) else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

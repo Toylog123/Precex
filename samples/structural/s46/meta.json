@@ -1,0 +1,26 @@
+{
+  "_doc": "PreCex L3 结构性缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：结构级缺陷（跳转目标改写/保护分支删除），修复需结构性重写",
+  "sample_id": "s46",
+  "module": "fifo_sync",
+  "error_type": "FIFO 满空",
+  "error_type_code": "fifo_full",
+  "level": "L3",
+  "inject_line": 1,
+  "buggy_inject_line": 5,
+  "inject_desc": "删除同拍读写 count 守恒分支（同时读写时 count 仍 +1，修复需重建守恒保护 guard_boundary）",
+  "diff": "structural: 删除同拍读写 count 守恒分支（同时读写时 count 仍 +1，修复需重建守恒保护 guard_boundary）",
+  "hit_assertion": "fifo_sync A4（count 增量守恒）",
+  "golden_source": "rtl/fifo_sync/fifo_sync.sv",
+  "date": "2026-08-05",
+  "reproduce_cmd": "python3 scripts/build_structural_samples.py --module fifo_sync",
+  "param_override": null,
+  "verification": {
+    "compile_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID",
+    "sim_ok": true,
+    "structural_template": "guard_boundary"
+  },
+  "structural_template": "guard_boundary"
+}

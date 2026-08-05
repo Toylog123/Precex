@@ -1,0 +1,26 @@
+{
+  "_doc": "PreCex L3 结构性缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：结构级缺陷（跳转目标改写/保护分支删除），修复需结构性重写",
+  "sample_id": "s44",
+  "module": "fsm_ctrl",
+  "error_type": "边界回绕",
+  "error_type_code": "boundary_wrap",
+  "level": "L3",
+  "inject_line": 1,
+  "buggy_inject_line": 5,
+  "inject_desc": "删除全部超时保护分支（step_cnt>=TIMEOUT 保护移除，修复需重插 guard_boundary）",
+  "diff": "structural: 删除全部超时保护分支（step_cnt>=TIMEOUT 保护移除，修复需重插 guard_boundary）",
+  "hit_assertion": "fsm_ctrl 强断言 A8（step_cnt 超阈值后必须回 IDLE）",
+  "golden_source": "rtl/fsm_ctrl/fsm_ctrl.sv",
+  "date": "2026-08-05",
+  "reproduce_cmd": "python3 scripts/build_structural_samples.py --module fsm_ctrl",
+  "param_override": null,
+  "verification": {
+    "compile_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID",
+    "sim_ok": true,
+    "structural_template": "guard_boundary"
+  },
+  "structural_template": "guard_boundary"
+}

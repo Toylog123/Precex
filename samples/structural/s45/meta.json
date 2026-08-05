@@ -1,0 +1,26 @@
+{
+  "_doc": "PreCex L3 结构性缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：结构级缺陷（跳转目标改写/保护分支删除），修复需结构性重写",
+  "sample_id": "s45",
+  "module": "uart_tx",
+  "error_type": "状态跳转",
+  "error_type_code": "state_trans",
+  "level": "L3",
+  "inject_line": 1,
+  "buggy_inject_line": 5,
+  "inject_desc": "数据位结束跳转目标 S_STOP 改 S_IDLE（帧缺停止位，修复需重建 STOP 状态 split_state）",
+  "diff": "structural: 数据位结束跳转目标 S_STOP 改 S_IDLE（帧缺停止位，修复需重建 STOP 状态 split_state）",
+  "hit_assertion": "uart_tx A4（DATA→STOP 收尾）",
+  "golden_source": "rtl/uart_tx/uart_tx.sv",
+  "date": "2026-08-05",
+  "reproduce_cmd": "python3 scripts/build_structural_samples.py --module uart_tx",
+  "param_override": null,
+  "verification": {
+    "compile_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID",
+    "sim_ok": true,
+    "structural_template": "split_state"
+  },
+  "structural_template": "split_state"
+}
