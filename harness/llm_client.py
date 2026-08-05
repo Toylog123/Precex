@@ -26,6 +26,7 @@
 
 import json
 import os
+import signal
 import socket
 import sys
 import time
@@ -219,33 +220,51 @@ class LLMClient:
         last_err = None
         for attempt in range(self.max_retries + 1):
             req = urllib_request.Request(url, data=body, headers=headers, method="POST")
+            def _alarm_handler(signum, frame):
+                raise socket.timeout("wall-clock timeout %.0fs exceeded" % (timeout + 10))
+            old_handler = None
             try:
-                with urllib_request.urlopen(req, timeout=timeout) as resp:
-                    try:
-                        return json.loads(resp.read().decode("utf-8"))
-                    except ValueError as e:
-                        raise RuntimeError("%s API 响应非合法 JSON：%s" % (self.provider_label, e))
-            except urllib_error.HTTPError as e:
-                # 429/5xx：可重试，指数退避后继续
-                if (e.code == 429 or e.code >= 500) and attempt < self.max_retries:
-                    time.sleep(min(1.5 * (2 ** attempt), 20.0))
-                    continue
-                detail = e.read().decode("utf-8", errors="replace")[:500]
-                if e.code == 429 or e.code >= 500:
+                old_handler = signal.getsignal(signal.SIGALRM)
+                signal.signal(signal.SIGALRM, _alarm_handler)
+                signal.alarm(int(timeout) + 10)
+            except Exception:
+                pass  # 非主线程/无 signal 环境降级为 urllib 自身超时
+            try:
+                try:
+                    with urllib_request.urlopen(req, timeout=timeout) as resp:
+                        try:
+                            return json.loads(resp.read().decode("utf-8"))
+                        except ValueError as e:
+                            raise RuntimeError("%s API 响应非合法 JSON：%s" % (self.provider_label, e))
+                except urllib_error.HTTPError as e:
+                    # 429/5xx：可重试，指数退避后继续
+                    if (e.code == 429 or e.code >= 500) and attempt < self.max_retries:
+                        time.sleep(min(1.5 * (2 ** attempt), 20.0))
+                        continue
+                    detail = e.read().decode("utf-8", errors="replace")[:500]
+                    if e.code == 429 or e.code >= 500:
+                        raise RuntimeError(
+                            "%s API 服务错误(HTTP %d)，重试 %d 次后仍失败：%s"
+                            % (self.provider_label, e.code, self.max_retries, detail))
+                    # 4xx（401/403 等）：不重试，提示检查 key
                     raise RuntimeError(
-                        "%s API 服务错误(HTTP %d)，重试 %d 次后仍失败：%s"
-                        % (self.provider_label, e.code, self.max_retries, detail))
-                # 4xx（401/403 等）：不重试，提示检查 key
-                raise RuntimeError(
-                    "%s API 请求被拒(HTTP %d)：%s\n提示：请检查 %s 是否正确、"
-                    "账户额度/权限是否可用。"
-                    % (self.provider_label, e.code, detail, PROVIDERS[self.provider]["env_key"]))
-            except (urllib_error.URLError, socket.timeout, TimeoutError) as e:
-                # 网络层错误（DNS/连接超时/socket 读超时等）：可重试
-                last_err = getattr(e, "reason", e)
-                if attempt < self.max_retries:
-                    time.sleep(min(1.5 * (2 ** attempt), 20.0))
-                    continue
+                        "%s API 请求被拒(HTTP %d)：%s\n提示：请检查 %s 是否正确、"
+                        "账户额度/权限是否可用。"
+                        % (self.provider_label, e.code, detail, PROVIDERS[self.provider]["env_key"]))
+                except (urllib_error.URLError, socket.timeout, TimeoutError) as e:
+                    # 网络层错误（DNS/连接超时/socket 读超时/墙钟 alarm 等）：可重试
+                    last_err = getattr(e, "reason", e)
+                    if attempt < self.max_retries:
+                        time.sleep(min(1.5 * (2 ** attempt), 20.0))
+                        continue
+            finally:
+                try:
+                    signal.alarm(0)
+                    if old_handler is not None:
+                        signal.signal(signal.SIGALRM, old_handler)
+                except Exception:
+                    pass
+
         raise RuntimeError("%s API 网络错误，重试 %d 次后仍失败：%s"
                            % (self.provider_label, self.max_retries, last_err))
 
