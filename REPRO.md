@@ -37,6 +37,9 @@ python3 scripts/build_evidence.py --samples s04-s37 --real --window 8
 python3 scripts/run_experiments_parallel.py --samples s04-s37 --settings A,B,C --seeds 0,1,2 --jobs 8 --detach
 python3 scripts/run_experiments_parallel.py --merge --out experiments/runs/experiments_results_parallel.json
 
+# 3b) 深时序专项子集（samples/deep/s38-s42，可选；深样本生成需注入器 --samples-dir deep）
+python3 scripts/run_experiments.py --samples s38-s42 --samples-dir deep --settings A,B --seeds 0,1,2 --provider deepseek
+
 # 4) 充分性量化（mutation/非空洞 + T2 审计 + bmc 重验）
 python3 scripts/verify_sufficiency.py --samples s04-s37
 python3 scripts/t2_audit.py --out experiments/runs/t2_audit_abc.json
@@ -75,7 +78,8 @@ cd submission_package && sha256sum -c verification/SHA256SUMS && cd ..
 | 主实验修正（BMC，论文口径） | experiments/runs/experiments_results_corrected.json | 306 条，repair_pass_bmc 全部 True；已入库 |
 | 跨模型重跑（DeepSeek） | experiments/runs/experiments_results_ds.json + experiments_results_ds_full3.json | 102 条（seed0）+ 306 条（三-seed）；均已入库 |
 | L2 假阳性率 | experiments/runs/experiments_results_l2.json | 72 条（A/B/C×24 L2 样本）；已入库 |
-| token 账本 | experiments/runs/token_ledger.jsonl | 1519 条，全部调用强制记账；已入库 |
+| token 账本 | experiments/runs/token_ledger.jsonl | 1519 条（论文冻结口径，含 69 条 mock 记账）已入库；工作区 1553 条（+34 深子集/调试，$0.1356）未提交 |
+| 深子集（DeepSeek A/B） | experiments/runs/deep_subset_ab.json | 30 条（5 深样本 × A/B × 3 seeds，BMC 判据；不入库，与账本约定一致） |
 | 充分性 | experiments/runs/reverify_bmc_all.json / t2_audit_abc.json / t2_audit_D.json | 303/303、408/408；均已入库 |
 | 验证计时 | experiments/runs/verify_timing.json | 重验逐样本 verify/golden 耗时；已入库 |
 | C 压缩对比 | experiments/runs/slim_compression.json | 原始 vs slim 字符/比率；已入库 |
@@ -87,7 +91,9 @@ cd submission_package && sha256sum -c verification/SHA256SUMS && cd ..
 - 公式：`cost = input_tokens × 输入单价/1M + output_tokens × 输出单价/1M`（USD）
 - MiniMax M3：输入 $0.60/1M、输出 $2.40/1M；>512K 上下文翻倍（代码注释标注"占位，以平台账单为准待校准"）
 - DeepSeek V4-Flash：输入 $0.14/1M（cache miss）、输出 $0.28/1M
-- 完整账本（2026-08-05）：**1519 次调用，$18.48**；主实验 408 runs（A/B/C/D）**$11.22、avg $0.0275**；DeepSeek 跨模型 306 次 $1.02 + L2 72 次 $0.29 + 可解释性 40 次 $0.11
+- 完整账本（2026-08-05，论文冻结口径）：**1519 次调用，$18.48**；主实验 408 runs（A/B/C/D）**$11.22、avg $0.0275**；DeepSeek 跨模型 306 次 $1.02 + L2 72 次 $0.29 + 可解释性 40 次 $0.11
+- 工作区账本另含深子集/调试追加 34 条（DeepSeek deep $0.0988 + MiniMax s04:A:seed0 复跑 $0.0368，合计 $0.1356）——未提交，待深子集进论文时并入
+- mock 模式记账为设计行为（mode=mock，HEAD 基线含 69 条）；验证用 mock 运行会追加 mock 行，注意清理
 - 分设置：A $2.78 / B $2.72 / C $4.17 / D $1.56；tokens A 1.99M / B 1.76M / C 3.50M / D 1.07M
 - 核对：token_ledger.jsonl 1519 条全部与公式一致（0 mismatch），上下文均 <512K
 
