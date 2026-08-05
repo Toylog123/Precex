@@ -85,6 +85,22 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
     ev_text = _build_evidence_text(setting, sample_dir)
     prompt = build_prompt(setting, design, assertions, ev_text, meta)
     prompt += "\n【重复试验】seed=%d（独立抽样标识，请独立判断）\n" % seed
+    # 反馈循环：每轮失败的 diff/原因进入下一轮 prompt（history 注入），
+    # 避免"开环重试"（重复相同错误补丁）。首次 prompt 与旧版一致。
+    retry_history = []
+
+    def _record_retry(failure_desc, diff_snippet=None):
+        """把一次失败尝试记入历史并重建下一轮 prompt（反馈循环）。"""
+        nonlocal prompt
+        retry_history.append({
+            "attempt": attempt,
+            "diff": (diff_snippet or "")[:1500],
+            "failure": failure_desc,
+        })
+        prompt = build_prompt(setting, design, assertions, ev_text, meta,
+                              history=retry_history)
+        prompt += "\n【重复试验】seed=%d attempt=%d（反馈循环第 %d 次，请避免上次失败模式）\n" % (
+            seed, attempt + 1, len(retry_history))
 
     result = {
         "sample": sample_id, "setting": setting, "seed": seed, "mock": mock,
@@ -129,10 +145,12 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
         result["loc_top1"] = (loc["line"] == buggy_line)
         if not diff_text:
             result["errors"].append("attempt %d: no diff" % attempt)
+            _record_retry("attempt %d: 未生成 diff（输出格式不符合 ###DIFF### 约定）" % attempt)
             continue
         ok, patched, err = apply_unified_diff(design, diff_text)
         if not ok:
             result["errors"].append("attempt %d: diff apply failed: %s" % (attempt, err))
+            _record_retry("attempt %d: diff 无法应用：%s" % (attempt, err), diff_text)
             continue
         work = os.path.join(out_dir, "%s_%s_seed%d_a%d" % (sample_id, setting, seed, attempt))
         os.makedirs(work, exist_ok=True)
@@ -177,6 +195,8 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
             break
         result["errors"].append("attempt %d: verdict=%s formal=%s" % (
             attempt, ev["verdict"], ev["formal"].get("result")))
+        _record_retry("verdict=%s formal=%s（修复后仍存在形式反例或验证未通过）"
+                      % (ev["verdict"], ev["formal"].get("result")), diff_text)
     return result
 
 
@@ -287,6 +307,7 @@ def main(argv=None):
     retries = 2
     out_path = DEFAULT_OUT
     verbose = False
+    check_compat = "--check-compat" in argv
     if "--samples" in argv:
         samples = argv[argv.index("--samples") + 1].split(",")
     if "--settings" in argv:
@@ -380,6 +401,19 @@ def main(argv=None):
         raise SystemExit("error: 0 任务可运行（请求样本=%s、设置=%s、seeds=%s）；"
                          "请检查 --samples/--tasks/--samples-dir（深样本用 --samples-dir deep）"
                          % (sample_ids, settings, seeds))
+    if check_compat:
+        # 工具链适配性预检（报错重写层）：LLM 调用前先扫不兼容 SVA/不可综合语法，
+        # 避免运行中 sby/iverilog 解析失败才暴露（评审缺陷 5）。
+        from check_rtl_compat import check_file
+        bad = []
+        for sid in sorted(dirs):
+            for hit in check_file(os.path.join(dirs[sid], "buggy.v")):
+                bad.append((sid,) + hit)
+        if bad:
+            msg = "\n".join("%s:%d: %s" % (b[0], b[2], b[4]) for b in bad)
+            raise SystemExit("error: --check-compat 发现 %d 处不兼容结构：\n%s\n"
+                             "请改写后再运行（见 scripts/check_rtl_compat.py 建议）" % (len(bad), msg))
+        print("[compat] %d 样本工具链适配性预检通过" % len(dirs))
     idx = 0
     # 增量写入：每完成一条 append 一行到 <out>.partial.jsonl，中断不丢进度；启动时跳过已完成键（断点续跑）
     partial_path = out_path + ".partial.jsonl"

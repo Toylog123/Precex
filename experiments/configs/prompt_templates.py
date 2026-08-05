@@ -44,9 +44,18 @@ reason: <一句话说明定位依据>
 """
 
 
-def build_prompt(setting, design, assertions, evidence_text, meta=None):
-    """组装 user prompt：任务说明 + 设计 + 断言 + 证据段 + 输出格式。"""
+def build_prompt(setting, design, assertions, evidence_text, meta=None, history=None):
+    """组装 user prompt：任务说明 + 设计 + 断言 + 证据段 + 输出格式。
+
+    history（可选）：list[dict]，每次修复尝试失败后追加一条：
+      {"attempt": int, "diff": str, "failure": str}
+    重试时注入【上次修复历史】，明确告诉 LLM 上一次生成的 diff 与失败原因，
+    并要求避免重复该模式——这是反馈循环（闭环承诺）在 prompt 层的兑现，
+    避免"开环重试"（第二轮只把相同 prompt 再发一次、LLM 重复相同错误补丁）。
+    首次调用不传 history 时输出与旧版逐字节一致（不改变已定案实验口径）。
+    """
     meta = meta or {}
+    history = history or []
     head = (
         "请定位并修复以下 RTL 设计中的跨周期行为缺陷（L3：弱 tb 通过但形式验证失败）。"
         + chr(10) + chr(10)
@@ -73,6 +82,20 @@ def build_prompt(setting, design, assertions, evidence_text, meta=None):
     )
     prompt += "【元数据】error_type=%s inject_line=%s（仅作参考，不代表答案）" % (
         meta.get("error_type", "?"), meta.get("inject_line", "?")) + chr(10)
+    if history:
+        prompt += chr(10) + "【上次修复历史（反馈循环）】" + chr(10)
+        for h in history:
+            prompt += (
+                "- 第 %d 次尝试：你上次生成的 diff 未通过验证。%s%s"
+                % (h.get("attempt", "?"),
+                   chr(10) + "  上次 diff：" + h.get("diff", "") + chr(10) if h.get("diff") else "",
+                   chr(10) + "  失败原因：" + h.get("failure", "?") + chr(10))
+            )
+        prompt += (
+            "要求：请先分析上次修复为何失败（它引入了什么新反例/为何未消除原反例），"
+            "然后给出**不同**的修复方案，不要重复该模式；若上次思路本身正确但实现有误，"
+            "请修正实现而非原样重发。" + chr(10)
+        )
     prompt += OUTPUT_FORMAT
     return prompt
 

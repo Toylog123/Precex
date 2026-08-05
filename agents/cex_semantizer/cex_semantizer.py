@@ -55,6 +55,19 @@ MODULE_CLK = {
 }
 
 
+def adaptive_window(fail_step, window=8):
+    """失败时刻尾部回溯：窗口随 fail_step 自适应放大。
+
+    固定 window=8 会把长反例（如 35-75 拍深时序样本）的关键因果尾部截断；
+    自适应策略保证 fail_step 附近的因果窗口覆盖至少 fail_step//2 拍
+    （上限 24 拍控制 token 成本），使"第 30 拍的根因"不会因固定窗口丢失。
+    返回 None 时由调用方保持默认 window（fail_step 未知）。
+    """
+    if fail_step is None:
+        return window
+    return max(int(window), min(24, fail_step // 2))
+
+
 def _load_json(path):
     try:
         with open(path, "r", encoding="utf-8") as f:
@@ -97,7 +110,7 @@ class CexSemantizer:
         self.vp = VcdParser(cex_path, clk_sig=clk_sig).parse() if os.path.isfile(cex_path) else None
         self.semantics = {}
 
-    def build(self, max_cycles=None, window=8):
+    def build(self, max_cycles=None, window=8, adaptive=False):
         """生成语义化证据（不含 NL 摘要，摘要由 summarize() 生成）。
 
         window: 触发窗口（fail_step 前后各保留的周期数）。压缩策略：
@@ -105,6 +118,8 @@ class CexSemantizer:
             之后截断（反例之后通常无新信息）；
           - 状态轨迹：与周期事件表同窗口；
           - 故障锥：只保留设计可见信号（过滤参数/内部辅助信号）。
+        adaptive: 为 True 时按 fail_step 自适应放大窗口（见 adaptive_window），
+          避免固定 8 拍截断长反例的关键因果尾部（架构级信息丢失）。
         """
         ev = self.evidence
         cycles = self.vp.cycle_events if self.vp else []
@@ -124,6 +139,8 @@ class CexSemantizer:
             prev = cur
         # 触发窗口压缩
         fail_step = ev.get("fail_step")
+        if adaptive and fail_step is not None:
+            window = adaptive_window(fail_step, window)
         if fail_step is not None and window > 0:
             lo = max(0, fail_step - window)
             hi = min(len(event_table), fail_step + window + 1)
@@ -147,7 +164,14 @@ class CexSemantizer:
             if pre_trace and pre_trace[-1]["cycle"] != lo - 1 and lo > 0:
                 pre_trace.append({"cycle": "...", "time": None})
             state_trace = pre_trace + state_trace[lo:hi]
-        # 故障锥（静态近似）：断言触发信号 + 代码切片引用的信号
+        # 故障锥（Fault Cone）：静态代码级扇入近似，算法如下（论文方法节 III-B 同口径）：
+        #   1. 触发集：失败断言表达式（trigger_condition）中出现的信号；
+        #   2. 切片集：失败行 ±4 行代码切片（code_slice）中引用的信号；
+        #   3. 关键信号集：KEY_SIGS 中在 VCD 中实际存在的控制/状态/计数/协议信号；
+        #   4. 取三者并集，再过滤参数/内部辅助信号（DATA_/OP_/f_ 前缀与数字开头标识符）。
+        # 说明：这是"静态扇入追溯"（代码文本依赖闭包），不是动态轨迹追踪——不要求根因信号
+        #   在波形内翻转（恒定错误值也能通过断言表达式/代码切片进入锥），也不会被 VCD 变化
+        #   过滤；代价是可能包含与缺陷无关的周边信号（论文作为已知边界声明）。
         cone = set()
         cone |= _extract_sig_names(ev.get("trigger_condition"))
         cone |= _extract_sig_names(ev.get("code_slice"))
@@ -163,6 +187,9 @@ class CexSemantizer:
             "error_type": ev.get("error_type"),
             "fail_stage": ev.get("fail_stage"),
             "fail_step": ev.get("fail_step"),
+            "window": window,
+            "fault_cone_algorithm": "static_code_fanin（trigger_condition ∪ code_slice ∪ key_signals，"
+                                    "过滤参数/内部前缀）",
             "failed_line": ev.get("line"),
             "trigger_condition": ev.get("trigger_condition"),
             "cycle_events": event_table,

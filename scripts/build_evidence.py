@@ -74,7 +74,9 @@ def main(argv=None):
     ap.add_argument("--samples", default="s04-s37", help="样本列表/区间（默认 s04-s37）")
     ap.add_argument("--mock", action="store_true", help="semantics 摘要用 mock（默认）")
     ap.add_argument("--real", action="store_true", help="semantics 摘要真实调用 MiniMax M3")
-    ap.add_argument("--window", type=int, default=8, help="语义化触发窗口（默认 8）")
+    ap.add_argument("--window", default="8",
+                    help="语义化触发窗口（默认 8；传 adaptive 时按 fail_step 自适应放大，"
+                         "避免长反例因果尾部被固定窗口截断）")
     ap.add_argument("--evidence-only", action="store_true", help="仅生成 evidence.json，不生成 semantics")
     args = ap.parse_args(argv)
 
@@ -85,6 +87,8 @@ def main(argv=None):
         print("warning: 未找到样本目录: %s" % ", ".join(missing))
 
     mock = not args.real
+    adaptive = str(args.window).lower() == "adaptive"
+    window = 8 if adaptive else int(args.window)
     ok = 0
     fail = []
     for sid, sdir in sorted(dirs.items()):
@@ -95,7 +99,7 @@ def main(argv=None):
                 sid, ev.get("module"), ev.get("line"), ev.get("fail_step"), ev.get("x_state_warn")))
             if not args.evidence_only:
                 cs = CexSemantizer(sdir)
-                cs.build(window=args.window)
+                cs.build(window=window, adaptive=adaptive)
                 cs.summarize(mock=mock)
                 write_json(os.path.join(sdir, "semantics.json"), cs.semantics)
                 print("[semantics] %s: cycles=%d cone=%d summary=%s" % (

@@ -158,11 +158,11 @@ AssertLLM2 & 断言生成 & --- & --- & --- & 变异驱动 \\
 \label{fig:pipeline}
 \end{figure}
 
-整体架构如图~\ref{fig:pipeline} 所示。PreCex 由四个核心组件与两个支撑元素构成（开源工具链 iverilog、Yosys\cite{yosys} 与 SymbiYosys\cite{sby}）。\textbf{EvidenceEngine} 将 cex.log 解析为统一 JSON 结构（错误类型、模块、文件、行号、代码片段、信号、触发条件、失败阶段与失败步）。\textbf{CexSemantizer} 将 VCD 转换为周期事件表、状态轨迹、故障锥与自然语言摘要（window=8 压缩）。\textbf{LocalRepairer} 以设计、断言与证据为输入（MiniMax M3，temperature 0.2），输出定位与最小统一 diff，重试不超过两轮。\textbf{Verifier} 执行三关验证：iverilog 编译零错误、弱测试平台仿真全绿、sby smtbmc+z3 BMC 无反例（主判据），并叠加 golden 双重校验。支撑元素为实验变量控制组件与 BugBench-PS 数据集资产。
+整体架构如图~\ref{fig:pipeline} 所示。PreCex 由四个核心组件与两个支撑元素构成（开源工具链 iverilog、Yosys\cite{yosys} 与 SymbiYosys\cite{sby}）。\textbf{EvidenceEngine} 将 cex.log 解析为统一 JSON 结构（错误类型、模块、文件、行号、代码片段、信号、触发条件、失败阶段与失败步）。\textbf{CexSemantizer} 将 VCD 转换为周期事件表、状态轨迹、故障锥与自然语言摘要（window=8 压缩）。\textbf{LocalRepairer} 以设计、断言与证据为输入（MiniMax M3，temperature 0.2），输出定位与最小统一 diff，重试不超过两轮；\textbf{每次失败尝试的 diff 与失败原因被注入下一轮 prompt}（历史修复记忆，见 \S\ref{sec:feedback}），明确要求 LLM 分析上次为何失败并避免重复该模式，避免“开环重试”重复同一错误补丁。\textbf{Verifier} 执行三关验证：iverilog 编译零错误、弱测试平台仿真全绿、sby smtbmc+z3 BMC 无反例（主判据），并叠加 golden 双重校验；工具链适配由断言安全子集（Gate-1 收敛）与前置兼容性预检（scripts/check\_rtl\_compat.py，见 \S\ref{sec:toolchain}）保障，工具解析失败按 INCONCLUSIVE 记录而非崩溃。支撑元素为实验变量控制组件与 BugBench-PS 数据集资产。
 
 \subsection{证据引擎与反例语义化}
 
-EvidenceEngine 以失败断言、错误类型与失败阶段的统一模式组织反例，输出稳定可解析的 evidence.json。CexSemantizer 在此基础上生成周期事件表（每周期信号变化）、状态轨迹（跨周期信号演化）、故障锥（与失败断言相关的信号依赖闭包）与自然语言摘要。实验表明主数据集反例普遍较短（VCD 时钟事件合计 295 拍，中位 6 拍，最长 41 拍），window=8 窗口压缩的收益有限——语义化的成本由摘要文本主导而非轨迹长度，这一观察直接支撑了第 V-D 节的成本分析。
+EvidenceEngine 以失败断言、错误类型与失败阶段的统一模式组织反例，输出稳定可解析的 evidence.json。CexSemantizer 在此基础上生成周期事件表（每周期信号变化）、状态轨迹（跨周期信号演化）、故障锥与自然语言摘要。\textbf{故障锥的算法为静态代码级扇入}：取失败断言表达式（trigger\_condition）、失败行 $\pm 4$ 行代码切片（code\_slice）与关键控制/状态/协议信号（按模块时钟域枚举的 KEY\_SIGS）三者并集，再过滤参数/内部辅助前缀（DATA\_/OP\_/f\_ 等）。它不依赖 VCD 中信号是否翻转——恒定错误值的根因信号仍经断言表达式/代码切片进入锥——但代价是可能包含与缺陷无关的周边信号，该边界在 \S\ref{sec:limitation} 如实声明。实验表明主数据集反例普遍较短（VCD 时钟事件合计 295 拍，中位 6 拍，最长 41 拍），window=8 窗口压缩的收益有限——语义化的成本由摘要文本主导而非轨迹长度，这一观察直接支撑了第 V-D 节的成本分析。需要指出，固定 window=8 会截断长反例的关键因果尾部：最长样本 41 拍，而 8 拍之后的窗口在状态机死锁/握手超时类缺陷上可能正是根因所在，属系统性信息损失而非成本权衡。为此 CexSemantizer 提供\textbf{失败时刻尾部回溯的自适应窗口}（window\_eff $=\max(8,\min(24,\lfloor fail\_step/2\rfloor))$），深时序子集（35--75 拍，仓库 samples/deep）的语义化已采用该策略；主数据集 34 样本为口径一致仍保留 window=8，该截断作为本版本的系统性局限列入 \S\ref{sec:limitation}。
 
 \subsection{四种证据表征}
 
@@ -202,10 +202,22 @@ D & FVDebug 式因果图（失败断言+故障锥+全周期状态轨迹+触发�
 \item \textbf{删除变异}：移除断言，作为空泛性控制，全部通过（若删除断言后仍能杀变异，说明断言冗余）。
 \end{itemize}
 
-模块级分析显示 axi 与 fifo 的强变异杀死率为 100\%，而 uart\_rx 最弱（强变异 55.0\%、常量变异 40.9\%）——结构断言对波特时序常量漂移不敏感，这是已记录的局限并列为未来工作。此外，T2 审计以确定性脚本替代 LLM 自证，对全部含 diff 的修复（A/B/C 306 条 + D 102 条）检查三类违规：接口/端口/参数变更、断言篡改、证据闭环一致性，均零失败；loc\_dev 中位数为 0（A/B/C 62.7\% 精确命中，D 69.6\%），补丁规模均值 2.1 行、最大值 6 行，证明修复保持最小化。
+模块级分析显示 axi 与 fifo 的强变异杀死率为 100\%，而 uart\_rx 最弱（强变异 55.0\%、常量变异 40.9\%）——结构断言对波特时序常量漂移不敏感，这是已记录的局限并列为未来工作。此外，T2 审计以确定性脚本替代 LLM 自证，对全部含 diff 的修复（A/B/C 306 条 + D 102 条）检查三类违规：接口/端口/参数变更、断言篡改、证据闭环一致性，均零失败；loc\_dev 中位数为 0（A/B/C 62.7\% 精确命中，D 69.6\%），补丁规模均值 2.1 行、最大值 6 行。\textbf{补丁“最小性”并非仅由规模数字佐证}：新增后验 delta-debugging 检查（scripts/minimize\_patch.py，见 \S\ref{sec:minimality}）对通过修复迭代移除 diff 中的改动单元，仅当移除后仍通过编译/仿真/BMC 三通过才保留，直至 1-minimal；在深时序子集真实修复上实测确认无冗余单元（移除任一单元即 FAIL，见 \S\ref{sec:minimality}）。
+
+\subsection{反馈循环与历史修复记忆}\label{sec:feedback}
+
+LocalRepairer 的重试并非"开环重试"：每次失败尝试的 diff 与失败原因（编译错误/仿真 FAIL/BMC 反例）被写入历史记录，并注入下一轮 prompt——prompt 显式给出"上次 diff + 失败原因 + 请避免该模式"的指令，要求 LLM 先分析上次修复为何失败再给出不同方案。该机制在实现层面已落地（scripts/run\_experiments.py 的 retry\_history），首次尝试的 prompt 与冻结协议逐字节一致，因此不影响已报告数字。需要诚实说明：主实验 408 次与跨模型 306 次运行于固定 prompt 协议（重试仅重复同一 prompt），报告的重试统计（MiniMax attempts=1.810、DeepSeek attempts=1.007）反映的是该协议下的行为；历史修复记忆是当前代码新增机制，面向后续扩展子集生效，用于消除"闭环承诺与开环实现"的落差。
+
+\subsection{最小补丁后验验证（delta-debugging）}\label{sec:minimality}
+
+"最小统一 diff"若不经过后验验证，只是对 LLM 提示词中"最小"二字的信任。为此新增确定性 delta-debugging 组件（scripts/minimize\_patch.py）：把通过三通过的修复 diff 拆成改动单元（每个 hunk 内连续的 -/+ 行块），贪心迭代尝试移除单元，仅当移除后仍通过编译/仿真/BMC 三通过才保留，直至 1-minimal。深时序子集真实修复实测：s40（fifo 满时仍写）修复 diff 为 1 单元，移除该单元后验证 FAIL，确认修复必要且无冗余改动；合成双单元用例（真实修复 + 注释级冗余 hunk）被正确约减到真实修复。诚实边界：1-minimal 是相对当前验证判据的，单行补丁仍可能是弱修复（例如引入冗余条件绕过触发路径）；delta-debugging 与 T2 审计（接口/断言不变）只约束该风险、不能根除，这属于"候选补丁生成器"定位的固有边界（见 \S\ref{sec:limitation}）。
+
+\subsection{工具链适配层}\label{sec:toolchain}
+
+系统对 Yosys/SymbiYosys 工具链的解析失败采用"预防 + 降级"两层设计：其一，断言安全子集（Gate-1 实测收敛）限定 immediate assert/assume、if 门控、打拍跨周期等结构，从源头避免并发 SVA（assert property、\$past、|->、\#\#n）等 Yosys/iverilog 不支持的结构进入形式验证；其二，前置兼容性预检（scripts/check\_rtl\_compat.py）在 LLM 调用前扫描设计/断言文件中的不兼容结构（并发 SVA、real 类型等），fail-fast 给出可操作改写建议，替代"运行中才崩溃"。验证阶段，工具超时/解析错误由 evaluator 归类为 INCONCLUSIVE 并记录（不中断流水线），与 golden-first 规则共同构成降级路径；主协议中证明/k-归纳对门控断言返回 UNKNOWN 的问题即由此路径处理（见第 V-F 节）。
 
 % =============================================================================
-% IV. 实验设置
+% IV. \u5b9e\u9a8c\u8bbe\u7f6e
 % =============================================================================
 \section{实验设置}
 
@@ -382,9 +394,11 @@ C 反例语义化 & 56.9\% & \textbf{62.7\%} & 100\% & 100\% \\
 \item 跨模型鲁棒性：修复率在 MiniMax M3 与 DeepSeek v4-flash 上均为 100\%（BMC 口径），但定位优势模型依赖——B 的优势仅在 MiniMax 上成立（61.8\% 对 A 47.1\%，$p=0.0035$），DeepSeek 上被 C 反超（62.7\% 对 B 54.9\%）；DeepSeek 成本为 MiniMax 的约 1/9.5，可作低成本复现通道。
 \end{itemize}
 
-未来工作包括：向工业协议与更大断言集扩展、更强的变异家族、多提供商多模型评测、GROVE 式跨样本知识层，以及以形式证明为奖励的强化学习修复。
+未来工作包括：(1) 将动态自适应反例窗口（失败时刻尾部回溯）正式纳入主数据集评测，并量化它对长周期（状态迁移/握手）定位精度的改善；(2) 放宽最小化约束，支持结构性重写候选（拆分状态、增加中间态）并与 delta-debugging 结合；(3) 顶层连接性审计：将修复放回原网表/SoC 交互环境验证模块外副作用；(4) 多候选并发验证与在线仲裁（探索与利用）；(5) 向工业协议与更大断言集扩展、更强变异家族、多提供商多模型评测、GROVE 式跨样本知识层，以及从“生成最小代码改动”向“生成更强的不变式约束”演进的修复范式。
 
-\subsection{局限性}
+\subsection{局限性}\label{sec:limitation}
+
+\textbf{架构边界：}本方法的定位是“快速生成并验证候选补丁”（candidate patch generator），而非“完全消除设计错误”。具体而言：(1) 修复成功定义为“反例消失”而非“不变式成立”——BMC 是有限深度的穷举测试，不是完备性证明，深度上界以外的错误仍可能存在；(2) “行级定位 + 最小 unified diff”的约束偏好局部修复——状态机拆分、增加中间态或重写状态转移条件等结构性重写可能需要十几行，超出最小化约束，这解释了为何状态迁移/握手类定位精度低（31.2\%--33.3\%）但修复率仍为 100\%——BMC 浅深度下小补丁可能绕过触发路径（弱修复），由 delta-debugging 与 T2 审计部分约束；(3) 验证为模块级，无顶层互联/协议栈审计，修复在模块外的副作用未覆盖；(4) 单流水线单候选，3 seeds 是离线统计而非在线多候选仲裁。这四点均列入未来工作。
 
 \textbf{内部效度：}所有结果以 BMC 为主判据；对带门控时序断言的模块，BMC 探测到缺陷深度加 2 并与 golden 验证交叉核对，但 BMC 深度上界并非完备性保证（深度敏感性抽查：axi\_lite\_slave 16→24、uart\_rx 24→32 的 5 个代表性修复在加深深度下仍全部通过）。LLM 推理是流水线唯一随机成分（3 seeds 配对统计），解析、提取与验证均为确定性。修复成功定义要求编译、弱测试平台回归与 BMC 无反例；不改变断言集的补丁仍可能在属性集之外改变行为，T2 审计通过接口与断言篡改检查约束该风险，但并非等价性检验。
 
