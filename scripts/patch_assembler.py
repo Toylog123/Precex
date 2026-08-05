@@ -42,21 +42,31 @@ action 含义：
 约束：不改变模块接口；不引入未声明信号；保持可综合风格。"""
 
 
-def build_intent_prompt(sample_dir, cex_text):
+def build_intent_prompt(sample_dir, cex_text, evidence_setting="B"):
     buggy = open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read()
     meta = json.load(open(os.path.join(sample_dir, "meta.json"), encoding="utf-8"))
+    ev_extra = ""
+    if evidence_setting in ("BT", "BH"):
+        try:
+            import run_experiments as RE
+            ev_extra = RE._build_evidence_text(evidence_setting, sample_dir)
+            ev_extra = ev_extra[:6000]
+        except Exception as e:
+            ev_extra = "动态证据注入失败: %s" % repr(e)[:80]
+    if evidence_setting == "B":
+        ev_block = "反例证据:" + cex_text[:2000]
+    else:
+        ev_block = "反例证据（结构化+动态分析）:" + ev_extra
     return {
         "messages": [
             {"role": "system", "content": SYSTEM_INTENT},
             {"role": "user", "content": (
-                "模块：%s\n错误类型：%s\n击穿断言：%s\n\n反例证据：\n%s\n\n"
-                "缺陷设计源码：\n```verilog\n%s\n```\n\n请输出修复意图 JSON。" % (
+                "模块: %s\n错误类型: %s\n击穿断言: %s\n\n%s\n\n"
+                "缺陷设计源码: \n%s\n\n请输出修复意图 JSON。" % (
                     meta.get("module"), meta.get("error_type"), meta.get("hit_assertion"),
-                    cex_text[:2000], buggy[:6000]))},
+                    ev_block, buggy[:6000]))},
         ]
     }
-
-
 def _extract_json_balanced(content):
     """从 content 提取第一个完整 JSON 对象（平衡花括号）。"""
     i = content.find("{")
@@ -507,7 +517,7 @@ def _find_sample_dir(sid):
     return None
 
 
-def run_one(sample_id, llm, mock, timeout):
+def run_one(sample_id, llm, mock, timeout, evidence="BH"):
     sample_dir = _find_sample_dir(sample_id)
     out = {"sample": sample_id, "ok": False, "error": "", "intent": None,
            "patched": False, "verdict": None, "cost": 0.0, "tokens": 0}
@@ -520,7 +530,7 @@ def run_one(sample_id, llm, mock, timeout):
     cxp = os.path.join(sample_dir, "cex.log")
     if os.path.isfile(cxp):
         cex = open(cxp, encoding="utf-8", errors="replace").read()
-    prompt = build_intent_prompt(sample_dir, cex)
+    prompt = build_intent_prompt(sample_dir, cex, evidence_setting=evidence)
     try:
         res = llm.chat(messages=prompt["messages"], temperature=0.2)
     except Exception as e:
@@ -573,13 +583,14 @@ def main(argv=None):
     ap.add_argument("--provider", default="deepseek")
     ap.add_argument("--mock", action="store_true")
     ap.add_argument("--timeout", type=float, default=180.0)
+    ap.add_argument("--evidence", default="BH", choices=["B", "BT", "BH"])
     ap.add_argument("--out", default=None)
     args = ap.parse_args(argv)
     llm = LLMClient(provider=args.provider, mock=args.mock)
     samples = [s.strip() for s in args.samples.split(",") if s.strip()]
     results = []
     for sid in samples:
-        r = run_one(sid, llm, args.mock, args.timeout)
+        r = run_one(sid, llm, args.mock, args.timeout, evidence=args.evidence)
         results.append(r)
         print("[%s] ok=%s verdict=%s formal=%s sim=%s intent=%s err=%s" % (
             sid, r["ok"], r["verdict"], r.get("formal"), r.get("sim"),
