@@ -31,6 +31,7 @@ sys.path.insert(0, os.path.join(REPO_ROOT, "scripts"))
 from llm_client import LLMClient  # noqa: E402
 from prompt_templates import SYSTEM_PROMPT, build_prompt  # noqa: E402
 from run_prestudy import parse_llm_output, apply_unified_diff  # noqa: E402
+import cex_diff  # noqa: E402
 import evaluator  # noqa: E402
 
 SAMPLES_BUGS = os.path.join(REPO_ROOT, "samples", "bugs")
@@ -42,6 +43,28 @@ BUGGY_HEADER_OFFSET = 4
 _SLIM_C = True  # C 证据激进出采样压缩开关（--no-slim-c 关闭，走完整原文）  # buggy.v 头注释偏移（与 bug_injector 一致）：缺陷行号 = inject_line + 4
 
 
+
+
+
+def _cex_diff_diagnosis(sample_dir, ev, meta):
+    """WP6：用新反例（evaluator 保留的 sby 输出）与旧反例差分，返回诊断文本。"""
+    tmp = ev.get("tmpdir")
+    if not tmp:
+        return ""
+    new_vcd = os.path.join(tmp, "sby_out", "engine_0", "trace.vcd")
+    new_log = os.path.join(tmp, "sby_out", "engine_0", "logfile.txt")
+    old_vcd = os.path.join(sample_dir, "cex.vcd")
+    old_log = os.path.join(sample_dir, "cex.log")
+    if not os.path.isfile(new_vcd) or not os.path.isfile(old_vcd):
+        return ""
+    clk = cex_diff.MODULE_CLK.get(meta.get("module"), "clk")
+    try:
+        old_fail, old_assert = cex_diff.extract_fail_step(old_log)
+        new_fail, _ = cex_diff.extract_fail_step(new_log)
+        r = cex_diff.analyze(old_vcd, new_vcd, clk, old_fail, new_fail)
+        return cex_diff.diagnosis_text(meta.get("sample_id", ""), r, old_assert)
+    except Exception as e:
+        return "（差分诊断失败：%s）" % repr(e)[:80]
 
 def expand_samples(spec):
     ids = []
@@ -77,7 +100,7 @@ def _extract_inline_assertions(design):
 
 
 def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retries=2,
-            verify_cfg=None):
+            verify_cfg=None, feedback="v1"):
     """单个 (sample, setting, seed) 评测。返回结果 dict。"""
     meta = json.load(open(os.path.join(sample_dir, "meta.json"), encoding="utf-8"))
     design = open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read()
@@ -180,6 +203,8 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
             if m:
                 tb_top = m.group(1)
         _ev_cfg = {"run_formal": True, "verbose": False, "tb_top": tb_top}
+        if feedback == "v2":
+            _ev_cfg["keep_tmp"] = True   # 保留 sby 临时目录以提取新反例做差分诊断
         if verify_cfg:
             _ev_cfg.update(verify_cfg)
         ev = evaluator.evaluate(work, _ev_cfg)
@@ -195,8 +220,14 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
             break
         result["errors"].append("attempt %d: verdict=%s formal=%s" % (
             attempt, ev["verdict"], ev["formal"].get("result")))
-        _record_retry("verdict=%s formal=%s（修复后仍存在形式反例或验证未通过）"
-                      % (ev["verdict"], ev["formal"].get("result")), diff_text)
+        diag = ""
+        if feedback == "v2":
+            diag = _cex_diff_diagnosis(sample_dir, ev, meta)
+        fail_desc = ("verdict=%s formal=%s（修复后仍存在形式反例或验证未通过）"
+                     % (ev["verdict"], ev["formal"].get("result")))
+        if diag:
+            fail_desc += "；【反例差分诊断】" + diag
+        _record_retry(fail_desc, diff_text)
     return result
 
 
@@ -305,6 +336,7 @@ def main(argv=None):
     seeds = [0, 1, 2]
     mock = False
     retries = 2
+    feedback = "v1"
     out_path = DEFAULT_OUT
     verbose = False
     check_compat = "--check-compat" in argv
@@ -324,6 +356,10 @@ def main(argv=None):
         mock = True
     if "--retries" in argv:
         retries = int(argv[argv.index("--retries") + 1])
+    if "--feedback" in argv:
+        feedback = argv[argv.index("--feedback") + 1]
+        if feedback not in ("v1", "v2"):
+            raise SystemExit("--feedback 必须是 v1|v2")
     if "--out" in argv:
         out_path = argv[argv.index("--out") + 1]
     provider = "minimax"
@@ -442,7 +478,7 @@ def main(argv=None):
                 print("[run %d/%d] sample=%s setting=%s seed=%d mock=%s" % (
                     idx, total, sid, st, sd, mock), flush=True)
                 r = run_one(dirs[sid], sid, st, sd, llm, out_dir, mock=mock, retries=retries,
-                            verify_cfg=verify_cfg)
+                            verify_cfg=verify_cfg, feedback=feedback)
                 print("[result] %s/%s/seed%d loc_top1=%s repair=%s verdict=%s cost=%.4f tokens=%d" % (
                     sid, st, sd, r["loc_top1"], r["repair_pass"], r["verdict"],
                     r["cost"], r["input_tokens"] + r["output_tokens"]), flush=True)

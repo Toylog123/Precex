@@ -302,8 +302,11 @@ def evaluate(sample_dir, cfg=None):
         else:
             verdict = "INCONCLUSIVE"
 
-        return {"sample": sample, "compile": compile_res, "sim": sim_res,
-                "formal": formal_res, "verdict": verdict}
+        out = {"sample": sample, "compile": compile_res, "sim": sim_res,
+               "formal": formal_res, "verdict": verdict}
+        if cfg.get("keep_tmp"):
+            out["tmpdir"] = tmpdir
+        return out
     finally:
         # 结束后清理运行产物（keep_tmp=True 时保留）
         if not cfg.get("keep_tmp"):
