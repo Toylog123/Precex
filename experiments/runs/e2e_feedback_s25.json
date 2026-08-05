@@ -1,0 +1,72 @@
+{
+  "summary": {
+    "total": 1,
+    "ok": 1,
+    "patched": 1,
+    "rounds": 1,
+    "attempts": 1,
+    "cost": 0.0005
+  },
+  "results": [
+    {
+      "sample": "s25",
+      "ok": true,
+      "rounds": 1,
+      "attempts": 1,
+      "cost": 0.0005356400000000001,
+      "tokens": 3326,
+      "rounds_detail": [
+        {
+          "round": 1,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": true,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S_AXI_RVALID 的复位分支赋值",
+                "params": {
+                  "signal": "S_AXI_RVALID",
+                  "location": "always @(posedge ACLK or negedge ARESETN) 读数据通道，if (!ARESETN) 分支",
+                  "from": "1'b1",
+                  "to": "1'b0"
+                },
+                "rationale": "AXI 协议要求复位释放后 RVALID 必须为低，原代码在复位时被错误置 1，导致复位后读数据通道立即宣告有效，违反 A8 复位释放输出断言。"
+              },
+              "error": "",
+              "cost": 0.0005356400000000001,
+              "tokens": 3326,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "PASS",
+              "formal": "pass",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "S_AXI_AWREADY",
+                  "S_AXI_WREADY",
+                  "S_AXI_BRESP",
+                  "S_AXI_BVALID",
+                  "S_AXI_ARREADY",
+                  "S_AXI_RDATA",
+                  "S_AXI_RRESP",
+                  "S_AXI_RVALID"
+                ],
+                "cycles_compared": 37,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            }
+          ],
+          "ok": true,
+          "diag": ""
+        }
+      ],
+      "errors": [],
+      "verdict": "PASS",
+      "patched": true
+    }
+  ]
+}

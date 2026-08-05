@@ -1,0 +1,160 @@
+{
+  "summary": {
+    "total": 1,
+    "ok": 1,
+    "patched": 1,
+    "rounds": 2,
+    "attempts": 4,
+    "cost": 0.0031
+  },
+  "results": [
+    {
+      "sample": "s40",
+      "ok": true,
+      "rounds": 2,
+      "attempts": 4,
+      "cost": 0.0031004400000000003,
+      "tokens": 17619,
+      "rounds_detail": [
+        {
+          "round": 1,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": false,
+              "intent": {
+                "action": "guard_boundary",
+                "target": "can_wr",
+                "params": {
+                  "fix": "can_wr = wr_en && !full"
+                },
+                "rationale": "恢复满标志对写使能的保护，确保满时禁止写入，避免击穿A1断言。"
+              },
+              "error": "",
+              "cost": 0.0005021800000000001,
+              "tokens": 3394,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "FAIL",
+              "formal": "fail",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "dout",
+                  "full",
+                  "empty",
+                  "half_full"
+                ],
+                "cycles_compared": 23,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            },
+            {
+              "temp": 0.5,
+              "ok": false,
+              "intent": {
+                "action": "edit_assign",
+                "target": "can_wr",
+                "params": {
+                  "new_expression": "wr_en && !full"
+                },
+                "rationale": "满标志未参与写使能门控，需恢复 !full 条件以阻止满时写入。"
+              },
+              "error": "assemble fail (no change)",
+              "cost": 0.00049574,
+              "tokens": 3371,
+              "audit": null,
+              "audit_error": ""
+            },
+            {
+              "temp": 0.8,
+              "ok": false,
+              "intent": {
+                "action": "edit_assign",
+                "target": "can_wr",
+                "params": {
+                  "new_expression": "wr_en && !full"
+                },
+                "rationale": "满标志未参与写使能门控，导致满时仍可写入，违反A1断言；应恢复为满时禁止写。"
+              },
+              "error": "assemble fail (no change)",
+              "cost": 0.00053186,
+              "tokens": 3500,
+              "audit": null,
+              "audit_error": ""
+            }
+          ],
+          "ok": false,
+          "diag": "样本 s40：旧反例 step 35 失败，新反例 失败步数与旧反例相同（##   0:01:10  Assert failed in fifo_sync: buggy.v:122.58-123.36 ($assert$buggy.v:122$111)）",
+          "history": [
+            {
+              "round": 1,
+              "temp": 0.2,
+              "failure": "验证失败 verdict=FAIL formal=fail sim=True",
+              "diag": "样本 s40：旧反例 step 35 失败，新反例 失败步数与旧反例相同（##   0:01:10  Assert failed in fifo_sync: buggy.v:122.58-123.36 ($assert$buggy.v:122$111)）"
+            },
+            {
+              "round": 1,
+              "temp": 0.5,
+              "failure": "assemble fail (no change)",
+              "diag": "样本 s40：旧反例 step 35 失败，新反例 失败步数与旧反例相同（##   0:01:10  Assert failed in fifo_sync: buggy.v:122.58-123.36 ($assert$buggy.v:122$111)）"
+            },
+            {
+              "round": 1,
+              "temp": 0.8,
+              "failure": "assemble fail (no change)",
+              "diag": "样本 s40：旧反例 step 35 失败，新反例 失败步数与旧反例相同（##   0:01:10  Assert failed in fifo_sync: buggy.v:122.58-123.36 ($assert$buggy.v:122$111)）"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": true,
+              "intent": {
+                "action": "edit_assign",
+                "target": "can_wr 赋值（行 30）",
+                "params": {
+                  "original": "wire can_wr = wr_en ;",
+                  "fixed": "wire can_wr = wr_en && !full;"
+                },
+                "rationale": "满时仍写导致 count 溢出越过 DEPTH，恢复 can_wr 的 !full 门控即可从根因满足 A1。"
+              },
+              "error": "",
+              "cost": 0.00157066,
+              "tokens": 7354,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "PASS",
+              "formal": "pass",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "dout",
+                  "full",
+                  "empty",
+                  "half_full"
+                ],
+                "cycles_compared": 23,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            }
+          ],
+          "ok": true,
+          "diag": ""
+        }
+      ],
+      "errors": [],
+      "verdict": "PASS",
+      "patched": true
+    }
+  ]
+}

@@ -1,0 +1,631 @@
+{
+  "summary": {
+    "experiment": "2b-e2e-feedback-closed-loop",
+    "date": "2026-08-05",
+    "provider": "DeepSeek",
+    "model": "deepseek-v4-flash",
+    "evidence": "B",
+    "max_rounds": 2,
+    "temps": [
+      0.2,
+      0.5,
+      0.8
+    ],
+    "verification": "四通过（compile/sim/formal/top-audit）",
+    "total": 6,
+    "ok": 6,
+    "patched": 6,
+    "rounds": 8,
+    "attempts": 14,
+    "cost": 0.0103,
+    "tokens": 59249,
+    "multi_round_converged": [
+      "s38",
+      "s40"
+    ],
+    "first_round_pass": [
+      "s15",
+      "s17",
+      "s25",
+      "s39"
+    ]
+  },
+  "results": [
+    {
+      "sample": "s15",
+      "ok": true,
+      "rounds": 1,
+      "attempts": 1,
+      "cost": 0.00047320000000000006,
+      "tokens": 2998,
+      "rounds_detail": [
+        {
+          "round": 1,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": true,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S_IDLE 状态中 if(tx_start) 分支",
+                "params": {
+                  "assign": "txd <= 1'b0;"
+                },
+                "rationale": "起始位必须在进入 START 的同一拍拉低，否则 START 状态首拍 txd 仍为高，击穿 A1 断言。"
+              },
+              "error": "",
+              "cost": 0.00047320000000000006,
+              "tokens": 2998,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "PASS",
+              "formal": "pass",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "txd",
+                  "tx_busy"
+                ],
+                "cycles_compared": 17384,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            }
+          ],
+          "ok": true,
+          "diag": ""
+        }
+      ],
+      "errors": [],
+      "verdict": "PASS",
+      "patched": true
+    },
+    {
+      "sample": "s17",
+      "ok": true,
+      "rounds": 1,
+      "attempts": 1,
+      "cost": 0.0005779200000000001,
+      "tokens": 3525,
+      "rounds_detail": [
+        {
+          "round": 1,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": true,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S_AXI_BVALID 释放分支（else if (S_AXI_BVALID && S_AXI_BREADY)）",
+                "params": {
+                  "signal": "S_AXI_BVALID",
+                  "condition": "S_AXI_BVALID && S_AXI_BREADY",
+                  "value": "1'b0"
+                },
+                "rationale": "恢复被删除的 BVALID 释放赋值，确保写响应在 BREADY 后撤销，满足握手完成条件。"
+              },
+              "error": "",
+              "cost": 0.0005779200000000001,
+              "tokens": 3525,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "PASS",
+              "formal": "pass",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "S_AXI_AWREADY",
+                  "S_AXI_WREADY",
+                  "S_AXI_BRESP",
+                  "S_AXI_BVALID",
+                  "S_AXI_ARREADY",
+                  "S_AXI_RDATA",
+                  "S_AXI_RRESP",
+                  "S_AXI_RVALID"
+                ],
+                "cycles_compared": 53,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            }
+          ],
+          "ok": true,
+          "diag": ""
+        }
+      ],
+      "errors": [],
+      "verdict": "PASS",
+      "patched": true
+    },
+    {
+      "sample": "s25",
+      "ok": true,
+      "rounds": 1,
+      "attempts": 1,
+      "cost": 0.0005356400000000001,
+      "tokens": 3326,
+      "rounds_detail": [
+        {
+          "round": 1,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": true,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S_AXI_RVALID 的复位分支赋值",
+                "params": {
+                  "signal": "S_AXI_RVALID",
+                  "location": "always @(posedge ACLK or negedge ARESETN) 读数据通道，if (!ARESETN) 分支",
+                  "from": "1'b1",
+                  "to": "1'b0"
+                },
+                "rationale": "AXI 协议要求复位释放后 RVALID 必须为低，原代码在复位时被错误置 1，导致复位后读数据通道立即宣告有效，违反 A8 复位释放输出断言。"
+              },
+              "error": "",
+              "cost": 0.0005356400000000001,
+              "tokens": 3326,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "PASS",
+              "formal": "pass",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "S_AXI_AWREADY",
+                  "S_AXI_WREADY",
+                  "S_AXI_BRESP",
+                  "S_AXI_BVALID",
+                  "S_AXI_ARREADY",
+                  "S_AXI_RDATA",
+                  "S_AXI_RRESP",
+                  "S_AXI_RVALID"
+                ],
+                "cycles_compared": 37,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            }
+          ],
+          "ok": true,
+          "diag": ""
+        }
+      ],
+      "errors": [],
+      "verdict": "PASS",
+      "patched": true
+    },
+    {
+      "sample": "s38",
+      "ok": true,
+      "rounds": 2,
+      "attempts": 6,
+      "cost": 0.005172300000000001,
+      "tokens": 28557,
+      "rounds_detail": [
+        {
+          "round": 1,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": false,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S_DATA 状态中 bit_cnt==DATA_W-1 时的 state 赋值",
+                "params": {
+                  "original": "state <= S_IDLE;",
+                  "corrected": "state <= S_STOP;"
+                },
+                "rationale": "数据位结束后应进入 STOP 状态发送停止位，而不是直接回 IDLE，否则帧缺少停止位击穿 A4 跳转检查。"
+              },
+              "error": "",
+              "cost": 0.0005875800000000002,
+              "tokens": 3621,
+              "audit": false,
+              "audit_error": "",
+              "verdict": "FAIL",
+              "formal": "fail",
+              "sim": false,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "txd",
+                  "tx_busy"
+                ],
+                "cycles_compared": 6,
+                "first_diff_cycle": 4,
+                "diff_sigs": {
+                  "txd": 4,
+                  "tx_busy": 4
+                },
+                "match": false
+              }
+            },
+            {
+              "temp": 0.5,
+              "ok": false,
+              "intent": {
+                "action": "split_state",
+                "target": "S_DATA 状态内 bit_cnt==DATA_W-1 分支",
+                "params": {
+                  "from": "S_DATA",
+                  "to": "S_IDLE",
+                  "fix_to": "S_STOP"
+                },
+                "rationale": "数据位结束后应进入 STOP 状态发送停止位，原代码直接跳回 IDLE 导致缺少停止位，击穿 A4。"
+              },
+              "error": "",
+              "cost": 0.0005517400000000001,
+              "tokens": 3493,
+              "audit": false,
+              "audit_error": "",
+              "verdict": "FAIL",
+              "formal": "fail",
+              "sim": false,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "txd",
+                  "tx_busy"
+                ],
+                "cycles_compared": 17,
+                "first_diff_cycle": 9,
+                "diff_sigs": {
+                  "tx_busy": 9,
+                  "txd": 13
+                },
+                "match": false
+              }
+            },
+            {
+              "temp": 0.8,
+              "ok": false,
+              "intent": {
+                "action": "split_state",
+                "target": "S_DATA 状态中 bit_cnt==DATA_W-1 的分支跳转",
+                "params": {
+                  "from": "S_DATA",
+                  "to": "S_STOP",
+                  "condition": "baud_tick && bit_cnt == DATA_W-1",
+                  "desc": "最后一位数据位结束后应先进入 STOP 状态，而不要直接回 IDLE"
+                },
+                "rationale": "恢复被跳过的 STOP 中间状态，使 DATA→STOP→IDLE 合法跳转序列成立。"
+              },
+              "error": "",
+              "cost": 0.0006284600000000001,
+              "tokens": 3767,
+              "audit": false,
+              "audit_error": "",
+              "verdict": "FAIL",
+              "formal": "fail",
+              "sim": false,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "txd",
+                  "tx_busy"
+                ],
+                "cycles_compared": 17,
+                "first_diff_cycle": 12,
+                "diff_sigs": {
+                  "tx_busy": 12,
+                  "txd": 13
+                },
+                "match": false
+              }
+            }
+          ],
+          "ok": false,
+          "diag": "样本 s38：旧反例 step 39 失败，新反例 失败步数前移 32 拍（恶化）（##   0:00:08  Assert failed in uart_tx: buggy.v:143.34-144.37 ($assert$buggy.v:143$94)）；新反例中值变化的信号：rst_n,state,state_d,tx_start,tx_data,txd,tx_busy,bit_cnt；状态疑似卡死：bit_cnt 在失败前连续不变；协议提示：UART TX 起始位握手：tx_start 有效后 tx_busy 拉高，同时 txd 必须立即输出低电平起始位并保持一个位周期（A1 断言）；busy 期间 txd 按位输出，帧结束后恢复高电平。",
+          "history": [
+            {
+              "round": 1,
+              "temp": 0.2,
+              "failure": "验证失败 verdict=FAIL formal=fail sim=False",
+              "diag": "样本 s38：旧反例 step 39 失败，新反例 失败步数前移 32 拍（恶化）（##   0:00:08  Assert failed in uart_tx: buggy.v:143.34-144.37 ($assert$buggy.v:143$94)）；新反例中值变化的信号：rst_n,state,state_d,tx_start,tx_data,txd,tx_busy,bit_cnt；状态疑似卡死：bit_cnt 在失败前连续不变；协议提示：UART TX 起始位握手：tx_start 有效后 tx_busy 拉高，同时 txd 必须立即输出低电平起始位并保持一个位周期（A1 断言）；busy 期间 txd 按位输出，帧结束后恢复高电平。"
+            },
+            {
+              "round": 1,
+              "temp": 0.5,
+              "failure": "验证失败 verdict=FAIL formal=fail sim=False",
+              "diag": "样本 s38：旧反例 step 39 失败，新反例 失败步数前移 32 拍（恶化）（##   0:00:08  Assert failed in uart_tx: buggy.v:143.34-144.37 ($assert$buggy.v:143$94)）；新反例中值变化的信号：rst_n,state,state_d,tx_start,tx_data,txd,tx_busy,bit_cnt；状态疑似卡死：bit_cnt 在失败前连续不变；协议提示：UART TX 起始位握手：tx_start 有效后 tx_busy 拉高，同时 txd 必须立即输出低电平起始位并保持一个位周期（A1 断言）；busy 期间 txd 按位输出，帧结束后恢复高电平。"
+            },
+            {
+              "round": 1,
+              "temp": 0.8,
+              "failure": "验证失败 verdict=FAIL formal=fail sim=False",
+              "diag": "样本 s38：旧反例 step 39 失败，新反例 失败步数前移 32 拍（恶化）（##   0:00:08  Assert failed in uart_tx: buggy.v:143.34-144.37 ($assert$buggy.v:143$94)）；新反例中值变化的信号：rst_n,state,state_d,tx_start,tx_data,txd,tx_busy,bit_cnt；状态疑似卡死：bit_cnt 在失败前连续不变；协议提示：UART TX 起始位握手：tx_start 有效后 tx_busy 拉高，同时 txd 必须立即输出低电平起始位并保持一个位周期（A1 断言）；busy 期间 txd 按位输出，帧结束后恢复高电平。"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": false,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S_DATA 状态下 baud_tick 有效且 bit_cnt == DATA_W-1 时的 state 赋值",
+                "params": {
+                  "original_assignment": "state <= S_IDLE;",
+                  "revised_assignment": "state <= S_STOP;"
+                },
+                "rationale": "数据位最后一拍应进入 STOP 状态发送停止位，原代码错误直接跳回 IDLE，导致非法 DATA→IDLE 跳转并击穿 A4；直接修正该转移目标即可。"
+              },
+              "error": "assemble fail (no change)",
+              "cost": 0.0011981200000000002,
+              "tokens": 6118,
+              "audit": null,
+              "audit_error": ""
+            },
+            {
+              "temp": 0.5,
+              "ok": false,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S_DATA 状态中 bit_cnt == DATA_W-1 的跳转分支",
+                "params": {
+                  "original_assignment": "state <= S_IDLE;",
+                  "fixed_assignment": "state <= S_STOP;"
+                },
+                "rationale": "数据位最后一拍直接跳回 IDLE 会跳过停止位，违反 A4 的 DATA→STOP 合法跳转，应改为进入 S_STOP 完成帧收尾。"
+              },
+              "error": "assemble fail (no change)",
+              "cost": 0.00128884,
+              "tokens": 6442,
+              "audit": null,
+              "audit_error": ""
+            },
+            {
+              "temp": 0.8,
+              "ok": true,
+              "intent": {
+                "action": "split_state",
+                "target": "S_DATA 状态中 bit_cnt==DATA_W-1 的跳转分支",
+                "params": {
+                  "skipped_state": "S_STOP",
+                  "original_next_state": "S_IDLE",
+                  "correct_next_state": "S_STOP",
+                  "condition": "baud_tick && (bit_cnt == DATA_W-1)"
+                },
+                "rationale": "数据位最后一位结束后必须插入 STOP 状态再回 IDLE，不能直接从 DATA 跳回 IDLE；上一轮在等待/计数逻辑上打补丁导致状态推进卡死，本次直接补回被跳过的 STOP 状态即可恢复 A4 合法跳转。"
+              },
+              "error": "",
+              "cost": 0.0009175600000000002,
+              "tokens": 5116,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "PASS",
+              "formal": "pass",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "txd",
+                  "tx_busy"
+                ],
+                "cycles_compared": 184,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            }
+          ],
+          "ok": true,
+          "diag": ""
+        }
+      ],
+      "errors": [],
+      "verdict": "PASS",
+      "patched": true
+    },
+    {
+      "sample": "s39",
+      "ok": true,
+      "rounds": 1,
+      "attempts": 1,
+      "cost": 0.00048286,
+      "tokens": 3224,
+      "rounds_detail": [
+        {
+          "round": 1,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": true,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S1 状态中的 step_cnt >= (TIMEOUT-1'b1) 超时判断",
+                "params": {
+                  "original": "step_cnt >= (TIMEOUT - 1'b1)",
+                  "fixed": "step_cnt >= TIMEOUT"
+                },
+                "rationale": "将超时阈值从 TIMEOUT-1 改回 TIMEOUT，确保 timeout_irq 仅在 step_cnt 达到真正超时值后产生，满足 A3 前置条件。"
+              },
+              "error": "",
+              "cost": 0.00048286,
+              "tokens": 3224,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "PASS",
+              "formal": "pass",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "done",
+                  "timeout_irq",
+                  "state"
+                ],
+                "cycles_compared": 50,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            }
+          ],
+          "ok": true,
+          "diag": ""
+        }
+      ],
+      "errors": [],
+      "verdict": "PASS",
+      "patched": true
+    },
+    {
+      "sample": "s40",
+      "ok": true,
+      "rounds": 2,
+      "attempts": 4,
+      "cost": 0.0031004400000000003,
+      "tokens": 17619,
+      "rounds_detail": [
+        {
+          "round": 1,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": false,
+              "intent": {
+                "action": "guard_boundary",
+                "target": "can_wr",
+                "params": {
+                  "fix": "can_wr = wr_en && !full"
+                },
+                "rationale": "恢复满标志对写使能的保护，确保满时禁止写入，避免击穿A1断言。"
+              },
+              "error": "",
+              "cost": 0.0005021800000000001,
+              "tokens": 3394,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "FAIL",
+              "formal": "fail",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "dout",
+                  "full",
+                  "empty",
+                  "half_full"
+                ],
+                "cycles_compared": 23,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            },
+            {
+              "temp": 0.5,
+              "ok": false,
+              "intent": {
+                "action": "edit_assign",
+                "target": "can_wr",
+                "params": {
+                  "new_expression": "wr_en && !full"
+                },
+                "rationale": "满标志未参与写使能门控，需恢复 !full 条件以阻止满时写入。"
+              },
+              "error": "assemble fail (no change)",
+              "cost": 0.00049574,
+              "tokens": 3371,
+              "audit": null,
+              "audit_error": ""
+            },
+            {
+              "temp": 0.8,
+              "ok": false,
+              "intent": {
+                "action": "edit_assign",
+                "target": "can_wr",
+                "params": {
+                  "new_expression": "wr_en && !full"
+                },
+                "rationale": "满标志未参与写使能门控，导致满时仍可写入，违反A1断言；应恢复为满时禁止写。"
+              },
+              "error": "assemble fail (no change)",
+              "cost": 0.00053186,
+              "tokens": 3500,
+              "audit": null,
+              "audit_error": ""
+            }
+          ],
+          "ok": false,
+          "diag": "样本 s40：旧反例 step 35 失败，新反例 失败步数与旧反例相同（##   0:01:10  Assert failed in fifo_sync: buggy.v:122.58-123.36 ($assert$buggy.v:122$111)）",
+          "history": [
+            {
+              "round": 1,
+              "temp": 0.2,
+              "failure": "验证失败 verdict=FAIL formal=fail sim=True",
+              "diag": "样本 s40：旧反例 step 35 失败，新反例 失败步数与旧反例相同（##   0:01:10  Assert failed in fifo_sync: buggy.v:122.58-123.36 ($assert$buggy.v:122$111)）"
+            },
+            {
+              "round": 1,
+              "temp": 0.5,
+              "failure": "assemble fail (no change)",
+              "diag": "样本 s40：旧反例 step 35 失败，新反例 失败步数与旧反例相同（##   0:01:10  Assert failed in fifo_sync: buggy.v:122.58-123.36 ($assert$buggy.v:122$111)）"
+            },
+            {
+              "round": 1,
+              "temp": 0.8,
+              "failure": "assemble fail (no change)",
+              "diag": "样本 s40：旧反例 step 35 失败，新反例 失败步数与旧反例相同（##   0:01:10  Assert failed in fifo_sync: buggy.v:122.58-123.36 ($assert$buggy.v:122$111)）"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": true,
+              "intent": {
+                "action": "edit_assign",
+                "target": "can_wr 赋值（行 30）",
+                "params": {
+                  "original": "wire can_wr = wr_en ;",
+                  "fixed": "wire can_wr = wr_en && !full;"
+                },
+                "rationale": "满时仍写导致 count 溢出越过 DEPTH，恢复 can_wr 的 !full 门控即可从根因满足 A1。"
+              },
+              "error": "",
+              "cost": 0.00157066,
+              "tokens": 7354,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "PASS",
+              "formal": "pass",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "dout",
+                  "full",
+                  "empty",
+                  "half_full"
+                ],
+                "cycles_compared": 23,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            }
+          ],
+          "ok": true,
+          "diag": ""
+        }
+      ],
+      "errors": [],
+      "verdict": "PASS",
+      "patched": true
+    }
+  ]
+}

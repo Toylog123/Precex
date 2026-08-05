@@ -1,0 +1,237 @@
+{
+  "summary": {
+    "total": 1,
+    "ok": 1,
+    "patched": 1,
+    "rounds": 2,
+    "attempts": 6,
+    "cost": 0.0052
+  },
+  "results": [
+    {
+      "sample": "s38",
+      "ok": true,
+      "rounds": 2,
+      "attempts": 6,
+      "cost": 0.005172300000000001,
+      "tokens": 28557,
+      "rounds_detail": [
+        {
+          "round": 1,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": false,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S_DATA 状态中 bit_cnt==DATA_W-1 时的 state 赋值",
+                "params": {
+                  "original": "state <= S_IDLE;",
+                  "corrected": "state <= S_STOP;"
+                },
+                "rationale": "数据位结束后应进入 STOP 状态发送停止位，而不是直接回 IDLE，否则帧缺少停止位击穿 A4 跳转检查。"
+              },
+              "error": "",
+              "cost": 0.0005875800000000002,
+              "tokens": 3621,
+              "audit": false,
+              "audit_error": "",
+              "verdict": "FAIL",
+              "formal": "fail",
+              "sim": false,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "txd",
+                  "tx_busy"
+                ],
+                "cycles_compared": 6,
+                "first_diff_cycle": 4,
+                "diff_sigs": {
+                  "txd": 4,
+                  "tx_busy": 4
+                },
+                "match": false
+              }
+            },
+            {
+              "temp": 0.5,
+              "ok": false,
+              "intent": {
+                "action": "split_state",
+                "target": "S_DATA 状态内 bit_cnt==DATA_W-1 分支",
+                "params": {
+                  "from": "S_DATA",
+                  "to": "S_IDLE",
+                  "fix_to": "S_STOP"
+                },
+                "rationale": "数据位结束后应进入 STOP 状态发送停止位，原代码直接跳回 IDLE 导致缺少停止位，击穿 A4。"
+              },
+              "error": "",
+              "cost": 0.0005517400000000001,
+              "tokens": 3493,
+              "audit": false,
+              "audit_error": "",
+              "verdict": "FAIL",
+              "formal": "fail",
+              "sim": false,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "txd",
+                  "tx_busy"
+                ],
+                "cycles_compared": 17,
+                "first_diff_cycle": 9,
+                "diff_sigs": {
+                  "tx_busy": 9,
+                  "txd": 13
+                },
+                "match": false
+              }
+            },
+            {
+              "temp": 0.8,
+              "ok": false,
+              "intent": {
+                "action": "split_state",
+                "target": "S_DATA 状态中 bit_cnt==DATA_W-1 的分支跳转",
+                "params": {
+                  "from": "S_DATA",
+                  "to": "S_STOP",
+                  "condition": "baud_tick && bit_cnt == DATA_W-1",
+                  "desc": "最后一位数据位结束后应先进入 STOP 状态，而不要直接回 IDLE"
+                },
+                "rationale": "恢复被跳过的 STOP 中间状态，使 DATA→STOP→IDLE 合法跳转序列成立。"
+              },
+              "error": "",
+              "cost": 0.0006284600000000001,
+              "tokens": 3767,
+              "audit": false,
+              "audit_error": "",
+              "verdict": "FAIL",
+              "formal": "fail",
+              "sim": false,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "txd",
+                  "tx_busy"
+                ],
+                "cycles_compared": 17,
+                "first_diff_cycle": 12,
+                "diff_sigs": {
+                  "tx_busy": 12,
+                  "txd": 13
+                },
+                "match": false
+              }
+            }
+          ],
+          "ok": false,
+          "diag": "样本 s38：旧反例 step 39 失败，新反例 失败步数前移 32 拍（恶化）（##   0:00:08  Assert failed in uart_tx: buggy.v:143.34-144.37 ($assert$buggy.v:143$94)）；新反例中值变化的信号：rst_n,state,state_d,tx_start,tx_data,txd,tx_busy,bit_cnt；状态疑似卡死：bit_cnt 在失败前连续不变；协议提示：UART TX 起始位握手：tx_start 有效后 tx_busy 拉高，同时 txd 必须立即输出低电平起始位并保持一个位周期（A1 断言）；busy 期间 txd 按位输出，帧结束后恢复高电平。",
+          "history": [
+            {
+              "round": 1,
+              "temp": 0.2,
+              "failure": "验证失败 verdict=FAIL formal=fail sim=False",
+              "diag": "样本 s38：旧反例 step 39 失败，新反例 失败步数前移 32 拍（恶化）（##   0:00:08  Assert failed in uart_tx: buggy.v:143.34-144.37 ($assert$buggy.v:143$94)）；新反例中值变化的信号：rst_n,state,state_d,tx_start,tx_data,txd,tx_busy,bit_cnt；状态疑似卡死：bit_cnt 在失败前连续不变；协议提示：UART TX 起始位握手：tx_start 有效后 tx_busy 拉高，同时 txd 必须立即输出低电平起始位并保持一个位周期（A1 断言）；busy 期间 txd 按位输出，帧结束后恢复高电平。"
+            },
+            {
+              "round": 1,
+              "temp": 0.5,
+              "failure": "验证失败 verdict=FAIL formal=fail sim=False",
+              "diag": "样本 s38：旧反例 step 39 失败，新反例 失败步数前移 32 拍（恶化）（##   0:00:08  Assert failed in uart_tx: buggy.v:143.34-144.37 ($assert$buggy.v:143$94)）；新反例中值变化的信号：rst_n,state,state_d,tx_start,tx_data,txd,tx_busy,bit_cnt；状态疑似卡死：bit_cnt 在失败前连续不变；协议提示：UART TX 起始位握手：tx_start 有效后 tx_busy 拉高，同时 txd 必须立即输出低电平起始位并保持一个位周期（A1 断言）；busy 期间 txd 按位输出，帧结束后恢复高电平。"
+            },
+            {
+              "round": 1,
+              "temp": 0.8,
+              "failure": "验证失败 verdict=FAIL formal=fail sim=False",
+              "diag": "样本 s38：旧反例 step 39 失败，新反例 失败步数前移 32 拍（恶化）（##   0:00:08  Assert failed in uart_tx: buggy.v:143.34-144.37 ($assert$buggy.v:143$94)）；新反例中值变化的信号：rst_n,state,state_d,tx_start,tx_data,txd,tx_busy,bit_cnt；状态疑似卡死：bit_cnt 在失败前连续不变；协议提示：UART TX 起始位握手：tx_start 有效后 tx_busy 拉高，同时 txd 必须立即输出低电平起始位并保持一个位周期（A1 断言）；busy 期间 txd 按位输出，帧结束后恢复高电平。"
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": false,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S_DATA 状态下 baud_tick 有效且 bit_cnt == DATA_W-1 时的 state 赋值",
+                "params": {
+                  "original_assignment": "state <= S_IDLE;",
+                  "revised_assignment": "state <= S_STOP;"
+                },
+                "rationale": "数据位最后一拍应进入 STOP 状态发送停止位，原代码错误直接跳回 IDLE，导致非法 DATA→IDLE 跳转并击穿 A4；直接修正该转移目标即可。"
+              },
+              "error": "assemble fail (no change)",
+              "cost": 0.0011981200000000002,
+              "tokens": 6118,
+              "audit": null,
+              "audit_error": ""
+            },
+            {
+              "temp": 0.5,
+              "ok": false,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S_DATA 状态中 bit_cnt == DATA_W-1 的跳转分支",
+                "params": {
+                  "original_assignment": "state <= S_IDLE;",
+                  "fixed_assignment": "state <= S_STOP;"
+                },
+                "rationale": "数据位最后一拍直接跳回 IDLE 会跳过停止位，违反 A4 的 DATA→STOP 合法跳转，应改为进入 S_STOP 完成帧收尾。"
+              },
+              "error": "assemble fail (no change)",
+              "cost": 0.00128884,
+              "tokens": 6442,
+              "audit": null,
+              "audit_error": ""
+            },
+            {
+              "temp": 0.8,
+              "ok": true,
+              "intent": {
+                "action": "split_state",
+                "target": "S_DATA 状态中 bit_cnt==DATA_W-1 的跳转分支",
+                "params": {
+                  "skipped_state": "S_STOP",
+                  "original_next_state": "S_IDLE",
+                  "correct_next_state": "S_STOP",
+                  "condition": "baud_tick && (bit_cnt == DATA_W-1)"
+                },
+                "rationale": "数据位最后一位结束后必须插入 STOP 状态再回 IDLE，不能直接从 DATA 跳回 IDLE；上一轮在等待/计数逻辑上打补丁导致状态推进卡死，本次直接补回被跳过的 STOP 状态即可恢复 A4 合法跳转。"
+              },
+              "error": "",
+              "cost": 0.0009175600000000002,
+              "tokens": 5116,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "PASS",
+              "formal": "pass",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "txd",
+                  "tx_busy"
+                ],
+                "cycles_compared": 184,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            }
+          ],
+          "ok": true,
+          "diag": ""
+        }
+      ],
+      "errors": [],
+      "verdict": "PASS",
+      "patched": true
+    }
+  ]
+}

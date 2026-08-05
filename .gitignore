@@ -1,4 +1,4 @@
-# PreCex - Git ignore
+﻿# PreCex - Git ignore
 # 作者：Toylog | 版本：v0.1 | 功能概述：排除构建产物、仿真输出与本地环境文件
 
 # Python
@@ -100,3 +100,12 @@ samples/**/gc/
 !experiments/runs/multi_candidate_ds_hard.json
 !experiments/runs/multi_candidate_ds_bh_hard.json
 !experiments/runs/cross_model_arbitration.json
+
+!experiments/runs/e2e_feedback_6hard.json
+!experiments/runs/e2e_feedback_s15.json
+!experiments/runs/e2e_feedback_s17.json
+!experiments/runs/e2e_feedback_s25.json
+!experiments/runs/e2e_feedback_s38.json
+!experiments/runs/e2e_feedback_s39.json
+!experiments/runs/e2e_feedback_s40.json
+

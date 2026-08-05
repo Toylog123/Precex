@@ -1,0 +1,63 @@
+{
+  "summary": {
+    "total": 1,
+    "ok": 1,
+    "patched": 1,
+    "rounds": 1,
+    "attempts": 1,
+    "cost": 0.0005
+  },
+  "results": [
+    {
+      "sample": "s15",
+      "ok": true,
+      "rounds": 1,
+      "attempts": 1,
+      "cost": 0.00047320000000000006,
+      "tokens": 2998,
+      "rounds_detail": [
+        {
+          "round": 1,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": true,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S_IDLE 状态中 if(tx_start) 分支",
+                "params": {
+                  "assign": "txd <= 1'b0;"
+                },
+                "rationale": "起始位必须在进入 START 的同一拍拉低，否则 START 状态首拍 txd 仍为高，击穿 A1 断言。"
+              },
+              "error": "",
+              "cost": 0.00047320000000000006,
+              "tokens": 2998,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "PASS",
+              "formal": "pass",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "txd",
+                  "tx_busy"
+                ],
+                "cycles_compared": 17384,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            }
+          ],
+          "ok": true,
+          "diag": ""
+        }
+      ],
+      "errors": [],
+      "verdict": "PASS",
+      "patched": true
+    }
+  ]
+}

@@ -312,10 +312,88 @@ def _gen_split_state(buggy, intent):
     return None
 
 
+def _gen_cond_replace(buggy, old_s, new_s, params):
+    """条件表达式替换：把 buggy 中的旧条件（宽松空白匹配）替换为新条件。
+    用于 guard_boundary 的『条件修改』语义（s39：TIMEOUT-1 -> TIMEOUT），
+    只替换匹配到的行内条件片段，绝不复制/插入整块保护逻辑。"""
+    if not old_s or not new_s:
+        return None
+    def _fold(s):
+        return " ".join(str(s).split())
+    old_f = _fold(old_s)
+    new_f = _fold(new_s)
+    if old_f == new_f:
+        return None
+    # 宽松空白模式
+    loose_old = "".join((chr(92) + "s*" if ch.isspace() else re.escape(ch)) for ch in old_f)
+    pat = re.compile(loose_old)
+    lines = buggy.splitlines(keepends=True)
+    out_lines = []
+    replaced = 0
+    for ln in lines:
+        code_part = ln.split("//")[0]  # 去掉行内注释后再匹配，避免注释里的旧条件被误替换
+        if pat.search(code_part):
+            new_code = pat.sub(_fold(new_s), code_part)
+            if new_code != code_part:
+                out_lines.append(new_code + ln[len(code_part):])
+                replaced += 1
+                continue
+        out_lines.append(ln)
+    if replaced == 0:
+        return None
+    return "".join(out_lines)
+
+
+def _auto_find_old_cond(buggy, new_cond):
+    """自动发现被改坏的旧条件：同一信号（LHS）同一比较符、RHS 不同（阈值偏移）的最相近条件。
+    仅用于『条件修改』语义（s39 类）；找不到返回 None（保持插入语义）。"""
+    def _fold(s):
+        return " ".join(str(s).split())
+    m = re.match(r"^(\w+)\s*(<=|>=|<|>|==|!=)\s*(.+)$", _fold(new_cond))
+    if not m:
+        return None
+    lhs, op, rhs = m.group(1), m.group(2), m.group(3).strip()
+    candidates = []
+    for ln in buggy.splitlines():
+        code = ln.split("//")[0]
+        m2 = re.search(r"\b(%s)\s*(<=|>=|<|>|==|!=)\s*(.+?)\s*;?\s*$" % re.escape(lhs), code)
+        if not m2:
+            continue
+        c_lhs, c_op, c_rhs = m2.group(1), m2.group(2), m2.group(3).strip()
+        if c_op == op and _fold(c_rhs) != _fold(rhs):
+            candidates.append((ln, c_lhs + " " + c_op + " " + _fold(c_rhs)))
+    if not candidates:
+        return None
+    # 优先选含 TIMEOUT-1 / 数值偏移的（阈值提前一拍类）
+    for ln, c in candidates:
+        if "TIMEOUT" in c and "1" in c and "-" in c:
+            return c
+    return candidates[0][1]
+
+
 def _gen_guard_boundary(buggy, intent, module):
     """guard_boundary：恢复被删的保护分支。fsm 走 _fsm_timeout_insert（golden 链式结构）。"""
     params = intent.get("params") or {}
     cond = params.get("condition") or ""
+    # 条件修改类意图（s39：超时阈值提前一拍 TIMEOUT-1 -> TIMEOUT）应做条件表达式替换，
+    # 而非插入缺失保护分支；否则 _fsm_timeout_insert 会把保护块重复插到多处制造垃圾。
+    replace_old = (params.get("original_condition") or params.get("replace_condition")
+                   or params.get("old_expr") or params.get("buggy_condition")
+                   or params.get("wrong_condition") or params.get("original") or "")
+    replace_new = (params.get("corrected_condition") or params.get("new_condition")
+                   or params.get("fixed_condition") or params.get("correct_condition")
+                   or params.get("boundary_expr") or params.get("corrected")
+                   or params.get("expected") or params.get("condition") or "")
+    # 若 LLM 只给出正确条件（condition/boundary_expr），自动发现 buggy 中同信号
+    # 不同阈值的旧条件（阈值偏移类缺陷：TIMEOUT-1 -> TIMEOUT）
+    if replace_new and not replace_old:
+        auto_old = _auto_find_old_cond(buggy, replace_new)
+        if auto_old:
+            replace_old = auto_old
+    if replace_old or replace_new:
+        p = _gen_cond_replace(buggy, replace_old, replace_new, params)
+        if p:
+            return p
     if module == "fsm_ctrl" and ("TIMEOUT" in cond or "TIMEOUT" in str(intent.get("target"))):
         return _fsm_timeout_insert(buggy)
     # s46 fifo：恢复 count 三路更新
@@ -707,6 +785,19 @@ def assemble(buggy, intent, module):
         p = _gen_assign_expr_restore(buggy, intent)
         if p:
             return p
+        # 条件表达式替换（s39 类：if (step_cnt >= (TIMEOUT-1'b1)) -> >= TIMEOUT）。
+        # LLM 常用 edit_assign 表达『改阈值条件』，需在赋值替换前尝试条件替换。
+        params = intent.get("params") or {}
+        old_c = (params.get("original") or params.get("old_expression")
+                 or params.get("old_condition") or params.get("buggy")
+                 or params.get("original_condition") or params.get("修改前") or "")
+        new_c = (params.get("fixed") or params.get("new_expression")
+                 or params.get("new_condition") or params.get("corrected")
+                 or params.get("fixed_condition") or params.get("修改后") or "")
+        if old_c or new_c:
+            p = _gen_cond_replace(buggy, old_c, new_c, params)
+            if p:
+                return p
         return _gen_edit_assign(buggy, intent)
     return None
 

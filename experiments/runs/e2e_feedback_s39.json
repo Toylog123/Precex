@@ -1,0 +1,65 @@
+{
+  "summary": {
+    "total": 1,
+    "ok": 1,
+    "patched": 1,
+    "rounds": 1,
+    "attempts": 1,
+    "cost": 0.0005
+  },
+  "results": [
+    {
+      "sample": "s39",
+      "ok": true,
+      "rounds": 1,
+      "attempts": 1,
+      "cost": 0.00048286,
+      "tokens": 3224,
+      "rounds_detail": [
+        {
+          "round": 1,
+          "candidates": [
+            {
+              "temp": 0.2,
+              "ok": true,
+              "intent": {
+                "action": "edit_assign",
+                "target": "S1 状态中的 step_cnt >= (TIMEOUT-1'b1) 超时判断",
+                "params": {
+                  "original": "step_cnt >= (TIMEOUT - 1'b1)",
+                  "fixed": "step_cnt >= TIMEOUT"
+                },
+                "rationale": "将超时阈值从 TIMEOUT-1 改回 TIMEOUT，确保 timeout_irq 仅在 step_cnt 达到真正超时值后产生，满足 A3 前置条件。"
+              },
+              "error": "",
+              "cost": 0.00048286,
+              "tokens": 3224,
+              "audit": true,
+              "audit_error": "",
+              "verdict": "PASS",
+              "formal": "pass",
+              "sim": true,
+              "compile": true,
+              "audit_detail": {
+                "sigs_compared": [
+                  "done",
+                  "timeout_irq",
+                  "state"
+                ],
+                "cycles_compared": 50,
+                "first_diff_cycle": null,
+                "diff_sigs": {},
+                "match": true
+              }
+            }
+          ],
+          "ok": true,
+          "diag": ""
+        }
+      ],
+      "errors": [],
+      "verdict": "PASS",
+      "patched": true
+    }
+  ]
+}
