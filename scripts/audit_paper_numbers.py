@@ -120,6 +120,25 @@ check("icc C actionability 0.774", abs(sm["icc"]["C"]["actionability"]-0.774) < 
 check("icc D ~0", sm["icc"]["D"]["causality"] == 0 and sm["icc"]["D"]["actionability"] == 0)
 check("interp cost 0.11", abs(sm["session_cost"]-0.114) < 0.01, "got %.4f" % sm["session_cost"])
 
+# 9. deep subset (s38-s42 x A/B/C/D x 3 seeds = 60)
+deep = load("experiments/runs/deep_subset_4settings.json")
+deeprows = [r for r in deep["results"] if r.get("sample") != "s38"]
+dby = collections.defaultdict(lambda: {"n":0,"loc":0,"rep":0,"cost":0.0})
+for r in deeprows:
+    a = dby[r["setting"]]
+    a["n"] += 1
+    if r.get("loc_top1"): a["loc"] += 1
+    if r.get("repair_pass") or str(r.get("verdict","")).startswith("PASS"): a["rep"] += 1
+    a["cost"] += float(r.get("cost") or 0)
+deep_expect = {"C":75.0,"A":66.7,"D":58.3,"B":41.7}
+for st, eloc in deep_expect.items():
+    a = dby[st]
+    check("deep %s loc %.1f" % (st, eloc), a["n"] == 12 and abs(100*a["loc"]/a["n"]-eloc) < 0.1, "got %d/%d=%.1f%%" % (a["loc"], a["n"], 100*a["loc"]/max(1,a["n"])))
+    check("deep %s rep 100" % st, a["rep"] == 12, "got %d/12" % a["rep"])
+deep_total_cost = sum(float(r.get("cost") or 0) for r in deep["results"])
+check("deep n=60", len(deep["results"]) == 60, "got %d" % len(deep["results"]))
+check("deep cost 0.22", abs(deep_total_cost-0.223) < 0.01, "got %.3f" % deep_total_cost)
+
 print()
 print("TOTAL FAILS:", len(fails))
 sys.exit(1 if fails else 0)
