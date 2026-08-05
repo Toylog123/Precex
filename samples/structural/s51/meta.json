@@ -1,0 +1,26 @@
+{
+  "_doc": "PreCex L3 结构性缺陷样本元数据 | 作者：Toylog | 版本：v0.1 | 功能概述：结构级缺陷（跳转目标改写/保护分支删除），修复需结构性重写",
+  "sample_id": "s51",
+  "module": "axi_lite_slave",
+  "error_type": "握手",
+  "error_type_code": "handshake",
+  "level": "L3",
+  "inject_line": 1,
+  "buggy_inject_line": 5,
+  "inject_desc": "BVALID 保持逻辑删除（不等 BREADY 就清零，握手保持态缺失 split_state）",
+  "diff": "structural: BVALID 保持逻辑删除（不等 BREADY 就清零，握手保持态缺失 split_state）",
+  "hit_assertion": "axi_lite A3（BVALID 保持至 BREADY）",
+  "golden_source": "rtl/axi_lite_slave/axi_lite_slave.sv",
+  "date": "2026-08-05",
+  "reproduce_cmd": "python3 scripts/build_structural_samples.py --module axi_lite_slave",
+  "param_override": null,
+  "verification": {
+    "compile_ok": true,
+    "formal_result": "fail",
+    "golden_formal_result": "pass",
+    "verdict": "L3_VALID",
+    "sim_ok": true,
+    "structural_template": "split_state"
+  },
+  "structural_template": "split_state"
+}

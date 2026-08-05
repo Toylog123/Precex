@@ -142,10 +142,72 @@ STRUCTURAL = {
             "hit": "fifo_sync A4（count 增量守恒）",
             "error_type": "FIFO 满空", "error_type_code": "fifo_full",
             "template": "guard_boundary",
+            "template": "guard_boundary",
+        },
+        {
+            "desc": "half_full 半满边界改写（count > DEPTH/2 误判，修复需恢复 >= 边界 guard_boundary）",
+            "fn": "half_full_rewrite",
+            "args": [],
+            "hit": "fifo_sync A5（half_full == (count >= DEPTH/2)）",
+            "error_type": "边界判断", "error_type_code": "boundary_wrap",
+            "template": "guard_boundary",
+        },
+    ],
+    "uart_rx": [
+        {
+            "desc": "起始位中点确认分支删除（跳过毛刺确认，修复需重建确认态 split_state）",
+            "fn": "rx_start_confirm_remove",
+            "args": [],
+            "param_override": {"CLK_FREQ": "400", "BAUD": "100"},
+            "hit": "uart_rx A2（起始位中点确认后才进数据接收）",
+            "error_type": "状态跳转", "error_type_code": "state_trans",
+            "template": "split_state",
+        },
+    ],
+    "axi_lite_slave": [
+        {
+            "desc": "BVALID 保持逻辑删除（不等 BREADY 就清零，握手保持态缺失 split_state）",
+            "fn": "bvalid_hold_remove",
+            "args": [],
+            "hit": "axi_lite A3（BVALID 保持至 BREADY）",
+            "error_type": "握手", "error_type_code": "handshake",
+            "template": "split_state",
         },
     ],
 }
 
+
+def _rx_start_confirm_remove(src):
+    # uart_rx START 中点确认删除：把 if(rxd)毛刺回IDLE/else进DATA 整块替换为无条件进 DATA
+    i0 = src.find('                        if (rxd) begin')
+    if i0 < 0:
+        return None
+    m = re.search(r"if \(rxd\) begin.*?end else begin.*?end", src[i0:], re.S)
+    if not m:
+        return None
+    NL = chr(10)
+    repl = ('                        // [structural] 毛刺检测分支被删除，中点无条件进 DATA' + NL
+            + '                        baud_cnt <= {DIV_W{1' + chr(39) + 'b0}};' + NL
+            + '                        bit_cnt  <= 4' + chr(39) + 'd0;' + NL
+            + '                        state    <= S_DATA;' + NL)
+    return src[:i0] + repl + src[i0 + m.end():]
+
+
+def _bvalid_hold_remove(src):
+    NL = chr(10)
+    old = '        end else if (S_AXI_BVALID && S_AXI_BREADY) begin' + NL + '            S_AXI_BVALID <= 1' + chr(39) + 'b0;' + NL + '        end'
+    new = '        end else begin' + NL + '            S_AXI_BVALID <= 1' + chr(39) + 'b0;' + NL + '        end'
+    if old not in src:
+        return None
+    return src.replace(old, new, 1)
+
+
+def _half_full_rewrite(src):
+    old = 'count >= (DEPTH >> 1)'
+    new = 'count >  (DEPTH >> 1)'
+    if old not in src:
+        return None
+    return src.replace(old, new, 1)
 
 def _apply_template(golden, tpl):
     fn = tpl["fn"]
@@ -158,6 +220,12 @@ def _apply_template(golden, tpl):
         buggy = golden[:m.start()] + tpl["args"][1] + golden[m.end():]
     elif fn == "timeout_remove":
         buggy = _timeout_remove(golden)
+    elif fn == "rx_start_confirm_remove":
+        buggy = _rx_start_confirm_remove(golden)
+    elif fn == "bvalid_hold_remove":
+        buggy = _bvalid_hold_remove(golden)
+    elif fn == "half_full_rewrite":
+        buggy = _half_full_rewrite(golden)
     elif fn == "block_remove":
         buggy = _block_remove(golden, tpl["args"][0])
     elif fn == "branch_remove":
@@ -214,6 +282,14 @@ def _build_sample(module, tpl, sample_id, out_dir, timeout):
             return src
         golden_inline = _finalize(golden)
         buggy_inline = _finalize(buggy)
+        # 结构性缺陷 rx_start_confirm_remove 与 GLOBAL_ASSUME 的 START 约束冲突：
+        # 该约束强制 START 期间 rxd==0，直接排除"毛刺误触发"场景，使缺陷不可达（sby 空洞 PASS）。
+        # 仅对本模板移除 START 期间 rxd 静默约束（保留 STOP 期间 rxd==1 约束），使毛刺场景可被反例触发。
+        if tpl.get("fn") == "rx_start_confirm_remove":
+            _start_assume = "    always @(posedge clk) assume (!(state == S_START) || !rxd);\n"
+            golden_inline = golden_inline.replace(_start_assume, "")
+            buggy_inline = buggy_inline.replace(_start_assume, "")
+
         # 强断言注入：超时保护必须存在（step_cnt 超阈值后下一拍必须回 IDLE）
         if tpl.get("strong_assert") == "timeout_guard":
             guard = (

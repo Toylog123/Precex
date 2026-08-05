@@ -136,6 +136,10 @@ def _classify_formal(res, out):
         return "timeout"
     if res["error"]:
         return "error"
+    # sby/引擎级错误优先：语法错误时命令可能 exit 0（bash run_script 包装），
+    # 但输出含 ERROR 字样；若不拦截会落入下方 pass 分支造成 L3 校验误判。
+    if ("DONE (ERROR" in out) or ("ERROR:" in out) or ("task failed" in out) or ("syntax error" in out):
+        return "error"
     # 反例特征优先（FAIL 时输出中也可能出现 Successfully 等无关字样）
     if res["exit_code"] == 2 or "Assert failed" in out or "Reached cover" in out or "DONE (FAIL" in out:
         return "fail"
