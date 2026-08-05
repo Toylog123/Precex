@@ -101,6 +101,7 @@ samples/**/gc/
 !experiments/runs/wp6_hs_bh.json
 !experiments/runs/handshake_ablation_analysis.json
 !experiments/runs/bt_ablation_ds_bt3.json
+!experiments/runs/clean_stats.json
 !experiments/runs/bt_vs_b_analysis.json
 !experiments/runs/cross_model_arbitration.json
 

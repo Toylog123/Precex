@@ -60,6 +60,9 @@ python3 scripts/measure_slim_compression.py
 # 8) 多 LLM 可解释性评分（可选，需 provider key）
 python3 scripts/llm_interpretability.py --providers deepseek,minimax --samples s04-s37 --n 10
 
+# 8b) 干净口径统计补全（McNemar+Holm+Wilson CI+效应量+seed 稳定性；--json 落盘 clean_stats.json）
+python3 scripts/stats_clean_evidence.py --json experiments/runs/clean_stats.json
+
 # 9) 论文数字终审（40 项断言，从 experiments/runs 读取并逐一核对）
 python3 scripts/audit_paper_numbers.py
 
@@ -92,6 +95,7 @@ cd submission_package && sha256sum -c verification/SHA256SUMS && cd ..
 | 充分性 | experiments/runs/reverify_bmc_all.json / t2_audit_abc.json / t2_audit_D.json | 303/303、408/408；均已入库 |
 | 验证计时 | experiments/runs/verify_timing.json | 重验逐样本 verify/golden 耗时；已入库 |
 | C 压缩对比 | experiments/runs/slim_compression.json | 原始 vs slim 字符/比率；已入库 |
+| 干净统计（论文 §V-B） | experiments/runs/clean_stats.json | 六对 McNemar/Holm/效应量 CI/seed 稳定性（stats_clean_evidence.py 生成）；已入库 |
 | BMC 深度抽查 | docs/bmc_depth_spotcheck_slim.json | axi 16→24、uart_rx 24→32，6 目标 5 PASS + 1 手工 apply；已入库 |
 | LLM 评分 | experiments/runs/llm_scores/ | 多模型可解释性评分（summary/all/deepseek/minimax 已入库） |
 
