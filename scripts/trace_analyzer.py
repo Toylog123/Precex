@@ -61,8 +61,12 @@ def _inject_dump(tb_src):
 def _compile_sim(work, design_src_name, top, timeout):
     """iverilog compile design+tb, run vvp -> trace.vcd. Return (ok, err)."""
     try:
+        srcs = [design_src_name] + sorted(
+            f for f in os.listdir(work)
+            if f.endswith((".v", ".sv")) and f != design_src_name
+        )
         r = subprocess.run(
-            ["iverilog", "-g2012", design_src_name, "tb_weak.sv", "-s", top, "-o", "sim.out"],
+            ["iverilog", "-g2012"] + srcs + ["-s", top, "-o", "sim.out"],
             capture_output=True, text=True, encoding="utf-8", errors="replace",
             timeout=timeout, cwd=work,
         )
