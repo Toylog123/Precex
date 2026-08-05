@@ -70,6 +70,9 @@ experiments/runs/*
 !experiments/runs/verify_timing.json
 !experiments/runs/patch_assembler_*.json
 !experiments/runs/patch_assembler_s45_v3.json
+!experiments/runs/adaptive_bmc_report.json
+!experiments/runs/wp6_ablation_*.json
+
 
 !experiments/runs/nonllm_baselines.json
 !experiments/runs/module_interaction.json
