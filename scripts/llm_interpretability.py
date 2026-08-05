@@ -130,7 +130,11 @@ def d_evidence_text(sample_dir):
 
 
 def build_user_prompt(sample_dir, setting):
-    design = open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read()
+    try:
+        from prompt_templates import sanitize_design_text
+        design = sanitize_design_text(open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read())
+    except Exception:
+        design = open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read()
     assertions = extract_inline_assertions(design)
     if setting == "C":
         ev_label = "【证据：反例语义化（周期事件表+状态轨迹+故障锥+NL 摘要）】"

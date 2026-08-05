@@ -70,7 +70,11 @@ action 含义：
 
 
 def build_intent_prompt(sample_dir, cex_text, evidence_setting="B"):
-    buggy = open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read()
+    try:
+        from prompt_templates import sanitize_design_text
+        buggy = sanitize_design_text(open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read())
+    except Exception:
+        buggy = open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read()
     meta = json.load(open(os.path.join(sample_dir, "meta.json"), encoding="utf-8"))
     ev_extra = ""
     if evidence_setting in ("BT", "BH"):

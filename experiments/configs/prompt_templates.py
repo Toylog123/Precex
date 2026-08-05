@@ -32,6 +32,30 @@ def strip_ground_truth(text):
     return text
 
 
+def sanitize_design_text(design):
+    """消毒 buggy.v 头部注释中的数据集标注（缺陷描述/注入行号），保持行数不变。
+
+    buggy.v 头部注释由 bug_injector 写入，含"注入『类型』类缺陷——描述（击穿断言）"
+    与"单点注入（行 N）"等 ground-truth 信息；喂给 LLM 前必须替换为中性注释，
+    否则 LLM 直接看到缺陷描述与行号（A 设置同样受影响）。
+    保持行数不变：loc_top1 判据依赖 buggy_inject_line 与设计文本行号对应。
+    """
+    import re as _re
+    # 只处理注释行；保留行尾符（\n 或 \r\n），保证行数/行号不变。
+    # 第一处（功能概述行）→ 中性概述；其余（来源/击穿行）→ 中性来源。
+    first = [True]
+    def _rep(m):
+        indent = m.group(1)
+        ending = m.group(2) or ""
+        if first[0]:
+            first[0] = False
+            return indent + " 功能概述：L3 跨周期行为缺陷样本（弱 tb 通过但形式验证失败）" + ending
+        return indent + " 来源：buggy 版本（L3 跨周期行为缺陷样本）" + ending
+    pattern = _re.compile(r'^(\s*//)[^\r\n]*(?:注入|击穿|单点注入)[^\r\n]*(\r?\n?)$', _re.M)
+    out = pattern.sub(_rep, design)
+    return out if out != design else design
+
+
 SYSTEM_PROMPT = """你是 PreCex 的 LocalRepairer：反例驱动的综合前 RTL 缺陷定位与修复智能体。
 你的任务：
 1. 定位：基于给定证据找出最可能的缺陷位置（模块+信号+行号），给出 Top-1 候选。

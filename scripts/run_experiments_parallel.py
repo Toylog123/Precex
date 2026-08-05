@@ -55,6 +55,7 @@ def main(argv=None):
     ap.add_argument("--settings", default="A,B,C")
     ap.add_argument("--seeds", default="0,1,2")
     ap.add_argument("--jobs", type=int, default=8)
+    ap.add_argument("--prefix", default="exp_part_", help="分片输出前缀（默认 exp_part_）")
     ap.add_argument("--retries", type=int, default=2)
     ap.add_argument("--out", default=None)
     ap.add_argument("--detach", action="store_true")
@@ -74,7 +75,7 @@ def main(argv=None):
         pass
     if args.merge:
         results = []; all_samples = []; settings = []; seeds = []
-        for p in sorted(glob.glob(os.path.join(workdir, "exp_part_*.json"))):
+        for p in sorted(glob.glob(os.path.join(workdir, "%s*.json" % args.prefix))):
             d = json.load(open(p, encoding="utf-8"))
             results.extend(d.get("results", [])); all_samples.extend(d.get("samples", []))
             settings = d.get("settings", settings); seeds = d.get("seeds", seeds)
@@ -111,10 +112,10 @@ def main(argv=None):
         if not chunk: continue
         # 清理该分片旧产物（含 partial 断点续跑文件），避免复用旧 partial 导致新任务被跳过
         for suffix in (".json", ".json.partial.jsonl", ".csv", ".log"):
-            stale = os.path.join(workdir, "exp_part_%d%s" % (i, suffix))
+            stale = os.path.join(workdir, "%s%d%s" % (args.prefix, i, suffix))
             if os.path.isfile(stale):
                 os.remove(stale)
-        wsl_out = "%s/experiments/runs/exp_part_%d.json" % (WSL_ROOT, i)
+        wsl_out = "%s/experiments/runs/%s%d.json" % (WSL_ROOT, args.prefix, i)
         sh = os.path.join(shdir, "part_%d.sh" % i)
         wsl_sh = "%s/experiments/runs/.par_sh/part_%d.sh" % (WSL_ROOT, i)
         body = "#!/bin/bash\n"

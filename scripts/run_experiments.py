@@ -29,7 +29,7 @@ sys.path.insert(0, os.path.join(REPO_ROOT, "experiments", "configs"))
 sys.path.insert(0, os.path.join(REPO_ROOT, "scripts"))
 
 from llm_client import LLMClient  # noqa: E402
-from prompt_templates import SYSTEM_PROMPT, build_prompt  # noqa: E402
+from prompt_templates import SYSTEM_PROMPT, build_prompt, sanitize_design_text  # noqa: E402
 from run_prestudy import parse_llm_output, apply_unified_diff  # noqa: E402
 import cex_diff  # noqa: E402
 import evaluator  # noqa: E402
@@ -103,7 +103,7 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
             verify_cfg=None, feedback="v1"):
     """单个 (sample, setting, seed) 评测。返回结果 dict。"""
     meta = json.load(open(os.path.join(sample_dir, "meta.json"), encoding="utf-8"))
-    design = open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read()
+    design = sanitize_design_text(open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read())
     assertions = _extract_inline_assertions(design)
     ev_text = _build_evidence_text(setting, sample_dir)
     prompt = build_prompt(setting, design, assertions, ev_text, meta)
@@ -327,7 +327,7 @@ def _build_evidence_text(setting, sample_dir):
                 ta_text = " | ".join(rows)
             except Exception as e:
                 ta_text = "（trace_analysis 解析失败: %s）" % e
-        return body_b + chr(10) + chr(10) + "【TraceAnalyzer 动态切片摘要】" + chr(10) + ta_text
+    return body_b + chr(10) + chr(10) + "【TraceAnalyzer 动态切片摘要】" + chr(10) + ta_text
     if setting == "C":
         p = os.path.join(sample_dir, "semantics.json")
         if not os.path.isfile(p):

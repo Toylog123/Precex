@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.join(REPO_ROOT, "scripts"))
 sys.path.insert(0, os.path.join(REPO_ROOT, "harness"))
 sys.path.insert(0, os.path.join(REPO_ROOT, "experiments", "configs"))
 from llm_client import LLMClient  # noqa: E402
-from prompt_templates import SYSTEM_PROMPT, build_prompt  # noqa: E402
+from prompt_templates import SYSTEM_PROMPT, build_prompt, sanitize_design_text  # noqa: E402
 from run_prestudy import parse_llm_output, apply_unified_diff  # noqa: E402
 from adaptive_bmc import _find_sample_dir, _read_depth, _make_workdir, _formal_at_depth, _tb_top  # noqa: E402
 import evaluator  # noqa: E402
@@ -111,7 +111,7 @@ def _verify_patch(sample_dir, patched_src, base_depth, timeout):
 
 def _generate_candidate(sample_dir, sample_id, setting, temp, llm, timeout, base_depth):
     meta = json.load(open(os.path.join(sample_dir, "meta.json"), encoding="utf-8"))
-    design = open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read()
+    design = sanitize_design_text(open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read())
     assertions = _extract_assertions(design)
     ev_text = _evidence_text(setting, sample_dir)
     prompt = build_prompt(setting, design, assertions, ev_text, meta)

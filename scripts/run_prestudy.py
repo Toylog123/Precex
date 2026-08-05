@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.join(REPO_ROOT, "experiments", "configs"))
 sys.path.insert(0, os.path.join(REPO_ROOT, "scripts"))
 
 from llm_client import LLMClient
-from prompt_templates import SYSTEM_PROMPT, build_prompt, build_evidence_text
+from prompt_templates import SYSTEM_PROMPT, build_prompt, build_evidence_text, sanitize_design_text
 import evaluator
 
 SAMPLES_DIR = os.path.join(REPO_ROOT, "samples", "prestudy")
@@ -156,7 +156,7 @@ def run_one(sample_id, setting, llm, out_dir, mock=False, retries=2, verbose=Fal
     """单个 (sample, setting) 评测：LLM 定位+修复 → 三通过 → 指标。返回结果 dict。"""
     sample_dir = os.path.join(SAMPLES_DIR, sample_id)
     meta = json.load(open(os.path.join(sample_dir, "meta.json"), encoding="utf-8"))
-    design = open(os.path.join(sample_dir, "buggy.sv"), encoding="utf-8").read()
+    design = sanitize_design_text(open(os.path.join(sample_dir, "buggy.sv"), encoding="utf-8").read())
     assertions = open(os.path.join(sample_dir, "assertions.sv"), encoding="utf-8").read()
     ev_text = build_evidence_text(setting, sample_dir)
     prompt = build_prompt(setting, design, assertions, ev_text, meta)
