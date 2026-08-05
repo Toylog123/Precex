@@ -14,6 +14,24 @@
     prompt = build_prompt(setting="C", design=..., assertions=..., evidence_text=..., meta=...)
 """
 
+def strip_ground_truth(text):
+    """剥离证据文本中的 ground-truth 标注（inject_line/inject_desc/diff）。
+
+    ground-truth 隔离：证据段只允许包含 LLM 可独立获得的信息，
+    禁止把数据集标注（注入行号/缺陷描述）混入生成上下文（Layer3 防火墙）。
+    """
+    import json as _json
+    try:
+        obj = _json.loads(text)
+    except Exception:
+        return text
+    if isinstance(obj, dict):
+        for k in ("inject_line", "inject_desc", "diff", "buggy_inject_line"):
+            obj.pop(k, None)
+        return _json.dumps(obj, ensure_ascii=False, indent=2)
+    return text
+
+
 SYSTEM_PROMPT = """你是 PreCex 的 LocalRepairer：反例驱动的综合前 RTL 缺陷定位与修复智能体。
 你的任务：
 1. 定位：基于给定证据找出最可能的缺陷位置（模块+信号+行号），给出 Top-1 候选。
@@ -84,8 +102,8 @@ def build_prompt(setting, design, assertions, evidence_text, meta=None, history=
         head + ev_label + chr(10) + "[证据内容开始]" + chr(10)
         + evidence_text + chr(10) + "[证据内容结束]" + chr(10) + chr(10)
     )
-    prompt += "【元数据】error_type=%s inject_line=%s（仅作参考，不代表答案）" % (
-        meta.get("error_type", "?"), meta.get("inject_line", "?")) + chr(10)
+    prompt += "【元数据】error_type=%s module=%s" % (
+        meta.get("error_type", "?"), meta.get("module", "?")) + chr(10)
     if history:
         prompt += chr(10) + "【上次修复历史（反馈循环）】" + chr(10)
         for h in history:
@@ -129,13 +147,13 @@ def build_evidence_text(setting, sample_dir):
         if not os.path.isfile(p):
             return "（evidence.json 缺失）"
         with open(p, "r", encoding="utf-8") as f:
-            return f.read()
+            return strip_ground_truth(f.read())
     if setting == "BH":
         p = os.path.join(sample_dir, "evidence.json")
         if not os.path.isfile(p):
             return "\uff08evidence.json \u7f3a\u5931\uff09"
         with open(p, "r", encoding="utf-8") as f:
-            body_b = f.read()
+            body_b = strip_ground_truth(f.read())
         try:
             import json as _json
             import os as _os

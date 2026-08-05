@@ -135,6 +135,30 @@ def build_user_prompt(sample_dir, setting):
     if setting == "C":
         ev_label = "【证据：反例语义化（周期事件表+状态轨迹+故障锥+NL 摘要）】"
         ev_text = slim_semantics_text(sample_dir)
+    elif setting == "B":
+        ev_label = "【证据：原始反例日志（B 基线）】"
+        p = os.path.join(sample_dir, "cex.log")
+        cex = open(p, encoding="utf-8", errors="replace").read() if os.path.isfile(p) else "（无 cex.log）"
+        ev_text = cex[:2500]
+    elif setting == "BH":
+        ev_label = "【证据：结构化+握手分析（BH）】"
+        ev_path = os.path.join(sample_dir, "evidence.json")
+        ev = {}
+        if os.path.isfile(ev_path):
+            with open(ev_path, encoding="utf-8") as f:
+                ev = json.load(f)
+        ev_safe = {k: v for k, v in ev.items()
+                   if k not in ("inject_line", "inject_desc", "diff", "buggy_inject_line")}
+        parts = ["### 结构化证据（evidence.json）",
+                 json.dumps(ev_safe, ensure_ascii=False, indent=2)[:1800]]
+        sem_path = os.path.join(sample_dir, "semantics.json")
+        if os.path.isfile(sem_path):
+            sem = json.load(open(sem_path, encoding="utf-8"))
+            parts.append("### 动态切片摘要")
+            parts.append(json.dumps({k: sem.get(k) for k in
+                                     ("fail_step", "trigger_condition", "fault_cone")},
+                                    ensure_ascii=False)[:800])
+        ev_text = "\n".join(parts)
     else:
         ev_label = "【证据：FVDebug 式因果图（失败断言+根因节点+因果链+触发条件）】"
         ev_text = d_evidence_text(sample_dir)
@@ -248,18 +272,27 @@ def main(argv=None):
     ap = argparse.ArgumentParser(prog="llm_interpretability.py")
     ap.add_argument("--providers", default=None, help="逗号分隔；默认取全部已配置 provider")
     ap.add_argument("--samples", default="s04-s37")
+    ap.add_argument("--samples-dir", default="bugs", help="样本子目录：bugs/deep")
+    ap.add_argument("--settings", default="C,D", help="评分设置：C/D/B/BH")
     ap.add_argument("--n", type=int, default=10, help="每设置抽取样本数（默认 10）")
     ap.add_argument("--seed", type=int, default=20260804)
     ap.add_argument("--mock", action="store_true")
+    ap.add_argument("--recompute", action="store_true",
+                    help="仅基于 out/all.json 重算统计，不调用 LLM")
     ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--max-budget", type=float, default=MAX_BUDGET_USD)
     args = ap.parse_args(argv)
 
+    samples_root = os.path.join(os.path.dirname(SAMPLES_BUGS), args.samples_dir)
+    if not os.path.isdir(samples_root):
+        print("error: 样本目录不存在 %s" % samples_root)
+        return 2
+    settings = [s.strip() for s in args.settings.split(",") if s.strip()]
     sample_ids = [s for s in expand_samples(args.samples)
-                  if os.path.isdir(os.path.join(SAMPLES_BUGS, s))]
+                  if os.path.isdir(os.path.join(samples_root, s))]
     eligible = []
     for sid in sample_ids:
-        d = os.path.join(SAMPLES_BUGS, sid)
+        d = os.path.join(samples_root, sid)
         need = ["buggy.v", "meta.json", "evidence.json", "semantics.json"]
         if all(os.path.isfile(os.path.join(d, f)) for f in need):
             eligible.append(sid)
@@ -268,7 +301,7 @@ def main(argv=None):
     # 按模块分层轮询抽样（确定性，seed 仅用于打散模块内顺序）
     groups = {}
     for sid in eligible:
-        meta = json.load(open(os.path.join(SAMPLES_BUGS, sid, "meta.json"), encoding="utf-8"))
+        meta = json.load(open(os.path.join(samples_root, sid, "meta.json"), encoding="utf-8"))
         groups.setdefault(meta.get("module", "?"), []).append(sid)
     for mod in groups:
         rng = __import__("random").Random(args.seed + sum(ord(c) for c in mod))
@@ -289,12 +322,25 @@ def main(argv=None):
 
     os.makedirs(args.out, exist_ok=True)
     session = "interp-%s" % time.strftime("%Y%m%d%H%M%S")
-    units = [(sid, setting) for sid in selected for setting in ("C", "D")]
+    units = [(sid, setting) for sid in selected for setting in settings]
+
+    if args.recompute:
+        allp = os.path.join(args.out, "all.json")
+        if not os.path.isfile(allp):
+            print("error: %s 不存在" % allp)
+            return 2
+        rows = json.load(open(allp, encoding="utf-8"))
+        providers = sorted({r.get("provider") for r in rows if r.get("provider")})
+        settings = [r["setting"] for r in rows if r.get("setting")]
+        settings = list(dict.fromkeys(settings))
+        selected = list(dict.fromkeys(r.get("sample") for r in rows if r.get("sample")))
+        units = [(sid, s) for sid in selected for s in settings]
+        session = rows[0].get("session") or session if rows else session
 
     def run_unit(sid, setting, prov):
         client = LLMClient(provider=prov, temperature=0, max_retries=2, timeout=240,
                            session=session, mock=args.mock)
-        prompt = build_user_prompt(os.path.join(SAMPLES_BUGS, sid), setting)
+        prompt = build_user_prompt(os.path.join(samples_root, sid), setting)
         extra_kw = {"response_format": {"type": "json_object"}}
         if prov in ("minimax", "deepseek"):
             # 两模型默认思考会先输出大段 think 再 JSON 且易触顶截断；禁思考后直接输出 JSON（实测有效）
@@ -308,7 +354,7 @@ def main(argv=None):
         )
         parsed = parse_json_score(res["content"])
         scores = (parsed or {}).get("scores") or {}
-        meta = json.load(open(os.path.join(SAMPLES_BUGS, sid, "meta.json"), encoding="utf-8"))
+        meta = json.load(open(os.path.join(samples_root, sid, "meta.json"), encoding="utf-8"))
         true = true_line(meta)
         loc = parsed.get("loc_line") if parsed else None
         return {
@@ -321,17 +367,18 @@ def main(argv=None):
             "cost": res["cost"], "mode": res["mode"], "parse_ok": parsed is not None,
         }
 
-    rows = []
-    with ThreadPoolExecutor(max_workers=4) as ex:
-        futs = {ex.submit(run_unit, sid, setting, prov): (sid, setting, prov)
-                for (sid, setting) in units for prov in providers}
-        for fut in futs:
-            try:
-                rows.append(fut.result())
-            except Exception as e:
-                sid, setting, prov = futs[fut]
-                rows.append({"sample": sid, "setting": setting, "provider": prov, "error": str(e)[:300]})
-                print("[FAIL] %s/%s/%s: %s" % (sid, setting, prov, str(e)[:200]))
+    if not args.recompute:
+        rows = []
+        with ThreadPoolExecutor(max_workers=4) as ex:
+            futs = {ex.submit(run_unit, sid, setting, prov): (sid, setting, prov)
+                    for (sid, setting) in units for prov in providers}
+            for fut in futs:
+                try:
+                    rows.append(fut.result())
+                except Exception as e:
+                    sid, setting, prov = futs[fut]
+                    rows.append({"sample": sid, "setting": setting, "provider": prov, "error": str(e)[:300]})
+                    print("[FAIL] %s/%s/%s: %s" % (sid, setting, prov, str(e)[:200]))
 
     # 落盘：逐 provider 原始 JSON + 汇总
     per_provider = {}
@@ -351,7 +398,7 @@ def main(argv=None):
              "parse_fail": [r for r in rows if not r.get("parse_ok")]}
     icc = {}
     dim_stats = {}
-    for setting in ("C", "D"):
+    for setting in settings:
         subset = [r for r in ok if r["setting"] == setting]
         if not subset:
             continue
@@ -377,10 +424,14 @@ def main(argv=None):
                     row = [by_target[sid].get(p) for p in provs]
                     if all(x is not None for x in row):
                         mat.append(row)
-                icc[setting][d] = round(icc21(mat), 3) if len(mat) >= 3 else None
+                if len(mat) >= 3:
+                    v = icc21(mat)
+                    icc[setting][d] = round(v, 3) if v is not None else None
+                else:
+                    icc[setting][d] = None
     # 行为代理定位精度
     loc_acc = {}
-    for setting in ("C", "D"):
+    for setting in settings:
         subset = [r for r in rows if r.get("setting") == setting and r.get("loc_line") is not None]
         loc_acc[setting] = {}
         for p in providers:
@@ -396,6 +447,8 @@ def main(argv=None):
     stats["dim_stats"] = dim_stats
     stats["icc"] = icc
     stats["loc_acc"] = loc_acc
+    stats["samples_root"] = samples_root
+    stats["settings"] = settings
     stats["session"] = session
     with open(os.path.join(args.out, "summary.json"), "w", encoding="utf-8") as f:
         json.dump(stats, f, ensure_ascii=False, indent=2)
@@ -410,7 +463,7 @@ def main(argv=None):
     print("\n==== 结果摘要 ====")
     print("样本数=%d 单元数=%d 调用数=%d 解析成功=%d 解析失败=%d 成本=$%.4f" % (
         len(selected), len(units), len(rows), len(ok), len(rows) - len(ok), sess_cost))
-    for setting in ("C", "D"):
+    for setting in settings:
         ds = dim_stats.get(setting, {})
         line = " | ".join("%s=%s" % (DIM_CN[d], ds.get(d, {}).get("mean")) for d in DIMS)
         print("[%s] 维度均分: %s" % (setting, line))

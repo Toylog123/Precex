@@ -233,6 +233,17 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
 
 def _build_evidence_text(setting, sample_dir):
     """按设置读取证据文本（A/B/C），与 prompt_templates.build_evidence_text 同协议。"""
+    def _strip_gt(raw):
+        """剥离 evidence.json 中的 ground-truth 标注（inject_line/inject_desc/diff）。"""
+        try:
+            obj = json.loads(raw)
+        except Exception:
+            return raw
+        if isinstance(obj, dict):
+            for k in ("inject_line", "inject_desc", "diff", "buggy_inject_line"):
+                obj.pop(k, None)
+            return json.dumps(obj, ensure_ascii=False, indent=2)
+        return raw
     if setting == "A":
         parts = []
         log = os.path.join(sample_dir, "cex.log")
@@ -255,14 +266,14 @@ def _build_evidence_text(setting, sample_dir):
         if not os.path.isfile(p):
             return "（evidence.json 缺失）"
         with open(p, "r", encoding="utf-8") as f:
-            return f.read()
+            return _strip_gt(f.read())
     if setting == "BH":
         # B 证据全文 + 握手协议分析（1d 握手专项：首轮注入，非仅重试）
         p = os.path.join(sample_dir, "evidence.json")
         if not os.path.isfile(p):
             return "\uff08evidence.json \u7f3a\u5931\uff09"
         with open(p, "r", encoding="utf-8") as f:
-            body_b = f.read()
+            body_b = _strip_gt(f.read())
         try:
             meta_p = os.path.join(sample_dir, "meta.json")
             meta = {}
@@ -294,7 +305,7 @@ def _build_evidence_text(setting, sample_dir):
         if not os.path.isfile(p):
             return "（evidence.json 缺失）"
         with open(p, "r", encoding="utf-8") as f:
-            body_b = f.read()
+            body_b = _strip_gt(f.read())
         ta_path = os.path.join(sample_dir, "trace_analysis_replay.json")
         if not os.path.isfile(ta_path):
             ta_path = os.path.join(sample_dir, "trace_analysis.json")
