@@ -83,5 +83,9 @@ experiments/runs/*
 !experiments/runs/llm_scores/summary.json
 
 
+# SoC 回归编译产物
+samples/soc/**/tb_*
+samples/soc/**/compile.err
+
 # sby work dirs (non-sby_ prefix, e.g. gc/)
 samples/**/gc/
