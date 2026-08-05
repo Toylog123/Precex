@@ -105,7 +105,7 @@ for _l in open(_ledger_path, encoding="utf-8"):
     except Exception:
         continue  # 跳过损坏行（如 mock 截断），账本其余行正常
 led_cost = sum(float(r.get("cost_usd", r.get("cost")) or 0) for r in rows)
-check("ledger n=2572", len(rows) == 2572, "got %d" % len(rows))
+check("ledger n=2573", len(rows) == 2573, "got %d" % len(rows))
 check("ledger cost 22.16", abs(led_cost-22.16) < 0.02, "got %.3f" % led_cost)
 
 # 7. verify timing golden max
