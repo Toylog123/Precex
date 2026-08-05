@@ -226,8 +226,29 @@ def handshake_delta_text(old_feat, new_feat, module):
                 n.get("first_valid_rise"), n.get("first_ready_rise"), n.get("wait_cycles"), n.get("hold_after_ready"), n.get("deassert_seen"))
         if viol:
             line += " [违规] " + ",".join(viol)
+        # 修复方向提示：结合违规类型与信号名，指出需要补/改的赋值（确定性规则，指导 LLM 定位）
+        fix_hint = _handshake_fix_hint(pk, n, viol, module)
+        if fix_hint:
+            line += " [修复提示] " + fix_hint
         parts.append(line)
     return "；".join(parts)
+
+
+def _handshake_fix_hint(pair_key, feat, viol, module):
+    """确定性修复提示：根据握手违规生成"改哪条赋值"的指导（1d 握手专项增强）。"""
+    if not viol:
+        return ""
+    hints = []
+    v_sig = pair_key.split("/")[0] if "/" in pair_key else pair_key
+    if any("未释放" in v or "卡住" in v or "持续有效" in v for v in viol):
+        r_sig = pair_key.split("/")[1] if "/" in pair_key else "ready"
+        hints.append("需在 %s 与 %s 握手成立的 if/else-if 分支内补充 %s <= 1'b0（释放赋值），"
+                     "该分支当前缺失此赋值（可能被删除或从未存在）" % (v_sig, r_sig, v_sig))
+    if any("提前置位" in v for v in viol):
+        hints.append("%s 置位条件过早：需检查其置位是否依赖前置握手完成（AW/W 或 AR）" % v_sig)
+    if any("起始位未拉低" in v or "txd=1" in v for v in viol):
+        hints.append("tx_start 有效同一拍需补 txd <= 1'b0（起始位立即拉低），该赋值缺失或被删除")
+    return "；".join(hints)
 
 
 def analyze(old_vcd, new_vcd, clk_sig, old_fail, new_fail, module=None):
@@ -305,6 +326,14 @@ def diagnosis_text(sample, r, assert_line):
     viols = module_handshake_violations(hs_feat, r.get("module") or "")
     if viols:
         parts.append("协议违规检测：" + "；".join(viols))
+        # 1d 增强：确定性修复方向提示（结合违规类型指出需补/改的赋值位置）
+        hints = []
+        for pk, feat in hs_feat.items():
+            h = _handshake_fix_hint(pk, feat, viols, r.get("module") or "")
+            if h:
+                hints.append(h)
+        if hints:
+            parts.append("修复提示：" + "；".join(dict.fromkeys(hints)))
     if r.get("handshake_delta") and r.get("new_fail_step") is not None:
         parts.append("握手分析：" + r["handshake_delta"][:260])
     module_note = HANDSHAKE_NOTE.get(r.get("module") or "")

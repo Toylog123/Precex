@@ -107,14 +107,16 @@ def parse_intent(content):
 
 
 def _norm_assign(s):
-    """把 'state <= S3;' 类描述归一为正则匹配模式（容忍空白差异）。"""
+    """Normalize assignment description into a regex pattern (whitespace tolerant)."""
     s = s.strip()
-    m = re.match(r"^(\w+)\s*<=\s*([\w_\[\]:']+)\s*;?$", s)
+    BS = chr(92)
+    m = re.match(r"^(\w+)" + BS + "s*<= " + BS + "s*(.+?)" + BS + "s*;?$", s)
     if m:
         lhs, rhs = m.group(1), m.group(2)
-        return re.compile(r"\b%s\s*<=\s*%s\s*;" % (re.escape(lhs), re.escape(rhs)))
+        # 逐字符构建宽松模式：空白 -> \s*，其余 re.escape（+ 转义为 \+，避免量词误解析）
+        rhs_norm = "".join((BS + "s*" if ch.isspace() else re.escape(ch)) for ch in rhs)
+        return re.compile(r"\b" + re.escape(lhs) + BS + "s*<= " + BS + "s*" + rhs_norm + BS + "s*;")
     return None
-
 
 def _condition_anchor_positions(buggy, params):
     # Extract comparison conditions from intent params (trigger/condition/hold_condition)
@@ -382,6 +384,174 @@ def _gen_assign_expr_restore(buggy, intent):
     return None
 
 
+def _find_if_branch(buggy, cond_text, target_sig=None):
+    """Locate if/else-if (<cond>) branch body (body_start/body_end) for missing-assignment insert.
+    target_sig: if given, skip branches whose body already assigns that signal, and prefer
+    branches whose body does NOT assign it (the deletion point)."""
+    BS = chr(92)
+    NL = chr(10)
+    folded = " ".join(str(cond_text).split())
+    loose = "".join((BS + "s*" if ch.isspace() else re.escape(ch)) for ch in folded)
+    pat_if = re.compile(r"if" + BS + "s*" + BS + "(" + BS + "s*" + loose + BS + "s*" + BS + ")", re.S)
+    found = None
+    for m in pat_if.finditer(buggy):
+        body_start = buggy.find(NL, m.end())
+        if body_start < 0:
+            continue
+        body_start += 1
+        line_start = buggy.rfind(NL, 0, m.start()) + 1
+        indent = len(buggy[line_start:m.start()]) - len(buggy[line_start:m.start()].lstrip())
+        q = body_start
+        body_end = len(buggy)
+        while q < len(buggy):
+            eol = buggy.find(NL, q)
+            if eol < 0:
+                eol = len(buggy)
+            line = buggy[q:eol]
+            stripped = line.strip()
+            # 分支结束：Verilog if 分支必然以 end/else 收尾（不依赖缩进，
+            # 兼容注入文件可能存在的异常缩进，如 end else begin 前导空格过多）
+            if stripped.startswith(("end", "else")):
+                body_end = eol
+                break
+            q = eol + 1
+        body = buggy[body_start:body_end]
+        if target_sig:
+            # 去掉行内注释后再检查真实赋值（避免注释里的赋值误判为已有赋值）
+            code_only = NL.join(ln.split("//")[0] for ln in body.splitlines())
+            has_assign = bool(re.search(r"\b%s\s*<=" % re.escape(target_sig), code_only))
+            if has_assign:
+                continue  # 该分支已含此信号赋值，不是删除点
+            # 优先选含 BUG 注释或注释指明删除点的分支
+            if "BUG" in body or "删除" in body or "deleted" in body.lower():
+                return {"body_start": body_start, "body_end": body_end}
+            if found is None:
+                found = {"body_start": body_start, "body_end": body_end}
+        else:
+            return {"body_start": body_start, "body_end": body_end}
+    return found
+
+def _find_if_in_body(body, buggy, body_start_abs):
+    """在状态分支 body 内找第一个 if (...) begin 的绝对插入位置（begin 后换行处）。
+    返回绝对位置；无 if 返回 None。"""
+    BS = chr(92)
+    NL = chr(10)
+    pat = re.compile(r"if" + BS + "s*" + BS + "(" + BS + "s*.*?" + BS + "s*" + BS + ")" + BS + "s*begin", re.S)
+    m = pat.search(body)
+    if not m:
+        return None
+    # m.end() 在 begin 之后；找该行行尾，插入到行尾后
+    abs_pos = body_start_abs + m.end()
+    eol = buggy.find(NL, abs_pos)
+    return (eol + 1) if eol >= 0 else None
+
+
+def _gen_insert_missing_assign(buggy, intent):
+    """Missing-assignment insert fallback (2b e2e): intent gives assignment but the source
+    deleted that assignment (deletion-type defect). Insert into the target state branch,
+    or into the if/else-if branch matching intent condition, or fall back to case(state)."""
+    params = intent.get("params") or {}
+    NL = chr(10)
+    def _first(d, keys, default=""):
+        for k in keys:
+            v = d.get(k)
+            if v:
+                return str(v)
+        return default
+    assign_s = _first(params, ("assignment", "new_assignment", "insert", "line", "add_assign",
+                               "assign", "statement", "restore_assignment", "code"))
+    if not assign_s:
+        # signal + value 组合（如 signal=txd, value=1'b0）拼接为完整赋值
+        sig = _first(params, ("signal",))
+        val = _first(params, ("value", "assigned_value", "new_value", "assign_value"))
+        if sig and val and str(sig).strip() not in ("", "state"):
+            assign_s = "%s <= %s;" % (str(sig).strip(), str(val).strip())
+    if not assign_s:
+        return None
+    assign_s = assign_s.strip()
+    if not assign_s.rstrip().endswith(";"):
+        assign_s += ";"
+    m = re.search(r"\s*([A-Za-z_][A-Za-z0-9_]*)\s*<=", assign_s)
+    if not m:
+        return None
+    sig_name = m.group(1)
+    state_name = None
+    for key in ("target", "state", "location", "where"):
+        v = _first(params, (key,))
+        if not v:
+            v = str(intent.get(key) or "")
+        m2 = re.search(r"(S_[A-Z0-9_]+)", v)
+        if m2:
+            state_name = m2.group(1)
+            break
+    anchors = _condition_anchor_positions(buggy, params)
+    # conditional-branch insert (s17 axi / s15 uart): if intent has condition, find the
+    # if/else-if branch that is missing the assignment (skip branches that already assign it)
+    cond_text = _first(params, ("condition", "branch_condition", "trigger", "when"))
+    if cond_text:
+        # 清洗：去掉 "state == S_xxx &&" 前缀（case 分支内状态已隐含，源码 if 只有其余条件）
+        import re as _re
+        cond_clean = _re.sub(r"state\s*==\s*S_[A-Z0-9_]+\s*(&&|&)\s*", "", cond_text)
+        cond_clean = _re.sub(r"\bS_[A-Z0-9_]+\s*:\s*begin.*", "", cond_clean)
+        if not cond_clean.strip():
+            cond_clean = cond_text
+        m_if = _find_if_branch(buggy, cond_clean, target_sig=sig_name)
+        # 清洗后仍匹配不到：尝试原条件
+        if not m_if and cond_clean != cond_text:
+            m_if = _find_if_branch(buggy, cond_text, target_sig=sig_name)
+        if m_if:
+            return buggy[:m_if["body_start"]] + "    " + assign_s + NL + buggy[m_if["body_start"]:]
+    if state_name:
+        pat_state = re.compile(r"(%s)\s*:\s*begin" % re.escape(state_name))
+        ms = list(pat_state.finditer(buggy))
+        m3 = _nearest_anchor(ms, anchors) if anchors else (ms[0] if ms else None)
+        if m3:
+            line_start = buggy.rfind(NL, 0, m3.start()) + 1
+            begin_indent = len(buggy[line_start:m3.start()]) - len(buggy[line_start:m3.start()].lstrip())
+            pos = buggy.find(NL, m3.end())
+            if pos < 0:
+                return None
+            body_end = len(buggy)
+            q = pos + 1
+            while q < len(buggy):
+                eol = buggy.find(NL, q)
+                if eol < 0:
+                    eol = len(buggy)
+                line = buggy[q:eol]
+                if line.strip() == "end":
+                    line_indent = len(line) - len(line.lstrip())
+                    if line_indent <= begin_indent:
+                        body_end = eol
+                        break
+                q = eol + 1
+            body = buggy[m3.end():body_end]
+            # 仅当 intent 明确要求插入 if 子分支（如 s15 "if (tx_start) 块内"）时才用子分支插入；
+            # 否则插到状态分支开头（无条件执行，如 s07 S_IDLE 的 step_cnt 清零）
+            loc_text = " ".join(str(_first(params, (k,), default=str(intent.get(k) or ""))) for k in
+                                ("location", "target", "placement", "scope", "where"))
+            wants_if = any(t in loc_text for t in ("if (", "if(", "块内", "分支内", "if 内", "if 子分支"))
+            sub_if = _find_if_in_body(body, buggy, m3.end()) if wants_if else None
+            if sub_if:
+                sub_body_start = sub_if
+                sub_body_end = buggy.find("end", sub_body_start)
+                sub_body = buggy[sub_body_start:sub_body_end if sub_body_end >= 0 else len(buggy)]
+                if not re.search(r"\b%s\s*<=" % re.escape(sig_name), sub_body):
+                    return buggy[:sub_if] + "    " + assign_s + NL + buggy[sub_if:]
+            if re.search(r"\b%s\s*<=" % re.escape(sig_name), body):
+                return None
+            indent = " " * (begin_indent + 4)
+            return buggy[:pos] + NL + indent + assign_s + buggy[pos:]
+    m_case = re.search(r"case\s*\(\s*state\s*\)", buggy)
+    if m_case:
+        pos = buggy.find(NL, m_case.end())
+        if pos >= 0:
+            case_end = buggy.find("endcase", m_case.end())
+            body = buggy[m_case.end():case_end if case_end >= 0 else len(buggy)]
+            if re.search(r"\b%s\s*<=" % re.escape(sig_name), body):
+                return None
+            return buggy[:pos] + NL + "                " + assign_s + buggy[pos:]
+    return None
+
 def _gen_edit_assign(buggy, intent):
     # Single-line assignment fix: anchor-based branch selection (same policy as
     # _gen_split_state) so pure state names never hit localparam declarations or
@@ -402,7 +572,7 @@ def _gen_edit_assign(buggy, intent):
     old = _first(params, old_keys)
     new = _first(params, new_keys)
     if not (old and new):
-        return None
+        return _gen_insert_missing_assign(buggy, intent)
     old_s, new_s = str(old).strip(), str(new).strip()
     anchors = _condition_anchor_positions(buggy, params)
     if "<=" in old_s:
@@ -500,7 +670,12 @@ def assemble(buggy, intent, module):
             p = _gen_half_full_restore(buggy)
             if p:
                 return p
-        return _gen_guard_boundary(buggy, intent, module)
+        p = _gen_guard_boundary(buggy, intent, module)
+        if p:
+            return p
+        # guard_boundary 兜底：恢复缺失赋值（如 s07 S_IDLE 的 step_cnt 清零，
+        # LLM 用 guard_boundary 表达"恢复被删的保护分支"）
+        return _gen_insert_missing_assign(buggy, intent)
     if action == "edit_assign":
         p = _gen_assign_expr_restore(buggy, intent)
         if p:
@@ -577,6 +752,121 @@ def run_one(sample_id, llm, mock, timeout, evidence="BH"):
     return out
 
 
+def run_e2e(sample_id, llm, mock, timeout, evidence="BH", max_rounds=3,
+            temps=(0.2, 0.5, 0.8)):
+    """2b end-to-end loop: intent (BH evidence) -> PatchAssembler -> 4-pass verify;
+    on failure, cex_diff diagnosis feeds next round; 3-temperature multi-candidate per round."""
+    sample_dir = _find_sample_dir(sample_id)
+    NL = chr(10)
+    out = {"sample": sample_id, "ok": False, "rounds": 0, "attempts": 0,
+           "cost": 0.0, "tokens": 0, "rounds_detail": [], "errors": [],
+           "verdict": None, "patched": False}
+    if sample_dir is None:
+        out["errors"].append("no sample dir")
+        return out
+    meta = json.load(open(os.path.join(sample_dir, "meta.json"), encoding="utf-8"))
+    module = meta.get("module")
+    buggy = open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read()
+    cex = ""
+    cxp = os.path.join(sample_dir, "cex.log")
+    if os.path.isfile(cxp):
+        cex = open(cxp, encoding="utf-8", errors="replace").read()
+    history = []
+    for rnd in range(1, max_rounds + 1):
+        out["rounds"] = rnd
+        round_rec = {"round": rnd, "candidates": [], "ok": False, "diag": ""}
+        any_patch = False
+        for temp in temps:
+            out["attempts"] += 1
+            rec = {"temp": temp, "ok": False, "intent": None, "error": "",
+                   "cost": 0.0, "tokens": 0}
+            prompt = build_intent_prompt(sample_dir, cex, evidence_setting=evidence)
+            if history:
+                hist_lines = ["【上次修复历史（反馈循环）】"]
+                for h in history:
+                    line = "- 第 %d 轮 %s：%s" % (h["round"], h.get("temp"), h.get("failure", ""))
+                    if h.get("diag"):
+                        line += "  诊断：" + h["diag"]
+                    hist_lines.append(line)
+                hist_lines.append("要求：先分析上次为何失败，给出不同的修复意图，不要重复该模式。")
+                prompt["messages"][1]["content"] += NL + NL.join(hist_lines)
+            prompt["messages"][1]["content"] += NL + "【多候选】temperature=%.1f 独立生成意图，请勿重复其他候选方案。" % temp
+            try:
+                res = llm.chat(messages=prompt["messages"], temperature=temp)
+            except Exception as e:
+                rec["error"] = "llm fail: %s" % repr(e)[:100]
+                round_rec["candidates"].append(rec)
+                continue
+            rec["cost"] = res.get("cost", 0.0)
+            rec["tokens"] = (res.get("input_tokens", 0) or 0) + (res.get("output_tokens", 0) or 0)
+            out["cost"] += rec["cost"]
+            out["tokens"] += rec["tokens"]
+            content = res.get("content", "") or ""
+            intent = parse_intent(content)
+            rec["intent"] = intent
+            if not intent:
+                rec["error"] = "intent parse fail"
+                round_rec["candidates"].append(rec)
+                continue
+            patched = assemble(buggy, intent, module)
+            if patched is None or patched == buggy:
+                rec["error"] = "assemble fail (no change)"
+                round_rec["candidates"].append(rec)
+                continue
+            any_patch = True
+            import shutil
+            work = os.path.join(TMP_ROOT, sample_id + "_e2e")
+            shutil.rmtree(work, ignore_errors=True)
+            os.makedirs(work, exist_ok=True)
+            with open(os.path.join(work, "buggy.v"), "w", encoding="utf-8") as f:
+                f.write(patched)
+            for fname in ("tb_weak.sv", "verify.sby", "verify_golden.sby", "uart_tx.sv"):
+                sp = os.path.join(sample_dir, fname)
+                if os.path.isfile(sp):
+                    shutil.copy(sp, os.path.join(work, fname))
+            tb_src = open(os.path.join(work, "tb_weak.sv"), encoding="utf-8").read()
+            m = re.search(r"module\s+(tb_\w+)", tb_src)
+            tb_top = m.group(1) if m else None
+            ev = evaluator.evaluate(work, {"run_formal": True, "formal_timeout": timeout,
+                                           "tb_top": tb_top, "keep_tmp": True})
+            rec["verdict"] = ev["verdict"]
+            rec["formal"] = ev["formal"].get("result")
+            rec["sim"] = ev["sim"].get("ok")
+            rec["compile"] = ev["compile"].get("ok")
+            rec["ok"] = ev["verdict"] == "PASS"
+            round_rec["candidates"].append(rec)
+            if rec["ok"]:
+                out["ok"] = True
+                out["verdict"] = "PASS"
+                out["patched"] = True
+                out["rounds_detail"].append(round_rec)
+                return out
+        if any_patch:
+            try:
+                tmp = ev.get("tmpdir")
+                if tmp:
+                    new_vcd = os.path.join(tmp, "sby_out", "engine_0", "trace.vcd")
+                    new_log = os.path.join(tmp, "sby_out", "engine_0", "logfile.txt")
+                    if os.path.isfile(new_vcd):
+                        import cex_diff
+                        clk = cex_diff.MODULE_CLK.get(module, "clk")
+                        old_fail, old_assert = cex_diff.extract_fail_step(cxp)
+                        new_fail, _ = cex_diff.extract_fail_step(new_log)
+                        r = cex_diff.analyze(new_vcd, new_vcd, clk, old_fail, new_fail, module=module)
+                        round_rec["diag"] = cex_diff.diagnosis_text(sample_id, r, old_assert)
+            except Exception as e:
+                round_rec["diag"] = "（差分诊断失败：%s）" % repr(e)[:80]
+        for cand in round_rec["candidates"]:
+            if cand.get("error"):
+                history.append({"round": rnd, "temp": cand.get("temp"),
+                                "failure": cand["error"][:200],
+                                "diag": round_rec.get("diag", "")})
+        out["rounds_detail"].append(round_rec)
+        if not any_patch:
+            history.append({"round": rnd, "temp": "all", "failure": "所有候选意图均未组装出有效补丁",
+                            "diag": round_rec.get("diag", "")})
+    return out
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--samples", default="s43")
@@ -584,20 +874,32 @@ def main(argv=None):
     ap.add_argument("--mock", action="store_true")
     ap.add_argument("--timeout", type=float, default=180.0)
     ap.add_argument("--evidence", default="BH", choices=["B", "BT", "BH"])
+    ap.add_argument("--e2e", action="store_true", help="2b end-to-end loop (multi-round feedback + multi-candidate)")
+    ap.add_argument("--max-rounds", type=int, default=3)
     ap.add_argument("--out", default=None)
     args = ap.parse_args(argv)
     llm = LLMClient(provider=args.provider, mock=args.mock)
     samples = [s.strip() for s in args.samples.split(",") if s.strip()]
     results = []
     for sid in samples:
-        r = run_one(sid, llm, args.mock, args.timeout, evidence=args.evidence)
+        if args.e2e:
+            r = run_e2e(sid, llm, args.mock, args.timeout, evidence=args.evidence,
+                        max_rounds=args.max_rounds)
+        else:
+            r = run_one(sid, llm, args.mock, args.timeout, evidence=args.evidence)
         results.append(r)
-        print("[%s] ok=%s verdict=%s formal=%s sim=%s intent=%s err=%s" % (
-            sid, r["ok"], r["verdict"], r.get("formal"), r.get("sim"),
-            (r.get("intent") or {}).get("action") if r.get("intent") else None,
-            (r.get("error") or "")[:90]), flush=True)
+        if args.e2e:
+            print("[%s] e2e ok=%s rounds=%d attempts=%d verdict=%s cost=%.4f" % (
+                sid, r["ok"], r.get("rounds", 0), r.get("attempts", 0), r.get("verdict"), r.get("cost", 0.0)), flush=True)
+        else:
+            print("[%s] ok=%s verdict=%s formal=%s sim=%s intent=%s err=%s" % (
+                sid, r["ok"], r["verdict"], r.get("formal"), r.get("sim"),
+                (r.get("intent") or {}).get("action") if r.get("intent") else None,
+                (r.get("error") or "")[:90]), flush=True)
     summary = {"total": len(results), "ok": sum(1 for r in results if r["ok"]),
                "patched": sum(1 for r in results if r["patched"]),
+               "rounds": sum(r.get("rounds", 0) for r in results),
+               "attempts": sum(r.get("attempts", 0) for r in results),
                "cost": round(sum(r["cost"] for r in results), 4)}
     out_path = args.out or os.path.join(REPO_ROOT, "experiments", "runs", "patch_assembler_%s.json" % "_".join(samples))
     with open(out_path, "w", encoding="utf-8") as f:
