@@ -32,7 +32,9 @@ def dedupe(rows):
 
 def main():
     rows = dedupe(load('deep_subset_ab.json') + load('deepcd_0.json') + load('deepcd_1.json') +
-                  load('deepcd_2.json') + load_partial('deep_subset_cd.json.partial.jsonl'))
+                  load('deepcd_2.json') + load('deepcd_s41.json') + load('deepcd_s38.json') +
+                  load('deep_cd_partial_collected.json') +
+                  load_partial('deep_subset_cd.json.partial.jsonl'))
     # 仅保留 deep 样本 s38-s42
     rows = [r for r in rows if r.get('sample') in ('s38','s39','s40','s41','s42')]
     samples = ['s38','s39','s40','s41','s42']

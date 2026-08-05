@@ -92,6 +92,7 @@ cd submission_package && sha256sum -c verification/SHA256SUMS && cd ..
 | L2 假阳性率 | experiments/runs/experiments_results_l2.json | 72 条（A/B/C×24 L2 样本）；已入库 |
 | token 账本 | experiments/runs/token_ledger.jsonl | 1519 条（论文冻结口径，含 69 条 mock 记账）已入库；工作区 1553 条（+34 深子集/调试，$0.1356）未提交 |
 | 深子集（DeepSeek A/B） | experiments/runs/deep_subset_ab.json | 30 条（5 深样本 × A/B × 3 seeds，BMC 判据；不入库，与账本约定一致） |
+| 深子集（DeepSeek C/D 补跑） | experiments/runs/deep_cd_partial_collected.json + deep_subset_4settings.json | s39/s40/s41/s42 四样本 C/D 全绿（24 条）+ s38 C/0（1 条）；s38 C/D 余 5 条待补（API 高峰挂起）；聚合分析见 scripts/analyze_deep_subset.py |
 | 充分性 | experiments/runs/reverify_bmc_all.json / t2_audit_abc.json / t2_audit_D.json | 303/303、408/408；均已入库 |
 | 验证计时 | experiments/runs/verify_timing.json | 重验逐样本 verify/golden 耗时；已入库 |
 | C 压缩对比 | experiments/runs/slim_compression.json | 原始 vs slim 字符/比率；已入库 |

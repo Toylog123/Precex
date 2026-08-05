@@ -88,7 +88,7 @@ DEFAULT_PROVIDER = "minimax"
 # 默认端点 / 模型 / 网络参数（向后兼容旧构造参数默认值）
 DEFAULT_BASE_URL = PROVIDERS[DEFAULT_PROVIDER]["base_url"]
 DEFAULT_MODEL = PROVIDERS[DEFAULT_PROVIDER]["model"]
-DEFAULT_TIMEOUT = 120.0
+DEFAULT_TIMEOUT = 45.0  # v0.3: 120→45，API 半开连接时快速失败重试（正常响应 <30s 不受影响）
 DEFAULT_MAX_RETRIES = 3
 
 # 价格占位（USD / 百万 token，随 provider 切换；以平台账单为准待校准）
