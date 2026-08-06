@@ -3089,5 +3089,11 @@
     "baud_cnt",
     "baud_tick"
   ],
-  "text_summary": null
+  "text_summary": "缺陷发生在 cycle 75：`state` 从 `10`（S_DATA）异常跳变为 `00`（S_IDLE），但同一时刻 `state_d` 仍为 `10`、`tx_busy=1`、`bit_cnt=0111`（未完成 8 位发送），说明状态寄存器未被次态逻辑正常更新，而是被提前置为空闲态。先异常的信号是 `bit_cnt`：从 cycle 67 起一直停在 `0111`，且 cycle 74 的 `baud_tick=1` 未使其递增至 `1000`，随后 cycle 75 的 `baud_tick_d=1` 触发了错误的 IDLE 跳转。因果链为：`baud_cnt` 溢出产生 `baud_tick` → `bit_cnt` 计数达到上限 7 后不再增加 → 状态机误判发送完成，在 `baud_tick_d` 有效时从 `S_DATA` 直接跳入 `S_IDLE`，违反 line 163 的 `state==S_IDLE` 约束。最可疑代码位置在 `uart_tx` 状态机的 `S_DATA→S_IDLE` 跳转分支（failed_line=163），其完成条件疑似未严格检查 `bit_cnt==8` 或正确发送完成标志，而错误使用了 `baud_tick_d`/`baud_cnt` 作为跳转依据。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 16308,
+    "output_tokens": 2589,
+    "cost": 0.0030080400000000005
+  }
 }

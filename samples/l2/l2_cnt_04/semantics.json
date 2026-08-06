@@ -1,0 +1,1102 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "l2_cnt_04",
+  "module": null,
+  "error_type": null,
+  "fail_stage": null,
+  "fail_step": null,
+  "window": 8,
+  "fault_cone_algorithm": "static_code_fanin（trigger_condition ∪ code_slice ∪ key_signals，过滤参数/内部前缀）",
+  "failed_line": null,
+  "trigger_condition": null,
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "00000000"
+        },
+        {
+          "sig": "a_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyinit_procdff_235",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_237",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_243",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_247",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_249",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_258",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_265",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_267",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_269",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_271",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_273",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_275",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "00000001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_279",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_281",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_283",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_285",
+          "val": "0"
+        },
+        {
+          "sig": "b",
+          "val": "00000000"
+        },
+        {
+          "sig": "b_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "clk",
+          "val": "0"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000000"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "cnt_en",
+          "val": "0"
+        },
+        {
+          "sig": "cnt_en_d",
+          "val": "0"
+        },
+        {
+          "sig": "op",
+          "val": "000"
+        },
+        {
+          "sig": "op_d",
+          "val": "000"
+        },
+        {
+          "sig": "rst_n",
+          "val": "0"
+        },
+        {
+          "sig": "rst_n_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "11111111"
+        },
+        {
+          "sig": "anyinit_procdff_235",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_237",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_243",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_247",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_249",
+          "val": "0"
+        },
+        {
+          "sig": "cnt_en",
+          "val": "1"
+        },
+        {
+          "sig": "op",
+          "val": "010"
+        },
+        {
+          "sig": "rst_n",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "00000100"
+        },
+        {
+          "sig": "a_d",
+          "val": "11111111"
+        },
+        {
+          "sig": "alu_out",
+          "val": "00010100"
+        },
+        {
+          "sig": "anyinit_procdff_237",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_243",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_247",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_258",
+          "val": "00000001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "00001000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_283",
+          "val": "1"
+        },
+        {
+          "sig": "b",
+          "val": "00010000"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000001"
+        },
+        {
+          "sig": "cnt_en_d",
+          "val": "1"
+        },
+        {
+          "sig": "op",
+          "val": "000"
+        },
+        {
+          "sig": "op_d",
+          "val": "010"
+        },
+        {
+          "sig": "rst_n_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "00000000"
+        },
+        {
+          "sig": "a_d",
+          "val": "00000100"
+        },
+        {
+          "sig": "alu_out",
+          "val": "11000101"
+        },
+        {
+          "sig": "alu_out_d",
+          "val": "00010100"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_249",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_258",
+          "val": "00000010"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_281",
+          "val": "1"
+        },
+        {
+          "sig": "b",
+          "val": "11000101"
+        },
+        {
+          "sig": "b_d",
+          "val": "00010000"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000010"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000001"
+        },
+        {
+          "sig": "op_d",
+          "val": "000"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "01000010"
+        },
+        {
+          "sig": "a_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out",
+          "val": "01000110"
+        },
+        {
+          "sig": "alu_out_d",
+          "val": "11000101"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_258",
+          "val": "00000011"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_273",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_279",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_285",
+          "val": "1"
+        },
+        {
+          "sig": "b",
+          "val": "00000100"
+        },
+        {
+          "sig": "b_d",
+          "val": "11000101"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000011"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000010"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        }
+      ]
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "00000000"
+        },
+        {
+          "sig": "a_d",
+          "val": "01000010"
+        },
+        {
+          "sig": "alu_out",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out_d",
+          "val": "01000110"
+        },
+        {
+          "sig": "anyinit_procdff_235",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_258",
+          "val": "00000100"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_265",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_267",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_269",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_271",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_275",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "00000001"
+        },
+        {
+          "sig": "b",
+          "val": "00000000"
+        },
+        {
+          "sig": "b_d",
+          "val": "00000100"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000100"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000011"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000101"
+        }
+      ]
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "changes": [
+        {
+          "sig": "a_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyinit_procdff_258",
+          "val": "00000101"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_265",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_267",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_269",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_271",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_275",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_279",
+          "val": "0"
+        },
+        {
+          "sig": "b_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000101"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000100"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000110"
+        }
+      ]
+    },
+    {
+      "cycle": 8,
+      "time": 70,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_258",
+          "val": "00000110"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "10000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_281",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_283",
+          "val": "0"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000110"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000101"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000111"
+        }
+      ]
+    },
+    {
+      "cycle": 9,
+      "time": 80,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "00000011"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_247",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_258",
+          "val": "00000111"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "00010000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_283",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_285",
+          "val": "0"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000111"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000110"
+        },
+        {
+          "sig": "op",
+          "val": "010"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001000"
+        }
+      ]
+    },
+    {
+      "cycle": 10,
+      "time": 90,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "01100001"
+        },
+        {
+          "sig": "a_d",
+          "val": "00000011"
+        },
+        {
+          "sig": "alu_out",
+          "val": "00100101"
+        },
+        {
+          "sig": "anyinit_procdff_247",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_258",
+          "val": "00001000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_281",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_285",
+          "val": "1"
+        },
+        {
+          "sig": "b",
+          "val": "00111100"
+        },
+        {
+          "sig": "cnt",
+          "val": "00001000"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000111"
+        },
+        {
+          "sig": "op",
+          "val": "001"
+        },
+        {
+          "sig": "op_d",
+          "val": "010"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001001"
+        }
+      ]
+    },
+    {
+      "cycle": 11,
+      "time": 100,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "00000000"
+        },
+        {
+          "sig": "a_d",
+          "val": "01100001"
+        },
+        {
+          "sig": "alu_out",
+          "val": "01000010"
+        },
+        {
+          "sig": "alu_out_d",
+          "val": "00100101"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_258",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_273",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "00001000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_281",
+          "val": "0"
+        },
+        {
+          "sig": "b",
+          "val": "01000010"
+        },
+        {
+          "sig": "b_d",
+          "val": "00111100"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000000"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00001000"
+        },
+        {
+          "sig": "cnt_en",
+          "val": "0"
+        },
+        {
+          "sig": "op",
+          "val": "000"
+        },
+        {
+          "sig": "op_d",
+          "val": "001"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001010"
+        }
+      ]
+    },
+    {
+      "cycle": 12,
+      "time": 110,
+      "changes": [
+        {
+          "sig": "a_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out_d",
+          "val": "01000010"
+        },
+        {
+          "sig": "anyinit_procdff_235",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_249",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_273",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "00000001"
+        },
+        {
+          "sig": "b",
+          "val": "00000000"
+        },
+        {
+          "sig": "b_d",
+          "val": "01000010"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "cnt_en_d",
+          "val": "0"
+        },
+        {
+          "sig": "op_d",
+          "val": "000"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001011"
+        }
+      ]
+    },
+    {
+      "cycle": 13,
+      "time": 120,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001100"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "cnt_en": null,
+      "cnt": null,
+      "cnt_d": null,
+      "op": null,
+      "op_d": null,
+      "a": null,
+      "b": null,
+      "a_d": null,
+      "b_d": null,
+      "alu_out": null,
+      "alu_out_d": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "rst_n": "0",
+      "cnt_en": "0",
+      "cnt": "00000000",
+      "cnt_d": "00000000",
+      "op": "000",
+      "op_d": "000",
+      "a": "00000000",
+      "b": "00000000",
+      "a_d": "00000000",
+      "b_d": "00000000",
+      "alu_out": "00000000",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "rst_n": "1",
+      "cnt_en": "1",
+      "cnt": "00000000",
+      "cnt_d": "00000000",
+      "op": "010",
+      "op_d": "000",
+      "a": "11111111",
+      "b": "00000000",
+      "a_d": "00000000",
+      "b_d": "00000000",
+      "alu_out": "00000000",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": "1",
+      "cnt_en": "1",
+      "cnt": "00000001",
+      "cnt_d": "00000000",
+      "op": "000",
+      "op_d": "010",
+      "a": "00000100",
+      "b": "00010000",
+      "a_d": "11111111",
+      "b_d": "00000000",
+      "alu_out": "00010100",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "rst_n": "1",
+      "cnt_en": "1",
+      "cnt": "00000010",
+      "cnt_d": "00000001",
+      "op": "000",
+      "op_d": "000",
+      "a": "00000000",
+      "b": "11000101",
+      "a_d": "00000100",
+      "b_d": "00010000",
+      "alu_out": "11000101",
+      "alu_out_d": "00010100"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "rst_n": "1",
+      "cnt_en": "1",
+      "cnt": "00000011",
+      "cnt_d": "00000010",
+      "op": "000",
+      "op_d": "000",
+      "a": "01000010",
+      "b": "00000100",
+      "a_d": "00000000",
+      "b_d": "11000101",
+      "alu_out": "01000110",
+      "alu_out_d": "11000101"
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "rst_n": "1",
+      "cnt_en": "1",
+      "cnt": "00000100",
+      "cnt_d": "00000011",
+      "op": "000",
+      "op_d": "000",
+      "a": "00000000",
+      "b": "00000000",
+      "a_d": "01000010",
+      "b_d": "00000100",
+      "alu_out": "00000000",
+      "alu_out_d": "01000110"
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "rst_n": "1",
+      "cnt_en": "1",
+      "cnt": "00000101",
+      "cnt_d": "00000100",
+      "op": "000",
+      "op_d": "000",
+      "a": "00000000",
+      "b": "00000000",
+      "a_d": "00000000",
+      "b_d": "00000000",
+      "alu_out": "00000000",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 8,
+      "time": 70,
+      "rst_n": "1",
+      "cnt_en": "1",
+      "cnt": "00000110",
+      "cnt_d": "00000101",
+      "op": "000",
+      "op_d": "000",
+      "a": "00000000",
+      "b": "00000000",
+      "a_d": "00000000",
+      "b_d": "00000000",
+      "alu_out": "00000000",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 9,
+      "time": 80,
+      "rst_n": "1",
+      "cnt_en": "1",
+      "cnt": "00000111",
+      "cnt_d": "00000110",
+      "op": "010",
+      "op_d": "000",
+      "a": "00000011",
+      "b": "00000000",
+      "a_d": "00000000",
+      "b_d": "00000000",
+      "alu_out": "00000000",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 10,
+      "time": 90,
+      "rst_n": "1",
+      "cnt_en": "1",
+      "cnt": "00001000",
+      "cnt_d": "00000111",
+      "op": "001",
+      "op_d": "010",
+      "a": "01100001",
+      "b": "00111100",
+      "a_d": "00000011",
+      "b_d": "00000000",
+      "alu_out": "00100101",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 11,
+      "time": 100,
+      "rst_n": "1",
+      "cnt_en": "0",
+      "cnt": "00000000",
+      "cnt_d": "00001000",
+      "op": "000",
+      "op_d": "001",
+      "a": "00000000",
+      "b": "01000010",
+      "a_d": "01100001",
+      "b_d": "00111100",
+      "alu_out": "01000010",
+      "alu_out_d": "00100101"
+    },
+    {
+      "cycle": 12,
+      "time": 110,
+      "rst_n": "1",
+      "cnt_en": "0",
+      "cnt": "00000000",
+      "cnt_d": "00000000",
+      "op": "000",
+      "op_d": "000",
+      "a": "00000000",
+      "b": "00000000",
+      "a_d": "00000000",
+      "b_d": "01000010",
+      "alu_out": "00000000",
+      "alu_out_d": "01000010"
+    },
+    {
+      "cycle": 13,
+      "time": 120,
+      "rst_n": null,
+      "cnt_en": null,
+      "cnt": null,
+      "cnt_d": null,
+      "op": null,
+      "op_d": null,
+      "a": null,
+      "b": null,
+      "a_d": null,
+      "b_d": null,
+      "alu_out": null,
+      "alu_out_d": null
+    }
+  ],
+  "fault_cone": [
+    "a",
+    "a_d",
+    "alu_out",
+    "alu_out_d",
+    "b",
+    "b_d",
+    "cnt",
+    "cnt_d",
+    "cnt_en",
+    "op",
+    "op_d",
+    "rst_n"
+  ],
+  "key_signals": [
+    "rst_n",
+    "cnt_en",
+    "cnt",
+    "cnt_d",
+    "op",
+    "op_d",
+    "a",
+    "b",
+    "a_d",
+    "b_d",
+    "alu_out",
+    "alu_out_d"
+  ],
+  "text_summary": "缺陷在周期11显现：`cnt` 本应在外围使能 `cnt_en=1`（周期10）后由 8 递增为 9，但实际却跳变为 0，同时 `cnt_en` 也降为 0；而 `cnt_d` 在周期11正确延迟为 8，说明问题出在 `cnt` 的下一状态组合逻辑或复位/清零逻辑，而非流水线寄存器。最可疑的代码位置是控制/状态机模块中 `cnt` 的赋值语句（信号 `cnt`，周期11），该异常清零直接导致与“`cnt_en` 有效时计数器逐周期递增”相关的断言违例。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 5361,
+    "output_tokens": 6468,
+    "cost": 0.0025615800000000004
+  }
+}

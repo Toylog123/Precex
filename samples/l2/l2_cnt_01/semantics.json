@@ -1,0 +1,506 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "l2_cnt_01",
+  "module": null,
+  "error_type": null,
+  "fail_stage": null,
+  "fail_step": null,
+  "window": 8,
+  "fault_cone_algorithm": "static_code_fanin（trigger_condition ∪ code_slice ∪ key_signals，过滤参数/内部前缀）",
+  "failed_line": null,
+  "trigger_condition": null,
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "00000000"
+        },
+        {
+          "sig": "a_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyinit_procdff_233",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_235",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_241",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_243",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_247",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_256",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_263",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_265",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_267",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_269",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_271",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_273",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_275",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_279",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_281",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_283",
+          "val": "0"
+        },
+        {
+          "sig": "b",
+          "val": "00000000"
+        },
+        {
+          "sig": "b_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "clk",
+          "val": "0"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000000"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "cnt_en",
+          "val": "0"
+        },
+        {
+          "sig": "cnt_en_d",
+          "val": "0"
+        },
+        {
+          "sig": "op",
+          "val": "000"
+        },
+        {
+          "sig": "op_d",
+          "val": "000"
+        },
+        {
+          "sig": "rst_n",
+          "val": "0"
+        },
+        {
+          "sig": "rst_n_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "11011111"
+        },
+        {
+          "sig": "alu_out",
+          "val": "10011111"
+        },
+        {
+          "sig": "anyinit_procdff_235",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_243",
+          "val": "0"
+        },
+        {
+          "sig": "b",
+          "val": "01000000"
+        },
+        {
+          "sig": "cnt_en",
+          "val": "1"
+        },
+        {
+          "sig": "rst_n",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "00000000"
+        },
+        {
+          "sig": "a_d",
+          "val": "11011111"
+        },
+        {
+          "sig": "alu_out",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out_d",
+          "val": "10011111"
+        },
+        {
+          "sig": "anyinit_procdff_235",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_241",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_243",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_256",
+          "val": "00000001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_275",
+          "val": "00010000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_279",
+          "val": "1"
+        },
+        {
+          "sig": "b",
+          "val": "10011011"
+        },
+        {
+          "sig": "b_d",
+          "val": "01000000"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000001"
+        },
+        {
+          "sig": "cnt_en_d",
+          "val": "1"
+        },
+        {
+          "sig": "op",
+          "val": "010"
+        },
+        {
+          "sig": "rst_n_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "a_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyinit_procdff_241",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_247",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_256",
+          "val": "00000010"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_275",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_279",
+          "val": "0"
+        },
+        {
+          "sig": "b",
+          "val": "00000000"
+        },
+        {
+          "sig": "b_d",
+          "val": "10011011"
+        },
+        {
+          "sig": "cnt",
+          "val": "00000010"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000001"
+        },
+        {
+          "sig": "cnt_en",
+          "val": "0"
+        },
+        {
+          "sig": "op",
+          "val": "000"
+        },
+        {
+          "sig": "op_d",
+          "val": "010"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "cnt_en": null,
+      "cnt": null,
+      "cnt_d": null,
+      "op": null,
+      "op_d": null,
+      "a": null,
+      "b": null,
+      "a_d": null,
+      "b_d": null,
+      "alu_out": null,
+      "alu_out_d": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "rst_n": "0",
+      "cnt_en": "0",
+      "cnt": "00000000",
+      "cnt_d": "00000000",
+      "op": "000",
+      "op_d": "000",
+      "a": "00000000",
+      "b": "00000000",
+      "a_d": "00000000",
+      "b_d": "00000000",
+      "alu_out": "00000000",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "rst_n": "1",
+      "cnt_en": "1",
+      "cnt": "00000000",
+      "cnt_d": "00000000",
+      "op": "000",
+      "op_d": "000",
+      "a": "11011111",
+      "b": "01000000",
+      "a_d": "00000000",
+      "b_d": "00000000",
+      "alu_out": "10011111",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": "1",
+      "cnt_en": "1",
+      "cnt": "00000001",
+      "cnt_d": "00000000",
+      "op": "010",
+      "op_d": "000",
+      "a": "00000000",
+      "b": "10011011",
+      "a_d": "11011111",
+      "b_d": "01000000",
+      "alu_out": "00000000",
+      "alu_out_d": "10011111"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "rst_n": "1",
+      "cnt_en": "0",
+      "cnt": "00000010",
+      "cnt_d": "00000001",
+      "op": "000",
+      "op_d": "010",
+      "a": "00000000",
+      "b": "00000000",
+      "a_d": "00000000",
+      "b_d": "10011011",
+      "alu_out": "00000000",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "rst_n": null,
+      "cnt_en": null,
+      "cnt": null,
+      "cnt_d": null,
+      "op": null,
+      "op_d": null,
+      "a": null,
+      "b": null,
+      "a_d": null,
+      "b_d": null,
+      "alu_out": null,
+      "alu_out_d": null
+    }
+  ],
+  "fault_cone": [
+    "a",
+    "a_d",
+    "alu_out",
+    "alu_out_d",
+    "b",
+    "b_d",
+    "cnt",
+    "cnt_d",
+    "cnt_en",
+    "op",
+    "op_d",
+    "rst_n"
+  ],
+  "key_signals": [
+    "rst_n",
+    "cnt_en",
+    "cnt",
+    "cnt_d",
+    "op",
+    "op_d",
+    "a",
+    "b",
+    "a_d",
+    "b_d",
+    "alu_out",
+    "alu_out_d"
+  ],
+  "text_summary": "缺陷最早体现在**周期3**：新的输入组合 `a=0, b=0x9B, op=010` 使组合输出 `alu_out` 变为 `0`，而同一时刻流水线寄存器中仍持有**周期2**产生的有效结果 `alu_out_d=10011111`。  \n异常信号顺序是 `alu_out` 先于 `alu_out_d` 异常：周期4沿触发时，错误的 `alu_out=0` 被无保护地锁存进 `alu_out_d`，覆盖了此前 `10011111` 的正确值，破坏流水线数据一致性。  \n该覆盖使后续断言在检查 `alu_out_d` 时看到与预期不符的 `00000000`，触发违例。  \n最可疑位置为执行级流水线寄存器更新逻辑（`alu_out_d` 采样路径，周期3→4），**疑似缺少有效期/气泡抑制条件**，导致新周期无效 ALU 结果错误覆盖仍有效的旧结果。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 2410,
+    "output_tokens": 3084,
+    "cost": 0.00120092
+  }
+}

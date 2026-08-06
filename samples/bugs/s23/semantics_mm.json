@@ -1,0 +1,1264 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "s23",
+  "module": "fifo_sync",
+  "error_type": "握手",
+  "fail_stage": "bmc_depth_11",
+  "fail_step": 11,
+  "failed_line": 112,
+  "trigger_condition": null,
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": "...",
+      "time": null,
+      "changes": []
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_404",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_406",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_416",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_418",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_434",
+          "val": "001"
+        },
+        {
+          "sig": "anyinit_procdff_435",
+          "val": "0001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_483",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_485",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_487",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_491",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_499",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_505",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_509",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_511",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_515",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_517",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_519",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_521",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_523",
+          "val": "1"
+        },
+        {
+          "sig": "can_wr_d",
+          "val": "1"
+        },
+        {
+          "sig": "count",
+          "val": "0001"
+        },
+        {
+          "sig": "delta_d",
+          "val": "01"
+        },
+        {
+          "sig": "din",
+          "val": "00101001"
+        },
+        {
+          "sig": "empty",
+          "val": "0"
+        },
+        {
+          "sig": "empty_d",
+          "val": "1"
+        },
+        {
+          "sig": "mem<0>",
+          "val": "10000001"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "tail",
+          "val": "001"
+        },
+        {
+          "sig": "wr_en_d",
+          "val": "1"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_402",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_406",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_408",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_410",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_412",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_420",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_422",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_434",
+          "val": "010"
+        },
+        {
+          "sig": "anyinit_procdff_435",
+          "val": "0010"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_487",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_495",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_523",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_527",
+          "val": "10101111"
+        },
+        {
+          "sig": "count",
+          "val": "0010"
+        },
+        {
+          "sig": "count_d",
+          "val": "0001"
+        },
+        {
+          "sig": "din",
+          "val": "10000000"
+        },
+        {
+          "sig": "empty_d",
+          "val": "0"
+        },
+        {
+          "sig": "mem<1>",
+          "val": "00101001"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        },
+        {
+          "sig": "tail",
+          "val": "010"
+        },
+        {
+          "sig": "tail_d",
+          "val": "001"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_422",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_434",
+          "val": "011"
+        },
+        {
+          "sig": "anyinit_procdff_435",
+          "val": "0011"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_487",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_493",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_497",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_499",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_505",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_509",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_525",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_527",
+          "val": "10100110"
+        },
+        {
+          "sig": "count",
+          "val": "0011"
+        },
+        {
+          "sig": "count_d",
+          "val": "0010"
+        },
+        {
+          "sig": "din",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<2>",
+          "val": "10000000"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        },
+        {
+          "sig": "tail",
+          "val": "011"
+        },
+        {
+          "sig": "tail_d",
+          "val": "010"
+        }
+      ]
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_406",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_410",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_434",
+          "val": "100"
+        },
+        {
+          "sig": "anyinit_procdff_435",
+          "val": "0100"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_487",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_491",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_497",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_517",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_525",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_527",
+          "val": "01000010"
+        },
+        {
+          "sig": "count",
+          "val": "0100"
+        },
+        {
+          "sig": "count_d",
+          "val": "0011"
+        },
+        {
+          "sig": "din",
+          "val": "10000000"
+        },
+        {
+          "sig": "half_full",
+          "val": "1"
+        },
+        {
+          "sig": "mem<3>",
+          "val": "00000000"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000101"
+        },
+        {
+          "sig": "tail",
+          "val": "100"
+        },
+        {
+          "sig": "tail_d",
+          "val": "011"
+        }
+      ]
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_434",
+          "val": "101"
+        },
+        {
+          "sig": "anyinit_procdff_435",
+          "val": "0101"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_491",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_495",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_517",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_527",
+          "val": "00101001"
+        },
+        {
+          "sig": "count",
+          "val": "0101"
+        },
+        {
+          "sig": "count_d",
+          "val": "0100"
+        },
+        {
+          "sig": "din",
+          "val": "00000100"
+        },
+        {
+          "sig": "mem<4>",
+          "val": "10000000"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000110"
+        },
+        {
+          "sig": "tail",
+          "val": "101"
+        },
+        {
+          "sig": "tail_d",
+          "val": "100"
+        }
+      ]
+    },
+    {
+      "cycle": 8,
+      "time": 70,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_434",
+          "val": "110"
+        },
+        {
+          "sig": "anyinit_procdff_435",
+          "val": "0110"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_487",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_493",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_499",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_501",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_503",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_525",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_527",
+          "val": "00000100"
+        },
+        {
+          "sig": "count",
+          "val": "0110"
+        },
+        {
+          "sig": "count_d",
+          "val": "0101"
+        },
+        {
+          "sig": "din",
+          "val": "00001010"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000111"
+        },
+        {
+          "sig": "tail",
+          "val": "110"
+        },
+        {
+          "sig": "tail_d",
+          "val": "101"
+        }
+      ]
+    },
+    {
+      "cycle": 9,
+      "time": 80,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_406",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_434",
+          "val": "111"
+        },
+        {
+          "sig": "anyinit_procdff_435",
+          "val": "0111"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_483",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_487",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_489",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_491",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_495",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_501",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_503",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_511",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_513",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_515",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_517",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_519",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_525",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_527",
+          "val": "00000000"
+        },
+        {
+          "sig": "count",
+          "val": "0111"
+        },
+        {
+          "sig": "count_d",
+          "val": "0110"
+        },
+        {
+          "sig": "din",
+          "val": "01001000"
+        },
+        {
+          "sig": "mem<6>",
+          "val": "00001010"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001000"
+        },
+        {
+          "sig": "tail",
+          "val": "111"
+        },
+        {
+          "sig": "tail_d",
+          "val": "110"
+        }
+      ]
+    },
+    {
+      "cycle": 10,
+      "time": 90,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_412",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_414",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_420",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_434",
+          "val": "000"
+        },
+        {
+          "sig": "anyinit_procdff_435",
+          "val": "1000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_483",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_487",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_489",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_491",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_495",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_511",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_515",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_517",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_519",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_527",
+          "val": "00101001"
+        },
+        {
+          "sig": "count",
+          "val": "1000"
+        },
+        {
+          "sig": "count_d",
+          "val": "0111"
+        },
+        {
+          "sig": "din",
+          "val": "10000000"
+        },
+        {
+          "sig": "full",
+          "val": "1"
+        },
+        {
+          "sig": "mem<7>",
+          "val": "01001000"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001001"
+        },
+        {
+          "sig": "tail",
+          "val": "000"
+        },
+        {
+          "sig": "tail_d",
+          "val": "111"
+        }
+      ]
+    },
+    {
+      "cycle": 11,
+      "time": 100,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_412",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_420",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_434",
+          "val": "001"
+        },
+        {
+          "sig": "anyinit_procdff_435",
+          "val": "1001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_487",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_493",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_495",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_497",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_511",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_519",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_521",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_525",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_527",
+          "val": "00010100"
+        },
+        {
+          "sig": "can_rd",
+          "val": "1"
+        },
+        {
+          "sig": "can_wr",
+          "val": "0"
+        },
+        {
+          "sig": "count",
+          "val": "1001"
+        },
+        {
+          "sig": "count_d",
+          "val": "1000"
+        },
+        {
+          "sig": "delta",
+          "val": "11"
+        },
+        {
+          "sig": "din",
+          "val": "11010011"
+        },
+        {
+          "sig": "full",
+          "val": "0"
+        },
+        {
+          "sig": "full_d",
+          "val": "1"
+        },
+        {
+          "sig": "mem<0>",
+          "val": "10000000"
+        },
+        {
+          "sig": "rd_en",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001010"
+        },
+        {
+          "sig": "tail",
+          "val": "001"
+        },
+        {
+          "sig": "tail_d",
+          "val": "000"
+        },
+        {
+          "sig": "wr_en",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 12,
+      "time": 110,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_406",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_412",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_420",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_432",
+          "val": "10000000"
+        },
+        {
+          "sig": "anyinit_procdff_433",
+          "val": "001"
+        },
+        {
+          "sig": "anyinit_procdff_435",
+          "val": "1000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_493",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_497",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_507",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_511",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_513",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_519",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_521",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_525",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_527",
+          "val": "00101001"
+        },
+        {
+          "sig": "can_rd",
+          "val": "0"
+        },
+        {
+          "sig": "can_wr_d",
+          "val": "0"
+        },
+        {
+          "sig": "count",
+          "val": "1000"
+        },
+        {
+          "sig": "count_d",
+          "val": "1001"
+        },
+        {
+          "sig": "delta",
+          "val": "00"
+        },
+        {
+          "sig": "delta_d",
+          "val": "11"
+        },
+        {
+          "sig": "din",
+          "val": "10000000"
+        },
+        {
+          "sig": "dout",
+          "val": "10000000"
+        },
+        {
+          "sig": "full",
+          "val": "1"
+        },
+        {
+          "sig": "full_d",
+          "val": "0"
+        },
+        {
+          "sig": "head",
+          "val": "001"
+        },
+        {
+          "sig": "rd_en",
+          "val": "0"
+        },
+        {
+          "sig": "rd_en_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001011"
+        },
+        {
+          "sig": "tail_d",
+          "val": "001"
+        },
+        {
+          "sig": "wr_en_d",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 13,
+      "time": 120,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001100"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "wr_en": null,
+      "rd_en": null,
+      "count": null,
+      "count_d": null,
+      "head": null,
+      "tail": null,
+      "full": null,
+      "empty": null,
+      "half_full": null,
+      "full_d": null,
+      "empty_d": null,
+      "din": null,
+      "dout": null
+    },
+    {
+      "cycle": "...",
+      "time": null
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "0001",
+      "count_d": "0000",
+      "head": "000",
+      "tail": "001",
+      "full": "0",
+      "empty": "0",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "1",
+      "din": "00101001",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "0010",
+      "count_d": "0001",
+      "head": "000",
+      "tail": "010",
+      "full": "0",
+      "empty": "0",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "10000000",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "0011",
+      "count_d": "0010",
+      "head": "000",
+      "tail": "011",
+      "full": "0",
+      "empty": "0",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00000000",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "0100",
+      "count_d": "0011",
+      "head": "000",
+      "tail": "100",
+      "full": "0",
+      "empty": "0",
+      "half_full": "1",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "10000000",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "0101",
+      "count_d": "0100",
+      "head": "000",
+      "tail": "101",
+      "full": "0",
+      "empty": "0",
+      "half_full": "1",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00000100",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 8,
+      "time": 70,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "0110",
+      "count_d": "0101",
+      "head": "000",
+      "tail": "110",
+      "full": "0",
+      "empty": "0",
+      "half_full": "1",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00001010",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 9,
+      "time": 80,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "0111",
+      "count_d": "0110",
+      "head": "000",
+      "tail": "111",
+      "full": "0",
+      "empty": "0",
+      "half_full": "1",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "01001000",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 10,
+      "time": 90,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "1000",
+      "count_d": "0111",
+      "head": "000",
+      "tail": "000",
+      "full": "1",
+      "empty": "0",
+      "half_full": "1",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "10000000",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 11,
+      "time": 100,
+      "rst_n": "1",
+      "wr_en": "0",
+      "rd_en": "1",
+      "count": "1001",
+      "count_d": "1000",
+      "head": "000",
+      "tail": "001",
+      "full": "0",
+      "empty": "0",
+      "half_full": "1",
+      "full_d": "1",
+      "empty_d": "0",
+      "din": "11010011",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 12,
+      "time": 110,
+      "rst_n": "1",
+      "wr_en": "0",
+      "rd_en": "0",
+      "count": "1000",
+      "count_d": "1001",
+      "head": "001",
+      "tail": "001",
+      "full": "1",
+      "empty": "0",
+      "half_full": "1",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "10000000",
+      "dout": "10000000"
+    },
+    {
+      "cycle": 13,
+      "time": 120,
+      "rst_n": null,
+      "wr_en": null,
+      "rd_en": null,
+      "count": null,
+      "count_d": null,
+      "head": null,
+      "tail": null,
+      "full": null,
+      "empty": null,
+      "half_full": null,
+      "full_d": null,
+      "empty_d": null,
+      "din": null,
+      "dout": null
+    }
+  ],
+  "fault_cone": [
+    "clk",
+    "count",
+    "count_d",
+    "din",
+    "dout",
+    "empty",
+    "empty_d",
+    "full",
+    "full_d",
+    "half_full",
+    "head",
+    "rd_en",
+    "rd_en_d",
+    "rst_n",
+    "tail",
+    "wr_en",
+    "wr_en_d"
+  ],
+  "key_signals": [
+    "rst_n",
+    "wr_en",
+    "rd_en",
+    "count",
+    "count_d",
+    "head",
+    "tail",
+    "full",
+    "empty",
+    "half_full",
+    "full_d",
+    "empty_d",
+    "din",
+    "dout"
+  ],
+  "text_summary": "<think>Let me analyze this carefully.\n\nThe defect is in module `fifo_sync`, error_type is \"握手\" (handshake), fail_stage is `bmc_depth_11`, fail_step is 11, failed_line is 112.\n\nLooking at the state trajectory:\n\n- Cycle 10: count=1000 (8), tail=000, full=1, wr_en=1. FIFO is full.\n- Cycle 11: count=1001 (9), full=0, wr_en=0, rd_en=1. count becomes 9, but the FIFO depth is 8 (count is 3 bits, max=7? wait count is 4 bits \"1001\"=9). Actually count is shown as 4 bits. With 8-entry FIFO, count can be 0-8. When full=1 at cycle 10, count=8. Then at cycle 11, rd_en=1 and wr_en=0, so count should decrement from 8 to 7. But count becomes 9 (1001) - that's wrong!\n\nWait, let me re-examine. The head stays at 000, tail becomes 001. So a read happens: tail goes from 000 to 001. But count went from 1000 (8) to 1001 (9). That's an increment when a read happened, which is wrong.\n\nActually, looking more carefully: at cycle 10, full=1, count=8. At cycle 11, count=9 with rd_en=1. This is suspicious - if full was set when count=8 and now count is 9, the full signal logic seems broken.\n\nAlso at cycle 11: full=0 but count=9, and at cycle 12: full=1 with count=8. There's inconsistency.\n\nKey issues:\n1. Cycle 11: count incremented from 8 to 9 while rd_en=1 (read operation). Read should decrement count, not increment. This is the core bug.\n2. full signal toggles erratically: full=1 at cycle 10 (count=8), full=0 at cycle 11 (count=9), full=1 at cycle 12 (count=8). The full flag doesn't track count correctly.\n3. empty_d=1 at cycle 3 when empty should be valid only initially - looks like delayed signal bug.\n\nThe handshake failure (握手) typically means wr_en/rd_en protocol violation. The wr_en=1 at cycle 10 with full=1 should not be accepted, or the full signal wasn't correctly preventing overflow.\n\nActually, the real issue: at cycle 10, wr_en=1 was asserted but full was already 1 from previous write. So the FIFO was already full and another write was attempted, OR the full flag was asserted one cycle late.\n\nWait, at cycle 10: full=1 and wr_en=1 simultaneously - that's a handshake violation. The full flag should have prevented wr_en=1. Looking at full_d:\n- cycle 10: full=1, full_d=0 → full becomes 1 in cycle 10\n- cycle 9: count=7, so full should still be 0\n- cycle 10: count=8 (full), and wr_en=1 was somehow allowed\n\nActually, the most suspicious thing is the count becoming 9 (1001) at cycle 11 when it should be 7 after a read. This suggests the count update logic is inverted or the count_d transition is wrong.\n\nLooking at count vs count_d:\n- cycle 11: count=1001, count_d=1000 (count_d from prev cycle was 1000, but the actual count is 1001)\n- This means at the rising edge of cycle 11, count was updated from 1000 to 1001\n\nThe actual transition: at cycle 10, wr_en=1 (write), rd_en=0, so count should go from 0111 (7) to 1000 (8). That's correct.\nAt cycle 11, wr_en=0, rd_en=1, so count should go from 1000 (8) to 0111 (7). But it became 1001 (9). \n\nSo the count increment logic is wrong - it might be using wr_en instead of rd_en or vice versa, or the wr_en_d delayed signal is being used incorrectly.\n\nThe most suspicious location: line 112, which involves count update. The signal `count` shows the anomaly, and it ties to full/empty handshake. The bug appears to be in the count update logic where rd_en is not properly decrementing the counter, possibly due to using `wr_en_d` instead of `wr_en` or similar delayed-signal confusion.\n\nLet me write a concise 3-5 sentence analysis.</think>\n\n缺陷触发于 cycle 11：在 FIFO 已满（cycle 10 时 full=1, count=8）的情况下，仍然采样到 wr_en=1 与 full=1 同时成立的握手违例。关键的因果异常出现在 `count` 信号——cycle 11 本应因 rd_en=1 而从 `1000`(8) 递减到 `0111`(7)，实际却跳变为 `1001`(9)，导致 full 在下一拍（cycle 12）再次错误地拉高而 count 又回退到 `1000`，形成 full/empty 握手标志与计数器不一致的链式违例。这说明 line 112 附近 `count` 的更新逻辑把读/写方向用反，或者混用了 `wr_en_d`/`rd_en_d` 这类延迟一拍的控制信号（注意 cycle 12 中 `wr_en_d` 由 1 变 0、`rd_en_d` 由 0 变 1 的翻转节拍与 count 异常更新周期吻合），最可疑代码位置为 `fifo_sync` 模块内驱动 `count`/`full` 的那段组合或时序逻辑（line 112，依赖 `wr_en_d`、`rd_en_d` 之处）。建议优先核对 count 在 `rd_en && !empty` 分支上的递减实现，确认未误用 `wr_en_d` 代替 `rd_en` 或将同步 FIFO 的两级同步延迟信号接入计数路径。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 6064,
+    "output_tokens": 1299,
+    "cost": 0.006756
+  }
+}

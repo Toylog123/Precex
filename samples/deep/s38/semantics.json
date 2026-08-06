@@ -2233,5 +2233,11 @@
     "baud_cnt",
     "baud_tick"
   ],
-  "text_summary": null
+  "text_summary": "缺陷发生在第39周期：`state` 从持续稳定的 `S_DATA(10)` 异常跳变为 `S_IDLE(00)`，同时 `txd` 由 0 变为 1（空闲电平），而 `state_d` 仍为 `10`，说明状态寄存器未按 `state_d` 更新，而是被额外逻辑覆盖。  \n此前第38周期 `baud_tick` 刚产生脉冲，按正常流程第39周期应基于 `baud_tick_d` 递增 `bit_cnt` 或进入停止位，但 `bit_cnt` 仍停在 `0111`，状态机却提前退回空闲态，直接触发 `(state == S_IDLE)` 断言违例。  \n最可疑位置为 `uart_tx` 第163行附近的状态跳转逻辑，涉及 `state`、`state_d`、`baud_tick` 与 `bit_cnt` 的交互，在周期39错误地产生了从 `S_DATA` 到 `S_IDLE` 的跳转。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 11665,
+    "output_tokens": 2854,
+    "cost": 0.00243222
+  }
 }

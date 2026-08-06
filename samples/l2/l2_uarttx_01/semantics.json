@@ -1,0 +1,562 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "l2_uarttx_01",
+  "module": null,
+  "error_type": null,
+  "fail_stage": null,
+  "fail_step": null,
+  "window": 8,
+  "fault_cone_algorithm": "static_code_fanin（trigger_condition ∪ code_slice ∪ key_signals，过滤参数/内部前缀）",
+  "failed_line": null,
+  "trigger_condition": null,
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_302",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_304",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_306",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_308",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_310",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_312",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_314",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_316",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_318",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_320",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_324",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_325",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_326",
+          "val": "01"
+        },
+        {
+          "sig": "anyinit_procdff_327",
+          "val": "00"
+        },
+        {
+          "sig": "anyinit_procdff_328",
+          "val": "0000"
+        },
+        {
+          "sig": "anyinit_procdff_329",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_358",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_360",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_362",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_364",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_366",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_368",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_370",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_372",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_374",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_376",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_378",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_380",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_382",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_384",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_386",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_388",
+          "val": "0"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "00"
+        },
+        {
+          "sig": "baud_tick",
+          "val": "1"
+        },
+        {
+          "sig": "baud_tick_d",
+          "val": "0"
+        },
+        {
+          "sig": "bit_cnt",
+          "val": "0000"
+        },
+        {
+          "sig": "clk",
+          "val": "0"
+        },
+        {
+          "sig": "rst_n",
+          "val": "0"
+        },
+        {
+          "sig": "shreg",
+          "val": "00000000"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "state",
+          "val": "00"
+        },
+        {
+          "sig": "state_d",
+          "val": "00"
+        },
+        {
+          "sig": "tx_busy",
+          "val": "0"
+        },
+        {
+          "sig": "tx_data",
+          "val": "00000000"
+        },
+        {
+          "sig": "tx_start",
+          "val": "0"
+        },
+        {
+          "sig": "txd",
+          "val": "1"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_306",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_325",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_326",
+          "val": "00"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_368",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_380",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_382",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_384",
+          "val": "1"
+        },
+        {
+          "sig": "rst_n",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        },
+        {
+          "sig": "tx_start",
+          "val": "1"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_306",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_308",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_312",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_314",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_316",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_325",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_326",
+          "val": "01"
+        },
+        {
+          "sig": "anyinit_procdff_327",
+          "val": "11"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_358",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_368",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_370",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_372",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_376",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_378",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_382",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_384",
+          "val": "0"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "11"
+        },
+        {
+          "sig": "baud_tick",
+          "val": "0"
+        },
+        {
+          "sig": "baud_tick_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "state",
+          "val": "01"
+        },
+        {
+          "sig": "tx_busy",
+          "val": "1"
+        },
+        {
+          "sig": "tx_start",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_304",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_308",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_312",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_314",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_316",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_324",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_327",
+          "val": "10"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_358",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_370",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_372",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_376",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_378",
+          "val": "1"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "10"
+        },
+        {
+          "sig": "baud_tick_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        },
+        {
+          "sig": "state_d",
+          "val": "01"
+        },
+        {
+          "sig": "txd",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "state": null,
+      "state_d": null,
+      "tx_start": null,
+      "tx_data": null,
+      "txd": null,
+      "tx_busy": null,
+      "bit_cnt": null,
+      "baud_cnt": null,
+      "baud_tick": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "rst_n": "0",
+      "state": "00",
+      "state_d": "00",
+      "tx_start": "0",
+      "tx_data": "00000000",
+      "txd": "1",
+      "tx_busy": "0",
+      "bit_cnt": "0000",
+      "baud_cnt": "00",
+      "baud_tick": "1"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "rst_n": "1",
+      "state": "00",
+      "state_d": "00",
+      "tx_start": "1",
+      "tx_data": "00000000",
+      "txd": "1",
+      "tx_busy": "0",
+      "bit_cnt": "0000",
+      "baud_cnt": "00",
+      "baud_tick": "1"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "00",
+      "tx_start": "0",
+      "tx_data": "00000000",
+      "txd": "1",
+      "tx_busy": "1",
+      "bit_cnt": "0000",
+      "baud_cnt": "11",
+      "baud_tick": "0"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "01",
+      "tx_start": "0",
+      "tx_data": "00000000",
+      "txd": "0",
+      "tx_busy": "1",
+      "bit_cnt": "0000",
+      "baud_cnt": "10",
+      "baud_tick": "0"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "rst_n": null,
+      "state": null,
+      "state_d": null,
+      "tx_start": null,
+      "tx_data": null,
+      "txd": null,
+      "tx_busy": null,
+      "bit_cnt": null,
+      "baud_cnt": null,
+      "baud_tick": null
+    }
+  ],
+  "fault_cone": [
+    "baud_cnt",
+    "baud_tick",
+    "bit_cnt",
+    "rst_n",
+    "state",
+    "state_d",
+    "tx_busy",
+    "tx_data",
+    "tx_start",
+    "txd"
+  ],
+  "key_signals": [
+    "rst_n",
+    "state",
+    "state_d",
+    "tx_start",
+    "tx_data",
+    "txd",
+    "tx_busy",
+    "bit_cnt",
+    "baud_cnt",
+    "baud_tick"
+  ],
+  "text_summary": "cycle 2 的 `tx_start=1` 触发发送后，cycle 3 状态机已进入 START（`state=01`）且 `tx_busy=1`，但 `txd` 仍为 1，未按协议输出起始位 0，这是首个直接导致断言违例的异常。异常根因是 `txd` 输出逻辑采样了 `state_d`（cycle 3 仍为 00）而非 `state`，因此 `txd` 直到 cycle 4 `state_d` 变为 01 时才拉低，造成起始位延迟一个周期。同期 `baud_cnt` 也从 00 异常跳变为 11，提示波特率计数也有缺陷，但断言失败的直接因果链是 `txd` 与 `state/state_d` 失配。最可疑代码位置：UART 发送模块中 `txd` 的赋值逻辑，位于 cycle 3，涉及信号 `state_d`/`txd`。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 2814,
+    "output_tokens": 3309,
+    "cost": 0.00132048
+  }
+}

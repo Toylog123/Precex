@@ -1,0 +1,1181 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "l2_axi_01",
+  "module": null,
+  "error_type": null,
+  "fail_stage": null,
+  "fail_step": null,
+  "window": 8,
+  "fault_cone_algorithm": "static_code_fanin（trigger_condition ∪ code_slice ∪ key_signals，过滤参数/内部前缀）",
+  "failed_line": null,
+  "trigger_condition": null,
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "ACLK",
+          "val": "0"
+        },
+        {
+          "sig": "ARESETN",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_ARADDR",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_ARREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_ARVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_AWADDR",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_AWREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_AWVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BRESP",
+          "val": "00"
+        },
+        {
+          "sig": "S_AXI_BVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RDATA",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "S_AXI_RREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RRESP",
+          "val": "00"
+        },
+        {
+          "sig": "S_AXI_RVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "S_AXI_WREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_WVALID",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1013",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1014",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_1015",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1017",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_940",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_942",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_944",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_946",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_948",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_950",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_952",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_954",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_956",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_958",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_960",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_962",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_964",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_966",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_968",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_982",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_983",
+          "val": "00"
+        },
+        {
+          "sig": "anyinit_procdff_984",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_985",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_987",
+          "val": "00"
+        },
+        {
+          "sig": "anyinit_procdff_988",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_989",
+          "val": "00000000001000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_990",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_991",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_992",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1076",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1078",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1080",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1082",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1084",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1086",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1088",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1090",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1092",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1094",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1096",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1098",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1100",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1102",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1104",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1106",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1108",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1110",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1112",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1114",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1116",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1118",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1120",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1122",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1124",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1126",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1128",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1130",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1132",
+          "val": "00000000000000000000000000000001"
+        },
+        {
+          "sig": "aresetn_d",
+          "val": "0"
+        },
+        {
+          "sig": "aw_done",
+          "val": "0"
+        },
+        {
+          "sig": "aw_done_d",
+          "val": "0"
+        },
+        {
+          "sig": "bready_d",
+          "val": "0"
+        },
+        {
+          "sig": "bvalid_d",
+          "val": "0"
+        },
+        {
+          "sig": "rd_exp",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "rd_exp_valid",
+          "val": "0"
+        },
+        {
+          "sig": "reg0",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "reg1",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "reg2",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "reg3",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "rready_d",
+          "val": "0"
+        },
+        {
+          "sig": "rvalid_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "w_done",
+          "val": "0"
+        },
+        {
+          "sig": "w_done_d",
+          "val": "0"
+        },
+        {
+          "sig": "waddr_d",
+          "val": "0000"
+        },
+        {
+          "sig": "wdata_d",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "wstrb_d",
+          "val": "0000"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "ARESETN",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_ARVALID",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_AWADDR",
+          "val": "1000"
+        },
+        {
+          "sig": "S_AXI_AWVALID",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_RREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "00000000001000000000000000000000"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "1111"
+        },
+        {
+          "sig": "S_AXI_WVALID",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_1014",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1017",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_940",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_942",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_946",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_948",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_984",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_989",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1132",
+          "val": "00000000000000000010000000000000"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "S_AXI_ARREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_ARVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_AWADDR",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_AWREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_AWVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RVALID",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "00001000010000000000100000001000"
+        },
+        {
+          "sig": "S_AXI_WREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "0100"
+        },
+        {
+          "sig": "S_AXI_WVALID",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1013",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_1014",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_1015",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_1017",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_940",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_942",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_944",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_946",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_948",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_984",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_985",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_989",
+          "val": "00000000001000000000000000000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1094",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1096",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1100",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1102",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1132",
+          "val": "00000000000000000000000000000001"
+        },
+        {
+          "sig": "aresetn_d",
+          "val": "1"
+        },
+        {
+          "sig": "aw_done",
+          "val": "1"
+        },
+        {
+          "sig": "rd_exp_valid",
+          "val": "1"
+        },
+        {
+          "sig": "reg0",
+          "val": "00000000001000000000000000000000"
+        },
+        {
+          "sig": "rready_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "w_done",
+          "val": "1"
+        },
+        {
+          "sig": "waddr_d",
+          "val": "1000"
+        },
+        {
+          "sig": "wdata_d",
+          "val": "00000000001000000000000000000000"
+        },
+        {
+          "sig": "wstrb_d",
+          "val": "1111"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "S_AXI_ARREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_AWREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_BVALID",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "S_AXI_WREADY",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1013",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1015",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_944",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_958",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_985",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_988",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1076",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1078",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1080",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1082",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1086",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1088",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1092",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1094",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1096",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1100",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1102",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1106",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1110",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1114",
+          "val": "1"
+        },
+        {
+          "sig": "aw_done_d",
+          "val": "1"
+        },
+        {
+          "sig": "rready_d",
+          "val": "0"
+        },
+        {
+          "sig": "rvalid_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        },
+        {
+          "sig": "w_done_d",
+          "val": "1"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "S_AXI_BREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "0000"
+        },
+        {
+          "sig": "anyinit_procdff_1014",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1017",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_940",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_942",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_946",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_948",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_960",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_964",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_966",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_968",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_988",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1076",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1078",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1080",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1082",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1086",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1088",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1092",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1106",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1110",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1114",
+          "val": "0"
+        },
+        {
+          "sig": "aw_done",
+          "val": "0"
+        },
+        {
+          "sig": "bready_d",
+          "val": "1"
+        },
+        {
+          "sig": "bvalid_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        },
+        {
+          "sig": "w_done",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "changes": [
+        {
+          "sig": "ACLK",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000101"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "ACLK": null,
+      "ARESETN": null,
+      "S_AXI_AWADDR": null,
+      "S_AXI_AWVALID": null,
+      "S_AXI_AWREADY": null,
+      "S_AXI_WDATA": null,
+      "S_AXI_WSTRB": null,
+      "S_AXI_WVALID": null,
+      "S_AXI_WREADY": null,
+      "S_AXI_BRESP": null,
+      "S_AXI_BVALID": null,
+      "S_AXI_BREADY": null,
+      "S_AXI_ARADDR": null,
+      "S_AXI_ARVALID": null,
+      "S_AXI_ARREADY": null,
+      "S_AXI_RDATA": null,
+      "S_AXI_RRESP": null,
+      "S_AXI_RVALID": null,
+      "S_AXI_RREADY": null,
+      "reg0": null,
+      "reg1": null,
+      "reg2": null,
+      "reg3": null,
+      "aw_done": null,
+      "w_done": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "ACLK": "0",
+      "ARESETN": "0",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "00000000000000000000000000000000",
+      "S_AXI_WSTRB": "0000",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "0",
+      "S_AXI_BREADY": "0",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "0",
+      "S_AXI_RREADY": "0",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "0",
+      "w_done": "0"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "1000",
+      "S_AXI_AWVALID": "1",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "00000000001000000000000000000000",
+      "S_AXI_WSTRB": "1111",
+      "S_AXI_WVALID": "1",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "0",
+      "S_AXI_BREADY": "0",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "1",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "0",
+      "S_AXI_RREADY": "1",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "0",
+      "w_done": "0"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "1",
+      "S_AXI_WDATA": "00001000010000000000100000001000",
+      "S_AXI_WSTRB": "0100",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "1",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "0",
+      "S_AXI_BREADY": "0",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "1",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "1",
+      "S_AXI_RREADY": "0",
+      "reg0": "00000000001000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "1",
+      "w_done": "1"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "00000000000000000000000000000000",
+      "S_AXI_WSTRB": "0100",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "1",
+      "S_AXI_BREADY": "1",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "1",
+      "S_AXI_RREADY": "0",
+      "reg0": "00000000001000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "1",
+      "w_done": "1"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "00000000000000000000000000000000",
+      "S_AXI_WSTRB": "0000",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "0",
+      "S_AXI_BREADY": "0",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "1",
+      "S_AXI_RREADY": "0",
+      "reg0": "00000000001000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "0",
+      "w_done": "0"
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "ACLK": "1",
+      "ARESETN": null,
+      "S_AXI_AWADDR": null,
+      "S_AXI_AWVALID": null,
+      "S_AXI_AWREADY": null,
+      "S_AXI_WDATA": null,
+      "S_AXI_WSTRB": null,
+      "S_AXI_WVALID": null,
+      "S_AXI_WREADY": null,
+      "S_AXI_BRESP": null,
+      "S_AXI_BVALID": null,
+      "S_AXI_BREADY": null,
+      "S_AXI_ARADDR": null,
+      "S_AXI_ARVALID": null,
+      "S_AXI_ARREADY": null,
+      "S_AXI_RDATA": null,
+      "S_AXI_RRESP": null,
+      "S_AXI_RVALID": null,
+      "S_AXI_RREADY": null,
+      "reg0": null,
+      "reg1": null,
+      "reg2": null,
+      "reg3": null,
+      "aw_done": null,
+      "w_done": null
+    }
+  ],
+  "fault_cone": [
+    "ACLK",
+    "ARESETN",
+    "S_AXI_ARADDR",
+    "S_AXI_ARREADY",
+    "S_AXI_ARVALID",
+    "S_AXI_AWADDR",
+    "S_AXI_AWREADY",
+    "S_AXI_AWVALID",
+    "S_AXI_BREADY",
+    "S_AXI_BRESP",
+    "S_AXI_BVALID",
+    "S_AXI_RDATA",
+    "S_AXI_RREADY",
+    "S_AXI_RRESP",
+    "S_AXI_RVALID",
+    "S_AXI_WDATA",
+    "S_AXI_WREADY",
+    "S_AXI_WSTRB",
+    "S_AXI_WVALID",
+    "aw_done",
+    "reg0",
+    "reg1",
+    "reg2",
+    "reg3",
+    "w_done"
+  ],
+  "key_signals": [
+    "ACLK",
+    "ARESETN",
+    "S_AXI_AWADDR",
+    "S_AXI_AWVALID",
+    "S_AXI_AWREADY",
+    "S_AXI_WDATA",
+    "S_AXI_WSTRB",
+    "S_AXI_WVALID",
+    "S_AXI_WREADY",
+    "S_AXI_BRESP",
+    "S_AXI_BVALID",
+    "S_AXI_BREADY",
+    "S_AXI_ARADDR",
+    "S_AXI_ARVALID",
+    "S_AXI_ARREADY",
+    "S_AXI_RDATA",
+    "S_AXI_RRESP",
+    "S_AXI_RVALID",
+    "S_AXI_RREADY",
+    "reg0",
+    "reg1",
+    "reg2",
+    "reg3",
+    "aw_done",
+    "w_done"
+  ],
+  "text_summary": "基于周期事件表，缺陷从 cycle 2 的写事务发起阶段已埋下：S_AXI_AWADDR=0x8、S_AXI_WDATA=0x2000、WSTRB=1111，但 AWVALID/WVALID 与 AWREADY/WREADY 从未在同拍拉高，AXI 写地址/数据握手并未真正完成。到 cycle 3，虽然 AWVALID/WVALID 已拉低，aw_done 与 w_done 却同时被置位，说明完成逻辑错误地将 READY 单独拉高视为握手成功，这是第一个可观察的异常信号。更关键的是 cycle 3 中 reg0 被更新为 WDATA 的 0x2000，而按 AWADDR=0x8（字偏移 8，对应 reg2）本应更新 reg2，但 reg2 仍为 0，表明寄存器写地址译码或采样逻辑在 cycle 3 发生了错误。随后 cycle 4 发起 BVALID/BREADY 写响应，进一步固化了这次错误写操作，最终导致断言违例。最可疑代码位置是 AXI 写通道完成逻辑与寄存器写使能译码（涉及 aw_done、w_done、reg0 的生成），重点检查 cycle 3 中 waddr_d 到寄存器片选信号的映射。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 6991,
+    "output_tokens": 2349,
+    "cost": 0.00163646
+  }
+}

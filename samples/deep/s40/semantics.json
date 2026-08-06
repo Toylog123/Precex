@@ -2591,5 +2591,11 @@
     "din",
     "dout"
   ],
-  "text_summary": null
+  "text_summary": "缺陷在 `cycle 35` 首次暴露：`count` 从 `100000`（32）异常跳到 `100001`（33），同时 `full` 由 `1` 降为 `0`，但 `full_d` 仍为 `1`，说明满标志与计数状态已不一致。同一周期 `mem<0>` 被写入 `00010100`，表明在 `full=1` 之后写操作仍然生效，即 `full` 没有正确门控 `wr_en`，导致 FIFO 深度被突破。此外 `rd_en=1` 已有效而 `head` 未更新，读写同时发生时计数器按“只写不读”递增，进一步佐证读使能/计数更新逻辑异常。随后 `cycle 36` 复位将 `count` 清为 `0` 并置 `empty=1`，掩盖了溢出，但断言已在 `fail_step=35` 触发。最可疑位置在 `fifo_sync` 模块的满标志生成与 `count` 更新逻辑（约 `failed_line=122`），关键信号为 `full`、`count`、`wr_en`，周期 `35`。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 13611,
+    "output_tokens": 2591,
+    "cost": 0.0026310200000000004
+  }
 }

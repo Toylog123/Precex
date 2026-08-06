@@ -1,0 +1,450 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "l2_fifo_04",
+  "module": null,
+  "error_type": null,
+  "fail_stage": null,
+  "fail_step": null,
+  "window": 8,
+  "fault_cone_algorithm": "static_code_fanin（trigger_condition ∪ code_slice ∪ key_signals，过滤参数/内部前缀）",
+  "failed_line": null,
+  "trigger_condition": null,
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_405",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_407",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_409",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_411",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_413",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_415",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_417",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_419",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_421",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_423",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_425",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_435",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyinit_procdff_436",
+          "val": "111"
+        },
+        {
+          "sig": "anyinit_procdff_437",
+          "val": "000"
+        },
+        {
+          "sig": "anyinit_procdff_438",
+          "val": "0000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_486",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_488",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_490",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_492",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_494",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_496",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_498",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_500",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_502",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_504",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_506",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_508",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_510",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_512",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_514",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_516",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_518",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_520",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_522",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_524",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_526",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_528",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "00000000"
+        },
+        {
+          "sig": "can_rd",
+          "val": "0"
+        },
+        {
+          "sig": "can_wr",
+          "val": "0"
+        },
+        {
+          "sig": "can_wr_d",
+          "val": "0"
+        },
+        {
+          "sig": "clk",
+          "val": "0"
+        },
+        {
+          "sig": "count",
+          "val": "0000"
+        },
+        {
+          "sig": "count_d",
+          "val": "0000"
+        },
+        {
+          "sig": "delta",
+          "val": "00"
+        },
+        {
+          "sig": "delta_d",
+          "val": "00"
+        },
+        {
+          "sig": "din",
+          "val": "00000000"
+        },
+        {
+          "sig": "dout",
+          "val": "00000000"
+        },
+        {
+          "sig": "empty",
+          "val": "1"
+        },
+        {
+          "sig": "empty_d",
+          "val": "0"
+        },
+        {
+          "sig": "full",
+          "val": "0"
+        },
+        {
+          "sig": "full_d",
+          "val": "0"
+        },
+        {
+          "sig": "half_full",
+          "val": "0"
+        },
+        {
+          "sig": "head",
+          "val": "111"
+        },
+        {
+          "sig": "mem<0>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<1>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<2>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<3>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<4>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<5>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<6>",
+          "val": "00000000"
+        },
+        {
+          "sig": "mem<7>",
+          "val": "00000000"
+        },
+        {
+          "sig": "rd_en",
+          "val": "0"
+        },
+        {
+          "sig": "rd_en_d",
+          "val": "0"
+        },
+        {
+          "sig": "rst_n",
+          "val": "0"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "tail",
+          "val": "000"
+        },
+        {
+          "sig": "tail_d",
+          "val": "000"
+        },
+        {
+          "sig": "wr_en",
+          "val": "0"
+        },
+        {
+          "sig": "wr_en_d",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "rst_n",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "wr_en": null,
+      "rd_en": null,
+      "count": null,
+      "count_d": null,
+      "head": null,
+      "tail": null,
+      "full": null,
+      "empty": null,
+      "half_full": null,
+      "full_d": null,
+      "empty_d": null,
+      "din": null,
+      "dout": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "rst_n": "0",
+      "wr_en": "0",
+      "rd_en": "0",
+      "count": "0000",
+      "count_d": "0000",
+      "head": "111",
+      "tail": "000",
+      "full": "0",
+      "empty": "1",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00000000",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "rst_n": "1",
+      "wr_en": "0",
+      "rd_en": "0",
+      "count": "0000",
+      "count_d": "0000",
+      "head": "111",
+      "tail": "000",
+      "full": "0",
+      "empty": "1",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00000000",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": null,
+      "wr_en": null,
+      "rd_en": null,
+      "count": null,
+      "count_d": null,
+      "head": null,
+      "tail": null,
+      "full": null,
+      "empty": null,
+      "half_full": null,
+      "full_d": null,
+      "empty_d": null,
+      "din": null,
+      "dout": null
+    }
+  ],
+  "fault_cone": [
+    "count",
+    "count_d",
+    "din",
+    "dout",
+    "empty",
+    "empty_d",
+    "full",
+    "full_d",
+    "half_full",
+    "head",
+    "rd_en",
+    "rst_n",
+    "tail",
+    "wr_en"
+  ],
+  "key_signals": [
+    "rst_n",
+    "wr_en",
+    "rd_en",
+    "count",
+    "count_d",
+    "head",
+    "tail",
+    "full",
+    "empty",
+    "half_full",
+    "full_d",
+    "empty_d",
+    "din",
+    "dout"
+  ],
+  "text_summary": "缺陷在周期1复位期间即已暴露：`empty_d` 被赋值为 0，而同一时刻 `empty` 为 1，说明空标志的下一拍逻辑在复位态下与当前空状态不一致。周期2复位释放后 `empty_d` 仍保持 0；周期3时钟上升沿到来时，错误值被采样进 `empty` 寄存器，使空标志由 1 跳变为 0，从而触发断言违例。最可疑代码位置为 FIFO 控制逻辑中 `empty_d` 的生成/复位逻辑，在 `rst_n==0` 时未将 `empty_d` 正确置 1，周期 1。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 2141,
+    "output_tokens": 1720,
+    "cost": 0.00078134
+  }
+}

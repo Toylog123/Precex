@@ -2129,5 +2129,11 @@
     "timeout_irq",
     "data_in"
   ],
-  "text_summary": null
+  "text_summary": "缺陷在周期51暴露：step_cnt 递增至二进制 `110000`（48），本应触发完成条件使 `done` 拉高，但实际 `done` 仍为低，同时 `state` 异常跳变为 `00` 且 `timeout_irq` 拉高，导致 `!done` 断言在 fail_step=51 违例。异常信号为 `step_cnt` 到达边界时的状态更新：cycle51 中 `state=00` 而 `state_d=01`，说明寄存器加载偏离了正常次态逻辑，疑似被计数器边界条件强制覆盖。因果链为：`start` 在周期29/37/42多次置位使 `step_cnt` 持续计数至48，而 `fsm_ctrl` 的状态转移未在此时产生 `done`，反而进入超时/空闲分支。最可疑代码位置：`fsm_ctrl` 模块中状态跳转与 `done` 生成逻辑（failed_line=172），重点检查 `step_cnt` 边界判断对 `state` 和 `timeout_irq` 的赋值，周期51。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 10878,
+    "output_tokens": 3532,
+    "cost": 0.00251188
+  }
 }

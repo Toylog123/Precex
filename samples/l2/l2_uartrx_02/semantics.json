@@ -1,0 +1,640 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "l2_uartrx_02",
+  "module": null,
+  "error_type": null,
+  "fail_stage": null,
+  "fail_step": null,
+  "window": 8,
+  "fault_cone_algorithm": "static_code_fanin（trigger_condition ∪ code_slice ∪ key_signals，过滤参数/内部前缀）",
+  "failed_line": null,
+  "trigger_condition": null,
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_333",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_335",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_337",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_339",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_341",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_343",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_345",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_347",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_349",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_351",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_356",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_357",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyinit_procdff_358",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_359",
+          "val": "01"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "00"
+        },
+        {
+          "sig": "anyinit_procdff_361",
+          "val": "0000"
+        },
+        {
+          "sig": "anyinit_procdff_362",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_395",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_397",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_399",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_401",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_403",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_405",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_407",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_409",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_411",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_413",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_415",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_417",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_419",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_421",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_423",
+          "val": "0"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "00"
+        },
+        {
+          "sig": "baud_cnt_d",
+          "val": "00"
+        },
+        {
+          "sig": "bit_cnt",
+          "val": "0000"
+        },
+        {
+          "sig": "clk",
+          "val": "0"
+        },
+        {
+          "sig": "rst_n",
+          "val": "0"
+        },
+        {
+          "sig": "rx_busy",
+          "val": "0"
+        },
+        {
+          "sig": "rx_data",
+          "val": "00000000"
+        },
+        {
+          "sig": "rx_shreg",
+          "val": "00000000"
+        },
+        {
+          "sig": "rx_valid",
+          "val": "0"
+        },
+        {
+          "sig": "rxd",
+          "val": "0"
+        },
+        {
+          "sig": "rxd_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "state",
+          "val": "00"
+        },
+        {
+          "sig": "state_d",
+          "val": "00"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_337",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_339",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_345",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_358",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_359",
+          "val": "00"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_405",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_407",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_409",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_417",
+          "val": "1"
+        },
+        {
+          "sig": "rst_n",
+          "val": "1"
+        },
+        {
+          "sig": "rxd_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_339",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_341",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_345",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_358",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_359",
+          "val": "01"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_405",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_407",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_411",
+          "val": "1"
+        },
+        {
+          "sig": "rx_busy",
+          "val": "1"
+        },
+        {
+          "sig": "rxd_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "state",
+          "val": "01"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_337",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_341",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_343",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "01"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_401",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_409",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_411",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_413",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_417",
+          "val": "0"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "01"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        },
+        {
+          "sig": "state_d",
+          "val": "01"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_339",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_341",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_343",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_359",
+          "val": "11"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "00"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_395",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_401",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_403",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_407",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_413",
+          "val": "0"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "00"
+        },
+        {
+          "sig": "baud_cnt_d",
+          "val": "01"
+        },
+        {
+          "sig": "rxd",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        },
+        {
+          "sig": "state",
+          "val": "11"
+        }
+      ]
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_339",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_341",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "01"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_395",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_403",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_407",
+          "val": "0"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "01"
+        },
+        {
+          "sig": "baud_cnt_d",
+          "val": "00"
+        },
+        {
+          "sig": "rxd_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000101"
+        },
+        {
+          "sig": "state_d",
+          "val": "11"
+        }
+      ]
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000110"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "state": null,
+      "state_d": null,
+      "bit_cnt": null,
+      "baud_cnt": null,
+      "rxd": null,
+      "rx_busy": null,
+      "rx_data": null,
+      "rx_valid": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "rst_n": "0",
+      "state": "00",
+      "state_d": "00",
+      "bit_cnt": "0000",
+      "baud_cnt": "00",
+      "rxd": "0",
+      "rx_busy": "0",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "rst_n": "1",
+      "state": "00",
+      "state_d": "00",
+      "bit_cnt": "0000",
+      "baud_cnt": "00",
+      "rxd": "0",
+      "rx_busy": "0",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "00",
+      "bit_cnt": "0000",
+      "baud_cnt": "00",
+      "rxd": "0",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "01",
+      "bit_cnt": "0000",
+      "baud_cnt": "01",
+      "rxd": "0",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "rst_n": "1",
+      "state": "11",
+      "state_d": "01",
+      "bit_cnt": "0000",
+      "baud_cnt": "00",
+      "rxd": "1",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "rst_n": "1",
+      "state": "11",
+      "state_d": "11",
+      "bit_cnt": "0000",
+      "baud_cnt": "01",
+      "rxd": "1",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "rst_n": null,
+      "state": null,
+      "state_d": null,
+      "bit_cnt": null,
+      "baud_cnt": null,
+      "rxd": null,
+      "rx_busy": null,
+      "rx_data": null,
+      "rx_valid": null
+    }
+  ],
+  "fault_cone": [
+    "baud_cnt",
+    "bit_cnt",
+    "rst_n",
+    "rx_busy",
+    "rx_data",
+    "rx_valid",
+    "rxd",
+    "state",
+    "state_d"
+  ],
+  "key_signals": [
+    "rst_n",
+    "state",
+    "state_d",
+    "bit_cnt",
+    "baud_cnt",
+    "rxd",
+    "rx_busy",
+    "rx_data",
+    "rx_valid"
+  ],
+  "text_summary": "缺陷最早在第 5 周期暴露：`state` 由 `01` 跳变为 `11`，但同周期 `state_d` 仍为 `01`，说明状态寄存器的输入输出不同步；同时 `baud_cnt` 从 `01` 回落为 `00`，而 `bit_cnt` 保持 `0000` 未开始计数。从周期 3 起 `rx_busy=1` 并进入 `state=01`，周期 4 `baud_cnt=01`，之后本应继续完成起始位采样，但周期 5 状态提前跳转并复位 `baud_cnt`，破坏后续数据位计数。因此最可疑的是 UART 接收状态机的状态转移/`state_d` 生成逻辑，尤其在周期 4→5 的跳转条件中对 `baud_cnt` 与 `state` 的判定有误，导致 `state` 与 `state_d` 失配、`bit_cnt` 停滞。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 3170,
+    "output_tokens": 2698,
+    "cost": 0.0011992400000000003
+  }
+}

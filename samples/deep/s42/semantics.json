@@ -3932,5 +3932,11 @@
     "timeout_irq",
     "data_in"
   ],
-  "text_summary": null
+  "text_summary": "缺陷发生在第 65 周期（fail_step=65）：此时 `step_cnt` 达到 `111110`（边界值），本应进入正常完成流程，但 `timeout_irq` 由 0 变 1，`state` 从 `01` 跳变到 `00`，而 `done` 始终保持 0，最终触发 `!done` 断言违例。  \n信号异常顺序上，`step_cnt` 连续递增至边界后，`timeout_irq` 率先拉高，随后 `state` 异常转移，`done` 未置位。  \n因果链为：`step_cnt` 计数到边界时，超时检测逻辑错误地判定超时，拉高 `timeout_irq` 并强制状态机退出 `01` 状态，绕过了产生 `done` 的路径。  \n最可疑代码位置为 `fsm_ctrl` 模块中与 `timeout_irq` 生成相关的边界比较逻辑（疑似对 `step_cnt` 的阈值判断），信号为 `timeout_irq` / `state`，周期为 65。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 21257,
+    "output_tokens": 3298,
+    "cost": 0.0038994200000000007
+  }
 }

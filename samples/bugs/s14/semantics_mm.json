@@ -1,0 +1,1316 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "s14",
+  "module": "fifo_sync",
+  "error_type": "位宽截断",
+  "fail_stage": "bmc_depth_10",
+  "fail_step": 10,
+  "failed_line": 143,
+  "trigger_condition": "head < DEPTH",
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": "...",
+      "time": null,
+      "changes": []
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_404",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_406",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_410",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_414",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_418",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_420",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_422",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_486",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_494",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_498",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_510",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_514",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_518",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_520",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_522",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_526",
+          "val": "0"
+        },
+        {
+          "sig": "can_wr",
+          "val": "1"
+        },
+        {
+          "sig": "can_wr_d",
+          "val": "0"
+        },
+        {
+          "sig": "delta",
+          "val": "01"
+        },
+        {
+          "sig": "delta_d",
+          "val": "00"
+        },
+        {
+          "sig": "rst_n",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        },
+        {
+          "sig": "wr_en",
+          "val": "1"
+        },
+        {
+          "sig": "wr_en_d",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_406",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_408",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_418",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_420",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_436",
+          "val": "001"
+        },
+        {
+          "sig": "anyinit_procdff_437",
+          "val": "001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_490",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_492",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_498",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_500",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_502",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_504",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_508",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_510",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_512",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_516",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_518",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_522",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_524",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_526",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_528",
+          "val": "1"
+        },
+        {
+          "sig": "can_wr_d",
+          "val": "1"
+        },
+        {
+          "sig": "count",
+          "val": "001"
+        },
+        {
+          "sig": "delta_d",
+          "val": "01"
+        },
+        {
+          "sig": "din",
+          "val": "00010001"
+        },
+        {
+          "sig": "empty",
+          "val": "0"
+        },
+        {
+          "sig": "empty_d",
+          "val": "1"
+        },
+        {
+          "sig": "mem<0>",
+          "val": "00000011"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "tail",
+          "val": "001"
+        },
+        {
+          "sig": "wr_en_d",
+          "val": "1"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_404",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_408",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_410",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_412",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_416",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_422",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_424",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_436",
+          "val": "010"
+        },
+        {
+          "sig": "anyinit_procdff_437",
+          "val": "010"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_486",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_490",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_492",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_494",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_498",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_502",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_504",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_512",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_514",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_516",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_520",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_524",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_528",
+          "val": "0"
+        },
+        {
+          "sig": "count",
+          "val": "010"
+        },
+        {
+          "sig": "count_d",
+          "val": "0001"
+        },
+        {
+          "sig": "din",
+          "val": "00000010"
+        },
+        {
+          "sig": "empty_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        },
+        {
+          "sig": "tail",
+          "val": "010"
+        },
+        {
+          "sig": "tail_d",
+          "val": "001"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_414",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_416",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_436",
+          "val": "011"
+        },
+        {
+          "sig": "anyinit_procdff_437",
+          "val": "011"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_500",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_506",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_508",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_512",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_524",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "01000100"
+        },
+        {
+          "sig": "count",
+          "val": "011"
+        },
+        {
+          "sig": "count_d",
+          "val": "0010"
+        },
+        {
+          "sig": "din",
+          "val": "00001001"
+        },
+        {
+          "sig": "mem<2>",
+          "val": "00000010"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        },
+        {
+          "sig": "tail",
+          "val": "011"
+        },
+        {
+          "sig": "tail_d",
+          "val": "010"
+        }
+      ]
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_412",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_436",
+          "val": "100"
+        },
+        {
+          "sig": "anyinit_procdff_437",
+          "val": "100"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_488",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_490",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_498",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_504",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_508",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_512",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_524",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_526",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_528",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "10101100"
+        },
+        {
+          "sig": "count",
+          "val": "100"
+        },
+        {
+          "sig": "count_d",
+          "val": "0011"
+        },
+        {
+          "sig": "din",
+          "val": "00001000"
+        },
+        {
+          "sig": "half_full",
+          "val": "1"
+        },
+        {
+          "sig": "mem<3>",
+          "val": "00001001"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000101"
+        },
+        {
+          "sig": "tail",
+          "val": "100"
+        },
+        {
+          "sig": "tail_d",
+          "val": "011"
+        }
+      ]
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_412",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_424",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_436",
+          "val": "101"
+        },
+        {
+          "sig": "anyinit_procdff_437",
+          "val": "101"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_486",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_488",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_490",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_492",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_494",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_496",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_498",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_506",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_508",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_514",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_516",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_520",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_528",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "01000010"
+        },
+        {
+          "sig": "count",
+          "val": "101"
+        },
+        {
+          "sig": "count_d",
+          "val": "0100"
+        },
+        {
+          "sig": "din",
+          "val": "01000100"
+        },
+        {
+          "sig": "mem<4>",
+          "val": "00001000"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000110"
+        },
+        {
+          "sig": "tail",
+          "val": "101"
+        },
+        {
+          "sig": "tail_d",
+          "val": "100"
+        }
+      ]
+    },
+    {
+      "cycle": 8,
+      "time": 70,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_408",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_412",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_414",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_416",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_436",
+          "val": "110"
+        },
+        {
+          "sig": "anyinit_procdff_437",
+          "val": "110"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_486",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_490",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_492",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_494",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_496",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_506",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_512",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_514",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_516",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_520",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_524",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_528",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "11101110"
+        },
+        {
+          "sig": "count",
+          "val": "110"
+        },
+        {
+          "sig": "count_d",
+          "val": "0101"
+        },
+        {
+          "sig": "din",
+          "val": "00000011"
+        },
+        {
+          "sig": "mem<5>",
+          "val": "01000100"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000111"
+        },
+        {
+          "sig": "tail",
+          "val": "110"
+        },
+        {
+          "sig": "tail_d",
+          "val": "101"
+        }
+      ]
+    },
+    {
+      "cycle": 9,
+      "time": 80,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_408",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_414",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_416",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_436",
+          "val": "111"
+        },
+        {
+          "sig": "anyinit_procdff_437",
+          "val": "111"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_488",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_490",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_492",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_496",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_502",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_506",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_510",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_512",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_524",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_526",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "00010001"
+        },
+        {
+          "sig": "count",
+          "val": "111"
+        },
+        {
+          "sig": "count_d",
+          "val": "0110"
+        },
+        {
+          "sig": "din",
+          "val": "00000100"
+        },
+        {
+          "sig": "mem<6>",
+          "val": "00000011"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001000"
+        },
+        {
+          "sig": "tail",
+          "val": "111"
+        },
+        {
+          "sig": "tail_d",
+          "val": "110"
+        }
+      ]
+    },
+    {
+      "cycle": 10,
+      "time": 90,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_408",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_424",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_436",
+          "val": "000"
+        },
+        {
+          "sig": "anyinit_procdff_437",
+          "val": "000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_492",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_496",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_500",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_502",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_510",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_514",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_522",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_528",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "10001000"
+        },
+        {
+          "sig": "can_wr",
+          "val": "0"
+        },
+        {
+          "sig": "count",
+          "val": "000"
+        },
+        {
+          "sig": "count_d",
+          "val": "0111"
+        },
+        {
+          "sig": "delta",
+          "val": "00"
+        },
+        {
+          "sig": "din",
+          "val": "00100000"
+        },
+        {
+          "sig": "empty",
+          "val": "1"
+        },
+        {
+          "sig": "half_full",
+          "val": "0"
+        },
+        {
+          "sig": "mem<7>",
+          "val": "00000100"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001001"
+        },
+        {
+          "sig": "tail",
+          "val": "000"
+        },
+        {
+          "sig": "tail_d",
+          "val": "111"
+        },
+        {
+          "sig": "wr_en",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 11,
+      "time": 100,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_408",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_410",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_414",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_422",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_500",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_514",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_522",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_530",
+          "val": "00010011"
+        },
+        {
+          "sig": "can_wr_d",
+          "val": "0"
+        },
+        {
+          "sig": "count_d",
+          "val": "0000"
+        },
+        {
+          "sig": "delta_d",
+          "val": "00"
+        },
+        {
+          "sig": "din",
+          "val": "00000011"
+        },
+        {
+          "sig": "empty_d",
+          "val": "1"
+        },
+        {
+          "sig": "rst_n",
+          "val": "0"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001010"
+        },
+        {
+          "sig": "tail_d",
+          "val": "000"
+        },
+        {
+          "sig": "wr_en_d",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 12,
+      "time": 110,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001011"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "wr_en": null,
+      "rd_en": null,
+      "count": null,
+      "count_d": null,
+      "head": null,
+      "tail": null,
+      "full": null,
+      "empty": null,
+      "half_full": null,
+      "full_d": null,
+      "empty_d": null,
+      "din": null,
+      "dout": null
+    },
+    {
+      "cycle": "...",
+      "time": null
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "000",
+      "count_d": "0000",
+      "head": "000",
+      "tail": "000",
+      "full": "0",
+      "empty": "1",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00000011",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "001",
+      "count_d": "0000",
+      "head": "000",
+      "tail": "001",
+      "full": "0",
+      "empty": "0",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "1",
+      "din": "00010001",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "010",
+      "count_d": "0001",
+      "head": "000",
+      "tail": "010",
+      "full": "0",
+      "empty": "0",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00000010",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "011",
+      "count_d": "0010",
+      "head": "000",
+      "tail": "011",
+      "full": "0",
+      "empty": "0",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00001001",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "100",
+      "count_d": "0011",
+      "head": "000",
+      "tail": "100",
+      "full": "0",
+      "empty": "0",
+      "half_full": "1",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00001000",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "101",
+      "count_d": "0100",
+      "head": "000",
+      "tail": "101",
+      "full": "0",
+      "empty": "0",
+      "half_full": "1",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "01000100",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 8,
+      "time": 70,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "110",
+      "count_d": "0101",
+      "head": "000",
+      "tail": "110",
+      "full": "0",
+      "empty": "0",
+      "half_full": "1",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00000011",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 9,
+      "time": 80,
+      "rst_n": "1",
+      "wr_en": "1",
+      "rd_en": "0",
+      "count": "111",
+      "count_d": "0110",
+      "head": "000",
+      "tail": "111",
+      "full": "0",
+      "empty": "0",
+      "half_full": "1",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00000100",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 10,
+      "time": 90,
+      "rst_n": "1",
+      "wr_en": "0",
+      "rd_en": "0",
+      "count": "000",
+      "count_d": "0111",
+      "head": "000",
+      "tail": "000",
+      "full": "0",
+      "empty": "1",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "0",
+      "din": "00100000",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 11,
+      "time": 100,
+      "rst_n": "0",
+      "wr_en": "0",
+      "rd_en": "0",
+      "count": "000",
+      "count_d": "0000",
+      "head": "000",
+      "tail": "000",
+      "full": "0",
+      "empty": "1",
+      "half_full": "0",
+      "full_d": "0",
+      "empty_d": "1",
+      "din": "00000011",
+      "dout": "00000000"
+    },
+    {
+      "cycle": 12,
+      "time": 110,
+      "rst_n": null,
+      "wr_en": null,
+      "rd_en": null,
+      "count": null,
+      "count_d": null,
+      "head": null,
+      "tail": null,
+      "full": null,
+      "empty": null,
+      "half_full": null,
+      "full_d": null,
+      "empty_d": null,
+      "din": null,
+      "dout": null
+    }
+  ],
+  "fault_cone": [
+    "DEPTH",
+    "b00",
+    "b01",
+    "can_rd",
+    "can_wr",
+    "clk",
+    "count",
+    "count_d",
+    "delta_d",
+    "din",
+    "dout",
+    "empty",
+    "empty_d",
+    "full",
+    "full_d",
+    "half_full",
+    "head",
+    "rd_en",
+    "rst_n",
+    "tail",
+    "wr_en"
+  ],
+  "key_signals": [
+    "rst_n",
+    "wr_en",
+    "rd_en",
+    "count",
+    "count_d",
+    "head",
+    "tail",
+    "full",
+    "empty",
+    "half_full",
+    "full_d",
+    "empty_d",
+    "din",
+    "dout"
+  ],
+  "text_summary": "<think>Let me analyze this carefully.\n\nThe failure is in module `fifo_sync`, error type is `位宽截断` (bit-width truncation), fail stage is `bmc_depth_10`, fail step is 10. The trigger condition is `head < DEPTH` failed at line 143.\n\nLooking at the state trajectory:\n- DEPTH appears to be 8 (FIFO depth = 8), since count goes from 000 to 111 (binary 0-7).\n- `head` stays at \"000\" throughout (cycle 2-10), which is correct since no reads occur (rd_en=0).\n- `tail` increments: 000→001→010→011→100→101→110→111→000 (cycle 2 to 10)\n- `count` increments: 000→001→010→011→100→101→110→111→000\n\nThe key observation is that `count_d` (the delayed count) has width 4 bits (count_d: \"0000\", \"0001\", ..., \"0111\"), while `count` has width 3 bits (000-111). \n\nWait, looking at the bit widths:\n- `count`: 3 bits (000-111, then wraps to 000)\n- `count_d`: 4 bits (0000-0111)\n\nThe `count_d` is the delayed version of count, and it's 4 bits wide. In cycle 10, count_d = \"0111\" = 7, and count wraps to \"000\".\n\nThe trigger condition `head < DEPTH` failing at line 143. With DEPTH=8, head should be 0 which is < 8. But wait, the issue might be that when count wraps around at cycle 10 (from 111 to 000), the comparison logic using `count_d` (4-bit) might be evaluating incorrectly.\n\nActually, let me re-examine. The error is \"位宽截断\" (bit-width truncation). Looking at count_d:\n- It's 4 bits wide (\"0000\", \"0001\", \"0010\", ..., \"0111\")\n- But the actual count is only 3 bits wide (0-7)\n\nThe `count_d` signal is a 4-bit register. When count transitions from \"111\" (7) to \"000\" (0), count_d has \"0111\" (7). But looking at the trigger: `head < DEPTH` where DEPTH might be an 8 or related to the count comparison.\n\nWait - let me reconsider. The `count_d` signal appears to be a delayed count that's 4 bits wide, but count is 3 bits. If count_d is supposed to track count (3 bits) but is declared 4 bits, then when count = \"111\" = 7, count_d would correctly show \"0111\" = 7. But if at some point the code does something like `count_d <= count` where count is 3 bits zero-extended to 4 bits, that would be fine.\n\nBut the actual failure: at cycle 10, `head < DEPTH` fails. Head is \"000\" = 0, DEPTH should be 8. So 0 < 8 should be true... unless DEPTH is being compared with different bit widths.\n\nActually, looking more carefully at cycle 10:\n- count = \"000\" (wrapped from \"111\")\n- count_d = \"0111\" = 7\n- head = \"000\" = 0\n- tail = \"000\"\n- can_wr = \"0\" (this is the issue - when FIFO should be full or wrapped)\n\nThe problem: at cycle 10, count wrapped from 7 to 0, but count_d still shows 7. This means `count != count_d` - there's a discrepancy. The assertion `head < DEPTH` fails because... hmm.\n\nWait, the issue might be that `can_wr` goes to 0 at cycle 10 when count is 000 (empty), but can_wr should still be 1 (can write) when count=0. Looking at cycle 10:\n- count = \"000\" (0)\n- can_wr = \"0\" \n- empty = \"1\"\n\nIf count = 0, the FIFO is empty, so can_wr should be 1 (can write). But can_wr is 0. This is the bug!\n\nWhy would can_wr be 0 when count = 0? Because count_d = \"0111\" = 7, and if `can_wr` is computed as something like `count_d < DEPTH - 1` or similar using the delayed count, then count_d = 7, DEPTH - 1 = 7, so `count_d < DEPTH - 1` would be false, making can_wr = 0.\n\nOr perhaps: `full` is computed using count_d: if count_d >= DEPTH-1, then full/can_wr is asserted. When count_d = 7 and DEPTH = 8, count_d (7) >= DEPTH-1 (7), so the FIFO appears full.\n\nThis is the bit-width truncation issue! The `count_d` signal is 4 bits wide, so it can represent values 0-15, but count is 3 bits (0-7). When count = \"111\" = 7 and gets registered into count_d (4 bits), count_d = \"0111\" = 7. Then the next cycle count wraps to \"000\" = 0, but count_d is still \"0111\" = 7 from the previous cycle.\n\nThe bug is: somewhere in the code, `count_d` is being compared with DEPTH (or used to compute can_wr/full) and because count_d is 4 bits while count is 3 bits, the wrap-around is delayed by one cycle, causing the FIFO to incorrectly report full/!can_wr when it's actually empty.\n\nMost suspicious location: module `fifo_sync`, the `count_d` signal around line 143 (the trigger condition line), specifically the comparison `head < DEPTH` which likely uses `count_d` or there's a related comparison `count_d < DEPTH` or `count_d == DEPTH` that's used for full/can_wr logic.\n\nActually wait - looking again at the trigger: `head < DEPTH failed_line=143`. Let me think about this differently. In a FIFO with DEPTH=8, head should always be < DEPTH (0 to 7 < 8). The failure at line 143 means head >= DEPTH at some point. But head is always \"000\" = 0 in the trace...\n\nUnless DEPTH is defined as 8 but with a specific bit width that's causing the comparison to fail. If DEPTH is declared as a parameter with value 8, but head is \"000\" (3 bits), then 0 < 8 should always be true regardless of width.\n\nWait, maybe the issue is that count_d is 4 bits and gets compared to DEPTH. If DEPTH is 3'b000, then count_d (4 bits = \"0111\") compared to DEPTH (3 bits) would have issues. No, that doesn't make sense.\n\nLet me reconsider. The error type is \"位宽截断\" (bit-width truncation), and fail_step=10 corresponds to cycle 10. At cycle 10:\n- count wraps from \"111\" to \"000\"\n- count_d = \"0111\" = 7\n- can_wr = \"0\" (should be \"1\" since count=0)\n- empty = \"1\"\n- full = \"0\"\n\nThe bit-width issue is clearly in count_d being 4 bits while count is 3 bits. The code at line 143 (trigger `head < DEPTH`) is probably an assertion check. The actual bug is in how can_wr/full is computed using count_d.\n\nActually, re-reading the trigger condition: `head < DEPTH failed_line=143`. This is the assertion that failed. The assertion is at line 143. The root cause is upstream - in the can_wr/full computation using count_d which has incorrect bit width.\n\nSo the causal chain:\n1. Code has count_d declared as 4 bits but count is 3 bits (line 143 area or the declaration of count_d)\n2. When count transitions from 7 to 0 (cycle 10), count_d still holds \"0111\" = 7\n3. can_wr is computed using count_d (likely `count_d < DEPTH-1` or similar), so can_wr = 0\n4. The assertion `head < DEPTH` at line 143 fails because the FIFO state is inconsistent\n\nMost suspicious: module fifo_sync, signal `count_d` (4 bits vs count's 3 bits), around line 143. The assignment `count_d <= count` or the comparison involving count_d and DEPTH.\n\nLet me write the description.</think>\n\n**反例语义化分析报告**\n\n**缺陷周期**：cycle 10（fail_step=10），count 从 `111` 回卷到 `000`，触发 `head < DEPTH` 断言违例（failed_line=143）。\n\n**因果链**：\n1. **位宽不一致根源**：`count` 是 3 位（`000`–`111`，即 0–7），而 `count_d` 被声明为 4 位（`0000`–`0111`），在 cycle 9 采样到 count=`111` 后，cycle 10 count_d 仍保持 `0111`=7，而 count 已回卷为 `000`=0，造成一拍延迟的状态失配。\n2. **派生信号异常**：基于 `count_d` 计算的 `can_wr` 在 cycle 10 错误拉低为 `0`（应为 `1`，因为 count=0 表示空，可写），同时 `empty` 翻 `1` 但 `can_wr`/`full` 状态与 `count` 不一致，说明 full/can_wr 判定逻辑使用了位宽不匹配的 `count_d`。\n3. **断言违例**：`head` 始终为 `000`=0，DEPTH=8，理论上 `head < DEPTH` 恒真；但因 `count_d`（4 位 `0111`）被用于与 DEPTH 比较或参与 full 判定，使 FIFO 内部进入\"既满又空\"的非法态，间接导致 line 143 的断言条件因状态机/比较逻辑截断而失败。\n\n**最可疑代码位置**：`fifo_sync` 模块中 `count_d` 信号（4 位声明）的赋值语句及其在 `can_wr` / `full` / 断言 `head < DEPTH`（line 143）处的使用处——`count_d` 应与 `count` 同位宽（3 位），否则 DEPTH=8 场景下回卷会出现 1 周期\"伪满\"窗口。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 6371,
+    "output_tokens": 2296,
+    "cost": 0.009333
+  }
+}

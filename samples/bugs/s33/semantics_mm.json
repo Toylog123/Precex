@@ -1,0 +1,1050 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "s33",
+  "module": "axi_lite_slave",
+  "error_type": "状态跳转",
+  "fail_stage": "bmc_depth_4",
+  "fail_step": 4,
+  "failed_line": 233,
+  "trigger_condition": "!S_AXI_WREADY",
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "ACLK",
+          "val": "0"
+        },
+        {
+          "sig": "ARESETN",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_ARADDR",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_ARREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_ARVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_AWADDR",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_AWREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_AWVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BRESP",
+          "val": "00"
+        },
+        {
+          "sig": "S_AXI_BVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RDATA",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "S_AXI_RREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RRESP",
+          "val": "00"
+        },
+        {
+          "sig": "S_AXI_RVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "S_AXI_WREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_WVALID",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1011",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1012",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1013",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1015",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_938",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_940",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_942",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_944",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_946",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_948",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_950",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_952",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_954",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_956",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_958",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_960",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_962",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_964",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_966",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_980",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_981",
+          "val": "00"
+        },
+        {
+          "sig": "anyinit_procdff_982",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_983",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_985",
+          "val": "00"
+        },
+        {
+          "sig": "anyinit_procdff_986",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_987",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_988",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_989",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_990",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1074",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1076",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1078",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1080",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1082",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1084",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1086",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1088",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1090",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1092",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1094",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1096",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1098",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1100",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1102",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1104",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1106",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1108",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1110",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1112",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1114",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1116",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1118",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1120",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1122",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1124",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1126",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1128",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1130",
+          "val": "10000000000000000000000000000000"
+        },
+        {
+          "sig": "aresetn_d",
+          "val": "1"
+        },
+        {
+          "sig": "aw_done",
+          "val": "0"
+        },
+        {
+          "sig": "aw_done_d",
+          "val": "0"
+        },
+        {
+          "sig": "bready_d",
+          "val": "1"
+        },
+        {
+          "sig": "bvalid_d",
+          "val": "0"
+        },
+        {
+          "sig": "rd_exp",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "rd_exp_valid",
+          "val": "0"
+        },
+        {
+          "sig": "reg0",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "reg1",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "reg2",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "reg3",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "rready_d",
+          "val": "0"
+        },
+        {
+          "sig": "rvalid_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "w_done",
+          "val": "0"
+        },
+        {
+          "sig": "w_done_d",
+          "val": "0"
+        },
+        {
+          "sig": "waddr_d",
+          "val": "0000"
+        },
+        {
+          "sig": "wdata_d",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "wstrb_d",
+          "val": "0000"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "ARESETN",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_AWADDR",
+          "val": "0001"
+        },
+        {
+          "sig": "S_AXI_AWVALID",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_BREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "10111111111011110000000001000000"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "0010"
+        },
+        {
+          "sig": "anyinit_procdff_1015",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_938",
+          "val": "0"
+        },
+        {
+          "sig": "aresetn_d",
+          "val": "0"
+        },
+        {
+          "sig": "bready_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "S_AXI_AWADDR",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_AWREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_AWVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "00010000001000000001000000100000"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "0001"
+        },
+        {
+          "sig": "anyinit_procdff_1013",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_1015",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_938",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_940",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_942",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_944",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_946",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1092",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1130",
+          "val": "00000000000000000001000000000000"
+        },
+        {
+          "sig": "aresetn_d",
+          "val": "1"
+        },
+        {
+          "sig": "aw_done",
+          "val": "1"
+        },
+        {
+          "sig": "bready_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "S_AXI_ARVALID",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_AWREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BVALID",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "00000000010000000000000001000000"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "0101"
+        },
+        {
+          "sig": "S_AXI_WVALID",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_1013",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_940",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_942",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_944",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_946",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_986",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1092",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1096",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1108",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1120",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1124",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1130",
+          "val": "00000000000000000000000100000000"
+        },
+        {
+          "sig": "aw_done_d",
+          "val": "1"
+        },
+        {
+          "sig": "rready_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "S_AXI_ARREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_ARVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RVALID",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "S_AXI_WREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_WVALID",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1011",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_1012",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_938",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_942",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_950",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_958",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_966",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_982",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_983",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_987",
+          "val": "00000000010000000000000001000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1096",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1108",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1120",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1124",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1130",
+          "val": "10000000000000000000000000000000"
+        },
+        {
+          "sig": "bready_d",
+          "val": "0"
+        },
+        {
+          "sig": "bvalid_d",
+          "val": "1"
+        },
+        {
+          "sig": "rd_exp_valid",
+          "val": "1"
+        },
+        {
+          "sig": "reg0",
+          "val": "00000000010000000000000001000000"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        },
+        {
+          "sig": "w_done",
+          "val": "1"
+        },
+        {
+          "sig": "wdata_d",
+          "val": "00000000010000000000000001000000"
+        },
+        {
+          "sig": "wstrb_d",
+          "val": "0101"
+        }
+      ]
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "changes": [
+        {
+          "sig": "ACLK",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000101"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "ACLK": null,
+      "ARESETN": null,
+      "S_AXI_AWADDR": null,
+      "S_AXI_AWVALID": null,
+      "S_AXI_AWREADY": null,
+      "S_AXI_WDATA": null,
+      "S_AXI_WSTRB": null,
+      "S_AXI_WVALID": null,
+      "S_AXI_WREADY": null,
+      "S_AXI_BRESP": null,
+      "S_AXI_BVALID": null,
+      "S_AXI_BREADY": null,
+      "S_AXI_ARADDR": null,
+      "S_AXI_ARVALID": null,
+      "S_AXI_ARREADY": null,
+      "S_AXI_RDATA": null,
+      "S_AXI_RRESP": null,
+      "S_AXI_RVALID": null,
+      "S_AXI_RREADY": null,
+      "reg0": null,
+      "reg1": null,
+      "reg2": null,
+      "reg3": null,
+      "aw_done": null,
+      "w_done": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "ACLK": "0",
+      "ARESETN": "0",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "00000000000000000000000000000000",
+      "S_AXI_WSTRB": "0000",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "0",
+      "S_AXI_BREADY": "0",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "0",
+      "S_AXI_RREADY": "0",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "0",
+      "w_done": "0"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0001",
+      "S_AXI_AWVALID": "1",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "10111111111011110000000001000000",
+      "S_AXI_WSTRB": "0010",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "0",
+      "S_AXI_BREADY": "1",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "0",
+      "S_AXI_RREADY": "0",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "0",
+      "w_done": "0"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "1",
+      "S_AXI_WDATA": "00010000001000000001000000100000",
+      "S_AXI_WSTRB": "0001",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "0",
+      "S_AXI_BREADY": "1",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "0",
+      "S_AXI_RREADY": "1",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "1",
+      "w_done": "0"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "00000000010000000000000001000000",
+      "S_AXI_WSTRB": "0101",
+      "S_AXI_WVALID": "1",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "1",
+      "S_AXI_BREADY": "0",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "1",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "0",
+      "S_AXI_RREADY": "1",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "1",
+      "w_done": "0"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "00000000000000000000000000000000",
+      "S_AXI_WSTRB": "0000",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "1",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "1",
+      "S_AXI_BREADY": "0",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "1",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "1",
+      "S_AXI_RREADY": "0",
+      "reg0": "00000000010000000000000001000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "1",
+      "w_done": "1"
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "ACLK": "1",
+      "ARESETN": null,
+      "S_AXI_AWADDR": null,
+      "S_AXI_AWVALID": null,
+      "S_AXI_AWREADY": null,
+      "S_AXI_WDATA": null,
+      "S_AXI_WSTRB": null,
+      "S_AXI_WVALID": null,
+      "S_AXI_WREADY": null,
+      "S_AXI_BRESP": null,
+      "S_AXI_BVALID": null,
+      "S_AXI_BREADY": null,
+      "S_AXI_ARADDR": null,
+      "S_AXI_ARVALID": null,
+      "S_AXI_ARREADY": null,
+      "S_AXI_RDATA": null,
+      "S_AXI_RRESP": null,
+      "S_AXI_RVALID": null,
+      "S_AXI_RREADY": null,
+      "reg0": null,
+      "reg1": null,
+      "reg2": null,
+      "reg3": null,
+      "aw_done": null,
+      "w_done": null
+    }
+  ],
+  "fault_cone": [
+    "ACLK",
+    "ARESETN",
+    "BVALID",
+    "S_AXI_ARADDR",
+    "S_AXI_ARREADY",
+    "S_AXI_ARVALID",
+    "S_AXI_AWADDR",
+    "S_AXI_AWREADY",
+    "S_AXI_AWVALID",
+    "S_AXI_BREADY",
+    "S_AXI_BRESP",
+    "S_AXI_BVALID",
+    "S_AXI_RDATA",
+    "S_AXI_RREADY",
+    "S_AXI_RRESP",
+    "S_AXI_RVALID",
+    "S_AXI_WDATA",
+    "S_AXI_WREADY",
+    "S_AXI_WSTRB",
+    "S_AXI_WVALID",
+    "W",
+    "aw_done",
+    "reg0",
+    "reg1",
+    "reg2",
+    "reg3",
+    "w_done",
+    "w_done_d"
+  ],
+  "key_signals": [
+    "ACLK",
+    "ARESETN",
+    "S_AXI_AWADDR",
+    "S_AXI_AWVALID",
+    "S_AXI_AWREADY",
+    "S_AXI_WDATA",
+    "S_AXI_WSTRB",
+    "S_AXI_WVALID",
+    "S_AXI_WREADY",
+    "S_AXI_BRESP",
+    "S_AXI_BVALID",
+    "S_AXI_BREADY",
+    "S_AXI_ARADDR",
+    "S_AXI_ARVALID",
+    "S_AXI_ARREADY",
+    "S_AXI_RDATA",
+    "S_AXI_RRESP",
+    "S_AXI_RVALID",
+    "S_AXI_RREADY",
+    "reg0",
+    "reg1",
+    "reg2",
+    "reg3",
+    "aw_done",
+    "w_done"
+  ],
+  "text_summary": "<think>Let me analyze this carefully.\n\nThe fault information indicates:\n- Module: axi_lite_slave\n- Error type: 状态跳转 (state transition)\n- Failure stage: bmc_depth_4, fail_step=4\n- Trigger condition: !S_AXI_WREADY\n- Failed line: 233\n\nLooking at the state trajectory:\n- Cycle 1 (time 0): Reset state, ARESETN=0, all signals 0\n- Cycle 2 (time 10): ARESETN=1, AWADDR=0001, AWVALID=1, BREADY=1 - Master initiates write address\n- Cycle 3 (time 20): AWREADY=1, AWVALID=0 (handshake complete), aw_done=1, RREADY=1 (master initiates read)\n- Cycle 4 (time 30): BVALID=1 (write response), AWREADY=0, ARVALID=1, WVALID=1, WDATA changed, WSTRB=0101\n- Cycle 5 (time 40): WREADY=1 (handshake completes), reg0 updated to the WDATA value, w_done=1\n- Cycle 6 (time 50): ACLK=1\n\nThe trigger condition is !S_AXI_WREADY (S_AXI_WREADY is false/0).\n\nLooking at cycle 4: WVALID=1 but WREADY=0 - the slave is NOT ready to accept write data even though the master has asserted WVALID. This is the failure point - at cycle 4, WREADY should be 1 (or should be asserted) because WVALID=1 and we're in a write transaction (aw_done=1 already since cycle 3).\n\nThe failure is at step 4 (cycle 4), where WREADY stays low even though:\n- AW handshake completed in cycle 3 (aw_done=1)\n- WVALID is asserted by master\n- Write data and strobes are valid\n\nThis causes the write state machine to not transition properly to accept the write data. By cycle 5, WREADY becomes 1, but the issue manifests at cycle 4 - the FSM doesn't transition to write data acceptance state when it should have.\n\nThe causal chain:\n1. Cycle 3: aw_done=1 (AW handshake completed)\n2. Cycle 4: WVALID=1 from master, but slave's WREADY=0 (should be ready)\n3. This violates the protocol - slave should assert WREADY to accept write data\n4. Cycle 5: Eventually WREADY=1, but wdata_d and wstrb_d capture values, w_done=1\n\nThe most suspicious code location is around line 233 where WREADY is being driven - likely the FSM state transition logic that determines when to assert S_AXI_WREADY. Given aw_done is set in cycle 3, the state machine should transition to WREADY=1 in cycle 4 when WVALID is asserted.\n\nLet me write a 3-5 sentence description in Chinese.</think>\n\n**缺陷语义化报告**\n\n缺陷发生在 **cycle 4（bmc_depth_4, fail_step=4）**，触发条件为 `!S_AXI_WREADY`：此时主设备已发起写数据通道（`S_AXI_WVALID=1`, `S_AXI_WDATA=0000…01000000`, `S_AXI_WSTRB=0101`），但从设备未拉高 `S_AXI_WREADY`，导致写数据握手未能在预期周期建立。**异常前置信号**在 cycle 3 已显现：`aw_done=1`（AW 握手已完成，地址 0001 已锁存于 `waddr_d`），从设备 FSM 理应在 cycle 4 进入\"等待/接受 WDATA\"次态并将 `S_AXI_WREADY` 置 1，但实际保持 0；直到 cycle 5 才迟到地拉高 `S_AXI_WREADY=1` 并捕获 `wdata_d/wstrb_d`、`reg0` 被写入——表明 FSM 在 `aw_done → w_ready` 转移上漏掉了一个组合/时序触发条件，与断言违例（写响应时序/写完成信号异常）的因果链为：**aw_done 置位但写数据就绪状态未跳转 → WVALID/WREADY 错位 → 写事务推迟一拍 → BVALID/RVALID 协议时序整体错位**。**最可疑代码位置**：`axi_lite_slave` 模块 line 233 附近的 `S_AXI_WREADY` 赋值逻辑（即基于 `aw_done`、`W`、`w_done_d` 等状态信号驱动 WREADY 输出的状态机 next-state / output 段），建议核对 WREADY 输出的 case/状态编码与 `aw_done` 上升沿的同步关系。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 6108,
+    "output_tokens": 1001,
+    "cost": 0.0060672
+  }
+}

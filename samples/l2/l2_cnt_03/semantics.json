@@ -1,0 +1,352 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "l2_cnt_03",
+  "module": null,
+  "error_type": null,
+  "fail_stage": null,
+  "fail_step": null,
+  "window": 8,
+  "fault_cone_algorithm": "static_code_fanin（trigger_condition ∪ code_slice ∪ key_signals，过滤参数/内部前缀）",
+  "failed_line": null,
+  "trigger_condition": null,
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "a",
+          "val": "00000000"
+        },
+        {
+          "sig": "a_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out",
+          "val": "00000000"
+        },
+        {
+          "sig": "alu_out_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyinit_procdff_233",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_235",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_241",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_243",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_245",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_247",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_256",
+          "val": "11111111"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_263",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_265",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_267",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_269",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_271",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_273",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_275",
+          "val": "00000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_277",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_279",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_281",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_283",
+          "val": "0"
+        },
+        {
+          "sig": "b",
+          "val": "00000000"
+        },
+        {
+          "sig": "b_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "clk",
+          "val": "0"
+        },
+        {
+          "sig": "cnt",
+          "val": "11111111"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "00000000"
+        },
+        {
+          "sig": "cnt_en",
+          "val": "0"
+        },
+        {
+          "sig": "cnt_en_d",
+          "val": "0"
+        },
+        {
+          "sig": "op",
+          "val": "000"
+        },
+        {
+          "sig": "op_d",
+          "val": "000"
+        },
+        {
+          "sig": "rst_n",
+          "val": "0"
+        },
+        {
+          "sig": "rst_n_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_279",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_281",
+          "val": "1"
+        },
+        {
+          "sig": "rst_n",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_235",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_241",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_279",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_281",
+          "val": "0"
+        },
+        {
+          "sig": "cnt_d",
+          "val": "11111111"
+        },
+        {
+          "sig": "rst_n_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "cnt_en": null,
+      "cnt": null,
+      "cnt_d": null,
+      "op": null,
+      "op_d": null,
+      "a": null,
+      "b": null,
+      "a_d": null,
+      "b_d": null,
+      "alu_out": null,
+      "alu_out_d": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "rst_n": "0",
+      "cnt_en": "0",
+      "cnt": "11111111",
+      "cnt_d": "00000000",
+      "op": "000",
+      "op_d": "000",
+      "a": "00000000",
+      "b": "00000000",
+      "a_d": "00000000",
+      "b_d": "00000000",
+      "alu_out": "00000000",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "rst_n": "1",
+      "cnt_en": "0",
+      "cnt": "11111111",
+      "cnt_d": "00000000",
+      "op": "000",
+      "op_d": "000",
+      "a": "00000000",
+      "b": "00000000",
+      "a_d": "00000000",
+      "b_d": "00000000",
+      "alu_out": "00000000",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": "1",
+      "cnt_en": "0",
+      "cnt": "11111111",
+      "cnt_d": "11111111",
+      "op": "000",
+      "op_d": "000",
+      "a": "00000000",
+      "b": "00000000",
+      "a_d": "00000000",
+      "b_d": "00000000",
+      "alu_out": "00000000",
+      "alu_out_d": "00000000"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "rst_n": null,
+      "cnt_en": null,
+      "cnt": null,
+      "cnt_d": null,
+      "op": null,
+      "op_d": null,
+      "a": null,
+      "b": null,
+      "a_d": null,
+      "b_d": null,
+      "alu_out": null,
+      "alu_out_d": null
+    }
+  ],
+  "fault_cone": [
+    "a",
+    "a_d",
+    "alu_out",
+    "alu_out_d",
+    "b",
+    "b_d",
+    "cnt",
+    "cnt_d",
+    "cnt_en",
+    "op",
+    "op_d",
+    "rst_n"
+  ],
+  "key_signals": [
+    "rst_n",
+    "cnt_en",
+    "cnt",
+    "cnt_d",
+    "op",
+    "op_d",
+    "a",
+    "b",
+    "a_d",
+    "b_d",
+    "alu_out",
+    "alu_out_d"
+  ],
+  "text_summary": "基于周期事件表，缺陷在 cycle 1 首次暴露：此时 `rst_n=0`，但 `cnt` 已为 `11111111`，而 `cnt_d` 却为 `00000000`，说明复位期间 `cnt` 寄存器的值没有被正确复位为 0，异常最先出现在 `cnt`。\n\n随后 cycle 3 `rst_n` 已拉高，`cnt_d` 跟随变为 `11111111`，与 `cnt` 一致；cycle 4 时钟上升沿到来后，该错误值将被锁存并沿 `cnt_d → cnt → alu_out/alu_out_d` 的路径传播，最终触发断言违例。\n\n最可疑代码位置为顶层被测模块中 `cnt` 寄存器的复位逻辑（信号 `cnt`，周期 1），即复位条件下 `cnt` 的赋值/复位值设置错误，而非 `rst_n` 本身或使能信号 `cnt_en` 的问题。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 1746,
+    "output_tokens": 805,
+    "cost": 0.00046984
+  }
+}

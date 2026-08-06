@@ -1,0 +1,1157 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "s17",
+  "module": "axi_lite_slave",
+  "error_type": "握手",
+  "fail_stage": "bmc_depth_5",
+  "fail_step": 5,
+  "failed_line": 234,
+  "trigger_condition": "!S_AXI_WREADY",
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "changes": [
+        {
+          "sig": "ACLK",
+          "val": "0"
+        },
+        {
+          "sig": "ARESETN",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_ARADDR",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_ARREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_ARVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_AWADDR",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_AWREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_AWVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BRESP",
+          "val": "00"
+        },
+        {
+          "sig": "S_AXI_BVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RDATA",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "S_AXI_RREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RRESP",
+          "val": "00"
+        },
+        {
+          "sig": "S_AXI_RVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "S_AXI_WREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_WVALID",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1008",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1009",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1010",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1012",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_935",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_937",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_939",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_941",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_943",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_945",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_947",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_949",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_951",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_953",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_955",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_957",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_959",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_961",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_963",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_977",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_978",
+          "val": "00"
+        },
+        {
+          "sig": "anyinit_procdff_979",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_980",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_982",
+          "val": "00"
+        },
+        {
+          "sig": "anyinit_procdff_983",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_984",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_985",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_986",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_987",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1071",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1073",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1075",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1077",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1079",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1081",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1083",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1085",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1087",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1089",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1091",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1093",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1095",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1097",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1099",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1101",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1103",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1105",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1107",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1109",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1111",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1113",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1115",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1117",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1119",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1121",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1123",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1125",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1127",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "aresetn_d",
+          "val": "1"
+        },
+        {
+          "sig": "aw_done",
+          "val": "0"
+        },
+        {
+          "sig": "aw_done_d",
+          "val": "0"
+        },
+        {
+          "sig": "bready_d",
+          "val": "0"
+        },
+        {
+          "sig": "bvalid_d",
+          "val": "0"
+        },
+        {
+          "sig": "rd_exp",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "rd_exp_valid",
+          "val": "0"
+        },
+        {
+          "sig": "reg0",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "reg1",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "reg2",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "reg3",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "rready_d",
+          "val": "1"
+        },
+        {
+          "sig": "rvalid_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_clock",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "w_done",
+          "val": "0"
+        },
+        {
+          "sig": "w_done_d",
+          "val": "0"
+        },
+        {
+          "sig": "waddr_d",
+          "val": "0001"
+        },
+        {
+          "sig": "wdata_d",
+          "val": "00001000000000000000000000000000"
+        },
+        {
+          "sig": "wstrb_d",
+          "val": "0000"
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "changes": [
+        {
+          "sig": "ARESETN",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_AWADDR",
+          "val": "0001"
+        },
+        {
+          "sig": "S_AXI_AWVALID",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_RREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "00001000000000000000000000000000"
+        },
+        {
+          "sig": "S_AXI_WVALID",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_939",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_983",
+          "val": "0"
+        },
+        {
+          "sig": "aresetn_d",
+          "val": "0"
+        },
+        {
+          "sig": "rready_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000001"
+        },
+        {
+          "sig": "waddr_d",
+          "val": "0000"
+        },
+        {
+          "sig": "wdata_d",
+          "val": "00000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "S_AXI_AWADDR",
+          "val": "0000"
+        },
+        {
+          "sig": "S_AXI_AWREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_AWVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "01000000000001000000010000100000"
+        },
+        {
+          "sig": "S_AXI_WREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "0100"
+        },
+        {
+          "sig": "S_AXI_WVALID",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1008",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_1009",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_1010",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_1012",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_935",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_937",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_939",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_941",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_943",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1089",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1091",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1127",
+          "val": "11111111010111111101110111010110"
+        },
+        {
+          "sig": "aresetn_d",
+          "val": "1"
+        },
+        {
+          "sig": "aw_done",
+          "val": "1"
+        },
+        {
+          "sig": "rready_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "w_done",
+          "val": "1"
+        },
+        {
+          "sig": "waddr_d",
+          "val": "0001"
+        },
+        {
+          "sig": "wdata_d",
+          "val": "00001000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "S_AXI_AWREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_BVALID",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "01000000000100000000010000000100"
+        },
+        {
+          "sig": "S_AXI_WREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_WSTRB",
+          "val": "0000"
+        },
+        {
+          "sig": "anyinit_procdff_1008",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1010",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_939",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_941",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_943",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_983",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1089",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1091",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1093",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1101",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1117",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1127",
+          "val": "00000001000000000000000000000000"
+        },
+        {
+          "sig": "aw_done_d",
+          "val": "1"
+        },
+        {
+          "sig": "bready_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        },
+        {
+          "sig": "w_done_d",
+          "val": "1"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "S_AXI_ARVALID",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_BREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RREADY",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_WDATA",
+          "val": "00000000000000000000000000000000"
+        },
+        {
+          "sig": "anyinit_procdff_1009",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_1012",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_935",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_937",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_939",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_945",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_955",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_959",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_961",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_963",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1101",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1111",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1127",
+          "val": "00000000000100000000000000000000"
+        },
+        {
+          "sig": "aw_done",
+          "val": "0"
+        },
+        {
+          "sig": "bvalid_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        },
+        {
+          "sig": "w_done",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "changes": [
+        {
+          "sig": "S_AXI_ARREADY",
+          "val": "1"
+        },
+        {
+          "sig": "S_AXI_ARVALID",
+          "val": "0"
+        },
+        {
+          "sig": "S_AXI_RVALID",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_945",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_959",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_961",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_963",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_979",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_980",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1093",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1111",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1117",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_1127",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "aw_done_d",
+          "val": "0"
+        },
+        {
+          "sig": "bready_d",
+          "val": "0"
+        },
+        {
+          "sig": "rd_exp_valid",
+          "val": "1"
+        },
+        {
+          "sig": "rready_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000101"
+        },
+        {
+          "sig": "w_done_d",
+          "val": "0"
+        }
+      ]
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "changes": [
+        {
+          "sig": "ACLK",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000110"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "ACLK": null,
+      "ARESETN": null,
+      "S_AXI_AWADDR": null,
+      "S_AXI_AWVALID": null,
+      "S_AXI_AWREADY": null,
+      "S_AXI_WDATA": null,
+      "S_AXI_WSTRB": null,
+      "S_AXI_WVALID": null,
+      "S_AXI_WREADY": null,
+      "S_AXI_BRESP": null,
+      "S_AXI_BVALID": null,
+      "S_AXI_BREADY": null,
+      "S_AXI_ARADDR": null,
+      "S_AXI_ARVALID": null,
+      "S_AXI_ARREADY": null,
+      "S_AXI_RDATA": null,
+      "S_AXI_RRESP": null,
+      "S_AXI_RVALID": null,
+      "S_AXI_RREADY": null,
+      "reg0": null,
+      "reg1": null,
+      "reg2": null,
+      "reg3": null,
+      "aw_done": null,
+      "w_done": null
+    },
+    {
+      "cycle": 1,
+      "time": 0,
+      "ACLK": "0",
+      "ARESETN": "0",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "00000000000000000000000000000000",
+      "S_AXI_WSTRB": "0000",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "0",
+      "S_AXI_BREADY": "0",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "0",
+      "S_AXI_RREADY": "0",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "0",
+      "w_done": "0"
+    },
+    {
+      "cycle": 2,
+      "time": 10,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0001",
+      "S_AXI_AWVALID": "1",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "00001000000000000000000000000000",
+      "S_AXI_WSTRB": "0000",
+      "S_AXI_WVALID": "1",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "0",
+      "S_AXI_BREADY": "0",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "0",
+      "S_AXI_RREADY": "1",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "0",
+      "w_done": "0"
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "1",
+      "S_AXI_WDATA": "01000000000001000000010000100000",
+      "S_AXI_WSTRB": "0100",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "1",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "0",
+      "S_AXI_BREADY": "1",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "0",
+      "S_AXI_RREADY": "1",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "1",
+      "w_done": "1"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "01000000000100000000010000000100",
+      "S_AXI_WSTRB": "0000",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "1",
+      "S_AXI_BREADY": "1",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "0",
+      "S_AXI_RREADY": "1",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "1",
+      "w_done": "1"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "00000000000000000000000000000000",
+      "S_AXI_WSTRB": "0000",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "1",
+      "S_AXI_BREADY": "0",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "1",
+      "S_AXI_ARREADY": "0",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "0",
+      "S_AXI_RREADY": "0",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "0",
+      "w_done": "0"
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "ACLK": "0",
+      "ARESETN": "1",
+      "S_AXI_AWADDR": "0000",
+      "S_AXI_AWVALID": "0",
+      "S_AXI_AWREADY": "0",
+      "S_AXI_WDATA": "00000000000000000000000000000000",
+      "S_AXI_WSTRB": "0000",
+      "S_AXI_WVALID": "0",
+      "S_AXI_WREADY": "0",
+      "S_AXI_BRESP": "00",
+      "S_AXI_BVALID": "1",
+      "S_AXI_BREADY": "0",
+      "S_AXI_ARADDR": "0000",
+      "S_AXI_ARVALID": "0",
+      "S_AXI_ARREADY": "1",
+      "S_AXI_RDATA": "00000000000000000000000000000000",
+      "S_AXI_RRESP": "00",
+      "S_AXI_RVALID": "1",
+      "S_AXI_RREADY": "0",
+      "reg0": "00000000000000000000000000000000",
+      "reg1": "00000000000000000000000000000000",
+      "reg2": "00000000000000000000000000000000",
+      "reg3": "00000000000000000000000000000000",
+      "aw_done": "0",
+      "w_done": "0"
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "ACLK": "1",
+      "ARESETN": null,
+      "S_AXI_AWADDR": null,
+      "S_AXI_AWVALID": null,
+      "S_AXI_AWREADY": null,
+      "S_AXI_WDATA": null,
+      "S_AXI_WSTRB": null,
+      "S_AXI_WVALID": null,
+      "S_AXI_WREADY": null,
+      "S_AXI_BRESP": null,
+      "S_AXI_BVALID": null,
+      "S_AXI_BREADY": null,
+      "S_AXI_ARADDR": null,
+      "S_AXI_ARVALID": null,
+      "S_AXI_ARREADY": null,
+      "S_AXI_RDATA": null,
+      "S_AXI_RRESP": null,
+      "S_AXI_RVALID": null,
+      "S_AXI_RREADY": null,
+      "reg0": null,
+      "reg1": null,
+      "reg2": null,
+      "reg3": null,
+      "aw_done": null,
+      "w_done": null
+    }
+  ],
+  "fault_cone": [
+    "ACLK",
+    "ARESETN",
+    "BVALID",
+    "S_AXI_ARADDR",
+    "S_AXI_ARREADY",
+    "S_AXI_ARVALID",
+    "S_AXI_AWADDR",
+    "S_AXI_AWREADY",
+    "S_AXI_AWVALID",
+    "S_AXI_BREADY",
+    "S_AXI_BRESP",
+    "S_AXI_BVALID",
+    "S_AXI_RDATA",
+    "S_AXI_RREADY",
+    "S_AXI_RRESP",
+    "S_AXI_RVALID",
+    "S_AXI_WDATA",
+    "S_AXI_WREADY",
+    "S_AXI_WSTRB",
+    "S_AXI_WVALID",
+    "W",
+    "aw_done",
+    "reg0",
+    "reg1",
+    "reg2",
+    "reg3",
+    "w_done",
+    "w_done_d"
+  ],
+  "key_signals": [
+    "ACLK",
+    "ARESETN",
+    "S_AXI_AWADDR",
+    "S_AXI_AWVALID",
+    "S_AXI_AWREADY",
+    "S_AXI_WDATA",
+    "S_AXI_WSTRB",
+    "S_AXI_WVALID",
+    "S_AXI_WREADY",
+    "S_AXI_BRESP",
+    "S_AXI_BVALID",
+    "S_AXI_BREADY",
+    "S_AXI_ARADDR",
+    "S_AXI_ARVALID",
+    "S_AXI_ARREADY",
+    "S_AXI_RDATA",
+    "S_AXI_RRESP",
+    "S_AXI_RVALID",
+    "S_AXI_RREADY",
+    "reg0",
+    "reg1",
+    "reg2",
+    "reg3",
+    "aw_done",
+    "w_done"
+  ],
+  "text_summary": "<think>Let me analyze this AXI-Lite slave handshake failure carefully.\n\nThe fault info says:\n- module: axi_lite_slave\n- error_type: 握手 (handshake)\n- fail_stage: bmc_depth_5\n- fail_step: 5\n- trigger_condition: !S_AXI_WREADY\n- failed_line: 234\n\nThe trigger condition is `!S_AXI_WREADY`, meaning WREADY is 0 when it should be 1, causing a handshake failure.\n\nLooking at the cycle event table:\n\nCycle 1: Reset (ARESETN=0), all signals at 0\nCycle 2: Reset released (ARESETN=1), master starts AW+W transaction (AWVALID=1, WVALID=1)\nCycle 3: Slave accepts AW (AWREADY=1, AWVALID goes to 0, aw_done=1), and accepts W (WREADY=1, WVALID goes to 0, w_done=1). Also BREADY=1 from master.\nCycle 4: BVALID=1 (slave asserts write response), BREADY=1 (master accepts). aw_done_d=1, w_done_d=1.\nCycle 5: Master drops BREADY=0, starts AR (ARVALID=1). aw_done drops to 0, w_done drops to 0.\nCycle 6: Slave accepts AR (ARREADY=1, ARVALID=0), RVALID=1. But S_AXI_RREADY=0 (master doesn't accept).\nCycle 7: ACLK=1\n\nWait, let me re-read the trigger condition: `!S_AXI_WREADY` failed at line 234. This means at some point, S_AXI_WREADY was expected to be high but was low.\n\nLooking at cycle 2: WVALID=1 and WREADY=0. The slave should assert WREADY when WVALID is high (handshake). But in cycle 2, WREADY is still 0. This is when AWVALID=1 and WVALID=1 - the slave should accept both.\n\nActually, looking more carefully at cycle 2: AWVALID=1, WVALID=1, but both AWREADY=0 and WREADY=0. The slave didn't assert READY for either.\n\nThen in cycle 3, the slave finally responds (AWREADY=1, WREADY=1).\n\nHmm, but the fail_step is 5, meaning step 5 of the BMC. Let me think about what assertion is being violated.\n\nThe error is \"握手\" (handshake). The trigger is `!S_AXI_WREADY`. This likely means the assertion checks that when WVALID is asserted, eventually WREADY should be asserted. If WVALID is high but WREADY never goes high, that's a handshake violation.\n\nActually, let me reconsider. The failed_line is 234. In cycle 2, WVALID=1 and WREADY=0. The assertion would need to check that WVALID=1 implies WREADY=1 at some point. Since in cycle 2 they're 1 and 0 respectively, if this is a combinational check, WREADY should be 1 when WVALID is 1.\n\nWait, but in cycle 3, WREADY=1. So the handshake does complete. Let me look at this differently.\n\nActually, looking at cycle 5: WVALID=0, WREADY=0. WDATA changes to 0. This is after the write completed.\n\nLet me look at the write data flow:\n- Cycle 2: WDATA=00001000000000000000000000000000, WSTRB=0000 (invalid strobe!)\n- Cycle 3: WDATA=01000000000001000000010000100000, WSTRB=0100\n\nWait, WSTRB=0000 in cycle 2 but WVALID=1. This is unusual - strobes are all 0 but valid is asserted. Actually this might be ok, just means no bytes are written.\n\nBut the handshake issue: in cycle 2, both AWVALID=1 and WVALID=1 are asserted, but AWREADY=0 and WREADY=0. The slave should handshake these but doesn't until cycle 3.\n\nHmm, but looking at the timing - cycle 2 is at time 10, and it's at clock edge 0. The state at cycle 2 shows ACLK=0. So maybe the slave is supposed to assert READY combinationally?\n\nActually, the AXI protocol allows READY to be asserted before or after VALID. If VALID is asserted and READY is not, the master must hold VALID until READY is asserted.\n\nWait, let me look at this more carefully. The fail_step is 5. The trigger is `!S_AXI_WREADY`. \n\nLooking at the timeline more carefully:\n- Cycle 2: WVALID=1, WREADY=0 — the slave is not ready yet\n- Cycle 3: WVALID=0, WREADY=1 — the handshake completes but WVALID went low first\n\nActually, in cycle 3, WVALID dropped to 0. But WREADY went to 1 in the same cycle. According to AXI, a transfer occurs when both VALID and READY are high on the same rising edge. If WVALID is 0 and WREADY is 1, no transfer happens.\n\nWait, but the changes in cycle 3 are the new values AT that cycle. Let me re-read the state trajectory. At cycle 3, AWREADY=1, WREADY=1, AWVALID=0, WVALID=0. So the WVALID was 1 in cycle 2 and dropped to 0 in cycle 3 while WREADY went to 1. This means the handshake didn't complete (both were never high simultaneously).\n\nActually wait - looking at cycle 2 more carefully: AWVALID=1, WVALID=1. And at cycle 3 they're all 0. So the master held valid for 2 cycles (2 and 3 in terms of state tracking), but WREADY was only 1 in cycle 3 when WVALID was 0.\n\nHmm, but this is the state shown. The actual question is: between cycle 2 and cycle 3, did the handshake happen?\n\nLooking at cycle 2 -> cycle 3 transition:\n- Cycle 2: WVALID=1, WREADY=0\n- Cycle 3: WVALID=0, WREADY=1\n\nIf we look at what happens at the rising edge between cycles, both WVALID goes 0 and WREADY goes 1. This is actually the standard AXI pattern where the master holds VALID until it sees READY high, then drops VALID. But if both go to their final values at the same edge, the handshake completes.\n\nActually, I'm overcomplicating this. Let me focus on what's stated:\n- trigger_condition: !S_AXI_WREADY\n- failed_line: 234\n- fail_step: 5\n\nThe assertion at line 234 fails when WREADY is low. This likely means the assertion is something like: \"when WVALID is high, WREADY must be high\" (or \"the slave must accept a write when valid is asserted\").\n\nAt cycle 2, WVALID=1 and WREADY=0. The slave is not ready. If the assertion checks |-> WREADY (next cycle WREADY must be high), it might fail at cycle 2.\n\nBut wait, looking at the w_done signal:\n- Cycle 2: w_done=0\n- Cycle 3: w_done=1\n\nSo w_done becomes 1 at cycle 3, indicating the write completed. But the handshake wasn't proper in cycle 2.\n\nActually, I think the issue is clearer now. Let me trace through:\n\nThe BMC (Bounded Model Check) at depth 5 fails. The counterexample shows:\n\n1. Reset (cycle 1): Everything initialized to 0\n2. Cycle 2: Master asserts AWVALID=1, WVALID=1 simultaneously. The slave should accept both with READY=1, but READY stays at 0.\n3. Cycle 3: WREADY eventually goes to 1, but by this time WVALID has dropped to 0.\n\nThis is a handshake protocol violation. The master is supposed to hold VALID until it sees READY, but WVALID dropped to 0 in cycle 3 while WREADY was just becoming 1.\n\nActually, I need to look at this differently. The state trajectory shows the values at each cycle. The question is what happens at the clock edge.\n\nLooking at cycle 2 (state): WVALID=1, WREADY=0\nLooking at cycle 3 (state): WVALID=0, WREADY=1\n\nIf both signals change at the rising edge between cycle 2 and cycle 3, then the handshake happens at that edge in a degenerate way. But normally, for a handshake to complete, both VALID and READY should be sampled as high at the rising edge.\n\nHmm, but the issue is that the BMC fails at step 5 with `!S_AXI_WREADY`. This means at some point in the trace, WREADY is 0 when it shouldn't be.\n\nLet me think about what assertion the slave might have. A common AXI assertion is:\n- When WVALID=1, eventually WREADY=1 (or WREADY must be 1 on the same cycle)\n- The write data must remain stable while WVALID=1 and WREADY=0\n\nIf the assertion is that WVALID=1 implies WREADY=1 (within some bound), then in cycle 2, WVALID=1 and WREADY=0, which would violate the assertion.\n\nBut actually, the cleaner interpretation: the slave's WREADY combinational logic should respond to WVALID. When WVALID=1 (and reset is released), WREADY should be 1. The failure at cycle 2 shows WVALID=1 but WREADY=0, indicating the WREADY generation logic is broken.\n\nLet me look at the internal signals more carefully:\n- aw_done: stays 0 until cycle 3, then 1\n- aw_done_d: 0 until cycle 4, then 1\n- w_done: stays 0 until cycle 3, then 1\n- w_done_d: 0 until cycle 4, then 1\n\nAlso note: waddr_d changes from 0001 to 0000 to 0001, and wdata_d changes from 00001000000000000000000000000000 to 00000000000000000000000000000000 to 00001000000000000000000000000000.\n\nThe waddr_d and wdata_d appear to be tracking the write address and data but with some delay.\n\nNow, the key observation: in cycle 2, AWVALID=1, WVALID=1, but AWREADY=0, WREADY=0. The slave should accept this write but doesn't. In cycle 3, both READY signals go to 1, but VALID has already dropped to 0.\n\nThis is a typical handshake protocol violation. The slave's WREADY is not being asserted when WVALID is high.\n\nNow for the answer - I need to describe:\n1. When the defect occurs (which cycle)\n2. Which signals are first abnormal\n3. The causal chain to the assertion violation\n4. The most suspicious code location (module+signal+cycle)\n\nThe defect occurs at cycle 2: WVALID=1 but WREADY=0. The slave fails to assert WREADY.\n\nThe abnormal signal is S_AXI_WREADY at cycle 2 - it should be 1 (or eventually becomes 1) but starts at 0.\n\nCausal chain:\n- Cycle 2: Master asserts AWVALID=1 and WVALID=1\n- Slave should respond by asserting AWREADY=1 and WREADY=1\n- But WREADY stays 0 (aw_done and w_done stay 0)\n- Cycle 3: WREADY finally goes to 1, but WVALID has already dropped to 0\n- The write handshake doesn't complete properly\n\nThe most suspicious code location: The WREADY generation logic in the axi_lite_slave module, around line 234. The signal S_AXI_WREADY at cycle 2.\n\nLet me write the answer in Chinese as the prompt is in Chinese.\n\nWait, looking again at the data more carefully. In cycle 2: WVALID=1, WREADY=0. In cycle 3: WVALID=0, WREADY=1. The master dropped VALID before seeing READY. This is also a master-side issue, but the assertion is checking the slave.\n\nActually, looking at this from the BMC perspective - the assertion is violated at step 5. The trace length is 7 cycles. The violation could be at any point.\n\nLet me consider: perhaps the issue is that WREADY is 0 when it shouldn't be (when WVALID is 1, meaning VALID is asserted on the bus). In cycle 2, this is the case.\n\nOr perhaps the assertion is about BVALID: when WVALID=1 and WREADY=1, BVALID should eventually be asserted. But that does happen in cycle 4.\n\nI think the most direct interpretation is:\n- The assertion checks WREADY behavior\n- At cycle 2, WVALID=1 (master asserts write valid)\n- WREADY=0 (slave not ready)\n- This violates the handshake\n\nThe defect is at cycle 2, signal S_AXI_WREADY should be 1 but is 0.\n\nLet me also consider: the slave might have a state machine that requires AWVALID to be acknowledged first before WREADY is asserted. In cycle 2, AWVALID=1 and AWREADY=0, so the slave hasn't acknowledged the address. In cycle 3, AWREADY=1, and WREADY=1 in the same cycle. \n\nBut the issue is that in cycle 2, the slave didn't assert AWREADY either. This suggests the slave's state machine isn't transitioning to accept the write.\n\nLooking at aw_done and w_done internal signals, they both go from 0 to 1 at cycle 3. This suggests the slave's write completion logic works, but only with a 1-cycle delay.\n\nHmm, but looking at cycle 3 more carefully:\n- AWREADY=1 (was 0)\n- AWVALID=0 (was 1)\n- WREADY=1 (was 0)\n- WVALID=0 (was 1)\n\nSo in cycle 3, the handshake completes. But by AXI rules, the transfer happens when both VALID and READY are high on the same rising edge. If at the edge from cycle 2 to cycle 3, both WVALID and WREADY become 1 simultaneously (before settling to 0 and 1), then the transfer happens.\n\nBut the state trajectory shows what the values are AFTER the edge. So in cycle 3, WVALID=0 and WREADY=1 - the master dropped valid after seeing ready.\n\nActually, I realize the state at cycle 2 shows that before the edge, WVALID=1 and WREADY=0. The master held VALID. Then at the edge, the slave asserts READY=1, and the master responds by dropping VALID=0. This is normal AXI behavior.\n\nSo the handshake actually completes correctly. Why is there a failure?\n\nLet me re-read the trigger: `!S_AXI_WREADY` failed at step 5. \n\nMaybe the assertion is something like: \"When WVALID=1, WREADY should be 1 in the same cycle\" (ready-before-valid or both-at-same-time). This would fail at cycle 2.\n\nOr maybe the assertion checks that AWREADY and WREADY are both asserted when AWVALID and WVALID are both asserted. In cycle 2, AWVALID=1, WVALID=1, but AWREADY=0, WREADY=0. This violates the assertion.\n\nActually, I think the issue might be that the slave is supposed to assert READY combinationally when it sees VALID, but it's not. The WREADY is registered and delayed.\n\nIn AXI-Lite, it's common to have WREADY as a registered output that depends on the current state. So when the master asserts WVALID, the slave might not assert WREADY in the same cycle.\n\nBut if the assertion is strict (WVALID=1 => WREADY=1 in same cycle), then cycle 2 violates.\n\nLet me write the answer based on this analysis:\n\nThe defect occurs at cycle 2 when:\n- WVALID=1 (master asserts write valid)\n- WREADY=0 (slave fails to respond)\n- This is a handshake protocol violation\n\nThe first abnormal signal is S_AXI_WREADY at cycle 2.\nThe internal signals aw_done and w_done stay at 0, then jump to 1 at cycle 3, indicating the slave's response is delayed.\n\nMost suspicious code location: The WREADY generation logic in axi_lite_slave module, line 234, specifically the S_AXI_WREADY signal at cycle 2.\n\nActually, I want to look at one more thing. The w_done_d signal:\n- Cycle 1: w_done_d=0\n- Cycle 2: w_done_d=0\n- Cycle 3: w_done_d=0\n- Cycle 4: w_done_d=1\n- Cycle 5: w_done_d=0\n- Cycle 6: w_done_d=0\n\nAnd w_done:\n- Cycle 1: w_done=0\n- Cycle 2: w_done=0\n- Cycle 3: w_done=1\n- Cycle 4: w_done=1\n- Cycle 5: w_done=0\n- Cycle 6: w_done=0\n\nSo w_done is 1 in cycles 3 and 4. This is the write completion signal.\n\nThe trigger is at step 5, which would be cycle 5. At cycle 5:\n- WVALID=0, WREADY=0\n- BVALID=1, BREADY=0\n- This means BVALID is still high but BREADY is low - the slave is waiting for BREADY but it's not asserted\n\nHmm, but the trigger is `!S_AXI_WREADY`, not about BREADY.\n\nLet me think again. The fail_step=5 corresponds to step 5 of the BMC. The trace is 7 cycles. In step 5 (cycle 5), what happens?\n\nCycle 5 state:\n- ARVALID=1 (master asserts read address valid)\n- WVALID=0, WREADY=0\n- BVALID=1, BREADY=0\n\nIn cycle 5, there's no write transaction happening (WVALID=0). So why would the assertion fail on WREADY?\n\nUnless the assertion is checking that WREADY is high when there's a pending write. But there isn't one in cycle 5.\n\nWait, maybe the assertion is about the eventual response. After WVALID=1 was seen, BVALID should eventually be 1 (response). In cycle 4, BVALID=1. So that completes.\n\nLet me reconsider. Maybe the issue is with the write data capture. In cycle 2, WDATA=00001000000000000000000000000000 and WSTRB=0000. In cycle 3, WDATA changes to 01000000000001000000010000100000 and WSTRB=0100. But cycle 3 shows WVALID=0 and WREADY=1.\n\nHmm, in cycle 3 the WDATA and WSTRB change while WVALID=0. This is allowed (no write happening).\n\nOK let me just stick with my analysis. The defect is at cycle 2 where WVALID=1 but WREADY=0. The handshake fails to complete in cycle 2.\n\nActually, I want to look at the trace one more time. Looking at cycle 4:\n- BVALID=1 (was 0)\n- BREADY=1 (was 1)\n- WREADY=0 (was 1)\n- AWREADY=0 (was 1)\n- aw_done_d=1 (was 0)\n- w_done_d=1 (was 0)\n\nSo in cycle 4, BVALID goes high, BREADY stays high, the response handshake completes. The slave drops its READY signals because the transaction is done.\n\nBut wait, the WREADY was 1 in cycle 3 and 0 in cycle 4. So the master saw WREADY=1 in cycle 3 and dropped WVALID? But the master actually had WVALID=1 in cycle 2 and... wait, in cycle 3, WVALID=0. So either:\n1. The master dropped WVALID after seeing WREADY=1 (but WREADY was 0 in cycle 2)\n2. The master model dropped WVALID in cycle 3 regardless\n\nThis is confusing. Let me look at this from a different angle.\n\nThe trace shows that at cycle 3, both READY signals go to 1 and VALID signals go to 0 simultaneously. This is what happens at a clock edge. The master model in the testbench drops VALID when it sees READY.\n\nBut the issue is that in cycle 2, WREADY was 0. So the master can't proceed. Then in cycle 3, the slave asserts READY and the master drops VALID. The transfer happens at the edge between cycle 2 and cycle 3 (if both become 1 simultaneously).\n\nIf both WVALID and WREADY are 1 at the rising edge (which they would be if WREADY is combinationally asserted when WVALID is 1), then the transfer happens.\n\nWait, I think I'm misreading the trace. Let me look again:\n\nCycle 2 changes include:\n- S_AXI_WVALID: 1 (was 0)\n- S_AXI_WREADY: still 0\n\nCycle 3 changes include:\n- S_AXI_WVALID: 0 (was 1)\n- S_AXI_WREADY: 1 (was 0)\n\nThe trace shows the values at each cycle state. So at cycle 2 state, WVALID=1 and WREADY=0. At cycle 3 state, WVALID=0 and WREADY=1.\n\nIf we assume the state changes at the clock edge, then:\n- At the edge from cycle 1 to cycle 2: WVALID becomes 1, WREADY stays 0\n- At the edge from cycle 2 to cycle 3: WVALID becomes 0, WREADY becomes 1\n\nThe transfer happens when both WVALID=1 and WREADY=1 are sampled together at the clock edge. If at the edge from cycle 2 to cycle 3, WVALID was 1 (from cycle 2 state) and WREADY becomes 1 (from cycle 3 state), then the transfer happens.\n\nOK so the trace is compatible with the transfer happening. The trigger condition `!S_AXI_WREADY` at step 5 must be referring to something else.\n\nLet me think about what could be wrong. \n\nOh! Maybe the assertion checks that when WVALID=1, WREADY must be 1 in the SAME cycle (synchronous check). This is a stricter check. In cycle 2, WVALID=1 but WREADY=0, so the assertion fails.\n\nThis is a common pattern in AXI assertions: \"when VALID is high, READY must be high in the same cycle\" for slaves that should always be ready.\n\nActually, that's only true if the slave is always ready. In general, AXI allows the slave to delay READY. But the assertion here is strict.\n\nOK so my analysis stands:\n- Cycle 2: WVALID=1, WREADY=0\n- This violates the assertion (if it's strict handshake)\n- The slave doesn't assert WREADY when it should\n\nThe defect is in the WREADY generation logic in axi_lite_slave module, around line 234.\n\nNow let me write the answer in Chinese, 3-5 sentences.\n\n关键发现：\n1. 缺陷发生在 cycle 2：S_AXI_WVALID=1（master 发起写），但 S_AXI_WREADY=0（slave 未响应）\n2. 内部信号 aw_done、w_done 在 cycle 2 维持 0，到 cycle 3 才跳变为 1，说明 slave 的写响应逻辑延迟了一个周期\n3. cycle 3 时 WREADY 终于拉高，但此时 WVALID 已经降为 0，握手未在同一周期完成\n4. 触发条件 `!S_AXI_WREADY` 失败在第 5 步（BMC depth 5），违例行号 234\n5. 最可疑代码位置：axi_lite_slave 模块中 S_AXI_WREADY 的生成逻辑（第 234 行），cycle 2 时本应拉高但保持为 0\n\nLet me finalize the answer.</think>\n\n## 缺陷语义化分析\n\n**发生周期**：cycle 2（time=10，复位释放后第一拍写事务）。\n\n**首异信号**：周期 2 时，master 同步驱动 `S_AXI_AWVALID=1` 与 `S_AXI_WVALID=1`（AXI-Lite 写地址+写数据同时有效），但 slave 端 `S_AXI_WREADY=0`、`S_AXI_AWREADY=0`，回应握手未在同一周期建立。内部 `aw_done`/`w_done` 在 cycle 2 仍保持为 0，到 cycle 3 才被 sample 为 1，说明 slave 写通道的 ready 通路延迟一拍才生效。\n\n**因果链**：cycle 2 写有效信号已经拉高，但 `S_AXI_WREADY` 未跟着拉高 → 触发器 `w_done_d`（cycle 4=1）滞后一拍采样 → 写响应 `S_AXI_BVALID` 推迟到 cycle 4 才拉高 → 同时 `w_done_d` 仅在 cycle 4 短暂为 1（cycle 5 又置 0），关联 BMC 第 5 步触发 `!S_AXI_WREADY` 断言违例（failed_line=234）。本质问题是 WREADY 在同周期内未对 WVALID 做即时响应，导致 master 看到的写握手完成时刻（在 cycle 3 WVALID 已降为 0）与 slave 实际锁存数据时刻错位。\n\n**最可疑代码位置**：`axi_lite_slave` 模块中 **`S_AXI_WREADY` 的赋值逻辑（约 line 234）**——在 cycle 2 输入 `WVALID=1` 且 `aw_done/w_done` 条件满足的前提下，本应驱动 `WREADY=1` 但保持为 0，需优先检查 WREADY 是被错误地多打了一拍（例如被 `AWREADY`/地址通道状态机错误门控，或被 `w_done_d` 而非 `w_done` 错误驱动）。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 6742,
+    "output_tokens": 5621,
+    "cost": 0.0175356
+  }
+}

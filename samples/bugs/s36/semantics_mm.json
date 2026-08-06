@@ -1,0 +1,748 @@
+{
+  "schema_ver": "v1.0",
+  "sample_id": "s36",
+  "module": "uart_rx",
+  "error_type": "状态跳转",
+  "fail_stage": "bmc_depth_11",
+  "fail_step": 11,
+  "failed_line": 159,
+  "trigger_condition": "rxd == 1'b1",
+  "cycle_events": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "changes": []
+    },
+    {
+      "cycle": "...",
+      "time": null,
+      "changes": []
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_339",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_345",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_358",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_359",
+          "val": "01"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_415",
+          "val": "0"
+        },
+        {
+          "sig": "rx_busy",
+          "val": "1"
+        },
+        {
+          "sig": "rxd_d",
+          "val": "0"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000010"
+        },
+        {
+          "sig": "state",
+          "val": "01"
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_337",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_345",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "0001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_401",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_405",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_409",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_415",
+          "val": "1"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "0001"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000011"
+        },
+        {
+          "sig": "state_d",
+          "val": "01"
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_339",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_341",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_345",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "0010"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_405",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_413",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_419",
+          "val": "1"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "0010"
+        },
+        {
+          "sig": "baud_cnt_d",
+          "val": "0001"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000100"
+        }
+      ]
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_347",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "0011"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_399",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_411",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_417",
+          "val": "1"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "0011"
+        },
+        {
+          "sig": "baud_cnt_d",
+          "val": "0010"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000101"
+        }
+      ]
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_335",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_343",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "0100"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_419",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_421",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_423",
+          "val": "1"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "0100"
+        },
+        {
+          "sig": "baud_cnt_d",
+          "val": "0011"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000110"
+        }
+      ]
+    },
+    {
+      "cycle": 8,
+      "time": 70,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_347",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_349",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_351",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "0101"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_401",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_409",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_417",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_419",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_421",
+          "val": "0"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "0101"
+        },
+        {
+          "sig": "baud_cnt_d",
+          "val": "0100"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000000111"
+        }
+      ]
+    },
+    {
+      "cycle": 9,
+      "time": 80,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_347",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_349",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "0110"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_405",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_409",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_411",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_421",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_423",
+          "val": "0"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "0110"
+        },
+        {
+          "sig": "baud_cnt_d",
+          "val": "0101"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001000"
+        }
+      ]
+    },
+    {
+      "cycle": 10,
+      "time": 90,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_343",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_349",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_351",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "0111"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_411",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_423",
+          "val": "1"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "0111"
+        },
+        {
+          "sig": "baud_cnt_d",
+          "val": "0110"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001001"
+        }
+      ]
+    },
+    {
+      "cycle": 11,
+      "time": 100,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_343",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_351",
+          "val": "1"
+        },
+        {
+          "sig": "anyinit_procdff_359",
+          "val": "11"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "0000"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_399",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_405",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_407",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_409",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_411",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_413",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_415",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_419",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_423",
+          "val": "0"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "0000"
+        },
+        {
+          "sig": "baud_cnt_d",
+          "val": "0111"
+        },
+        {
+          "sig": "rxd",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001010"
+        },
+        {
+          "sig": "state",
+          "val": "11"
+        }
+      ]
+    },
+    {
+      "cycle": 12,
+      "time": 110,
+      "changes": [
+        {
+          "sig": "anyinit_procdff_335",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_341",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_343",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_345",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_347",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_349",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_351",
+          "val": "0"
+        },
+        {
+          "sig": "anyinit_procdff_360",
+          "val": "0001"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_407",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_409",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_413",
+          "val": "0"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_415",
+          "val": "1"
+        },
+        {
+          "sig": "anyseq_auto_setundef_cc_533_execute_421",
+          "val": "0"
+        },
+        {
+          "sig": "baud_cnt",
+          "val": "0001"
+        },
+        {
+          "sig": "baud_cnt_d",
+          "val": "0000"
+        },
+        {
+          "sig": "rxd_d",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001011"
+        },
+        {
+          "sig": "state_d",
+          "val": "11"
+        }
+      ]
+    },
+    {
+      "cycle": 13,
+      "time": 120,
+      "changes": [
+        {
+          "sig": "clk",
+          "val": "1"
+        },
+        {
+          "sig": "smt_step",
+          "val": "00000000000000000000000000001100"
+        }
+      ]
+    }
+  ],
+  "state_trace": [
+    {
+      "cycle": 0,
+      "time": 0,
+      "rst_n": null,
+      "state": null,
+      "state_d": null,
+      "bit_cnt": null,
+      "baud_cnt": null,
+      "rxd": null,
+      "rx_busy": null,
+      "rx_data": null,
+      "rx_valid": null
+    },
+    {
+      "cycle": "...",
+      "time": null
+    },
+    {
+      "cycle": 3,
+      "time": 20,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "00",
+      "bit_cnt": "0000",
+      "baud_cnt": "0000",
+      "rxd": "0",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 4,
+      "time": 30,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "01",
+      "bit_cnt": "0000",
+      "baud_cnt": "0001",
+      "rxd": "0",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 5,
+      "time": 40,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "01",
+      "bit_cnt": "0000",
+      "baud_cnt": "0010",
+      "rxd": "0",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 6,
+      "time": 50,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "01",
+      "bit_cnt": "0000",
+      "baud_cnt": "0011",
+      "rxd": "0",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 7,
+      "time": 60,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "01",
+      "bit_cnt": "0000",
+      "baud_cnt": "0100",
+      "rxd": "0",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 8,
+      "time": 70,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "01",
+      "bit_cnt": "0000",
+      "baud_cnt": "0101",
+      "rxd": "0",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 9,
+      "time": 80,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "01",
+      "bit_cnt": "0000",
+      "baud_cnt": "0110",
+      "rxd": "0",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 10,
+      "time": 90,
+      "rst_n": "1",
+      "state": "01",
+      "state_d": "01",
+      "bit_cnt": "0000",
+      "baud_cnt": "0111",
+      "rxd": "0",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 11,
+      "time": 100,
+      "rst_n": "1",
+      "state": "11",
+      "state_d": "01",
+      "bit_cnt": "0000",
+      "baud_cnt": "0000",
+      "rxd": "1",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 12,
+      "time": 110,
+      "rst_n": "1",
+      "state": "11",
+      "state_d": "11",
+      "bit_cnt": "0000",
+      "baud_cnt": "0001",
+      "rxd": "1",
+      "rx_busy": "1",
+      "rx_data": "00000000",
+      "rx_valid": "0"
+    },
+    {
+      "cycle": 13,
+      "time": 120,
+      "rst_n": null,
+      "state": null,
+      "state_d": null,
+      "bit_cnt": null,
+      "baud_cnt": null,
+      "rxd": null,
+      "rx_busy": null,
+      "rx_data": null,
+      "rx_valid": null
+    }
+  ],
+  "fault_cone": [
+    "DATA",
+    "START",
+    "STOP",
+    "b1",
+    "baud_cnt",
+    "bit_cnt",
+    "clk",
+    "rst_n",
+    "rx_busy",
+    "rx_data",
+    "rx_valid",
+    "rxd",
+    "state",
+    "state_d"
+  ],
+  "key_signals": [
+    "rst_n",
+    "state",
+    "state_d",
+    "bit_cnt",
+    "baud_cnt",
+    "rxd",
+    "rx_busy",
+    "rx_data",
+    "rx_valid"
+  ],
+  "text_summary": "<think>\nLet me analyze this UART RX state machine failure carefully.\n\nFrom the state trajectory:\n- Cycle 3: state=01 (START state), rxd=0, rx_busy=1 — entering START state due to detected start bit\n- Cycles 4-10: state=01, baud_cnt counting from 0001 to 0111, rxd=0 — this is the start bit sampling period\n- Cycle 11: state jumps to 11 (STOP state), baud_cnt resets to 0000, rxd=1\n- The trigger condition says \"rxd == 1'b1\" at line 159\n\nSo the issue is:\n- The UART RX is in START state (01) with baud_cnt counting\n- At cycle 11, instead of transitioning to a DATA state (likely 10) to sample the first data bit, it jumps directly to STOP state (11)\n- This happens when rxd=1\n\nThe likely cause: In the state machine, the transition from START to DATA should happen when baud_cnt reaches a specific value (typically the middle of the bit period). But here:\n- The state transitions to 11 (STOP) when baud_cnt overflows back to 0000\n- rxd=1 at that point\n- This means the state machine is incorrectly transitioning from START to STOP when it should go to DATA state\n\nThe most suspicious code location is in the `state` signal logic — specifically the next-state logic for transitioning from the START state. The trigger is rxd==1 at line 159, which is likely in the state transition logic for the START state.\n\nLet me think about the causal chain:\n1. At cycle 3: state=01 (START), rxd=0, rx_busy=1\n2. Cycles 4-10: baud_cnt increments in START state\n3. At cycle 11: baud_cnt wraps to 0000, rxd=1, state jumps to 11 (STOP) — this is the bug\n4. Expected: state should transition to 10 (DATA) at cycle 11 to start sampling data bits\n\nThe defect is in the state transition from START to DATA. The state machine incorrectly transitions to STOP (11) when baud_cnt completes counting and rxd=1, instead of transitioning to DATA (10).\n\nMost suspicious code: `state` register next-state logic, specifically the case where current state is `START` and the counter reaches the sampling point. The rxd==1 at line 159 is likely the condition that causes the wrong transition to STOP instead of DATA.\n</think>\n## 缺陷语义化分析\n\n**缺陷周期**：cycle 11（time=100ns），是 `baud_cnt` 从 `0111` 回卷到 `0000` 的同一周期。\n\n**因果链**：\n1. **cycle 3**：`state=01`（START 态）因检测到 `rxd=0` 启动，`rx_busy=1`。\n2. **cycles 4–10**：`baud_cnt` 逐拍递增（`0001→0111`），状态停留在 START 等待半位/整位采样窗口——此阶段行为正常。\n3. **cycle 11 异常**：`baud_cnt` 回卷到 `0000`，同时 `rxd=1` 触发状态直接从 `01`(START) 跳到 `11`(STOP)，跳过了 `10`(DATA) 数据接收态。预期应当从 START 转到 DATA 开始逐 bit 采样第一帧数据位。\n4. 后续 **cycle 12**：`state_d` 锁存为 `11`，确认该非法跳转已被寄存器化，但 `bit_cnt` 始终为 `0000`、`rx_data` 始终为 `00`、无 `rx_valid` 拉高——典型\"未采样任何数据位即进入 STOP\"症状。\n\n**断言违例语义**：`bmc_depth_11, fail_step=11` 正是 cycle 11 的状态转移违例——START → STOP 的非法/早跳；trigger_condition `rxd==1` 表明错误的转移条件正是把 `rxd==1` 当作从 START 跳到 STOP 的依据。\n\n**最可疑代码位置**：`module uart_rx` 中 `state`（`state_d`）的下一态组合逻辑中，对当前态 `S_START`（`2'b01`）的 case 分支；具体为 line 159 附近——当 `baud_cnt` 到达采样终点（`baud_cnt==0` 或达到计数值阈值）时，错误地用 `rxd==1` 把下一态赋值为 `S_STOP`（`2'b11`）而非 `S_DATA`（`2'b10`）。建议重点核查 START 态跳出条件中 `rxd` 的优先级及 `bit_cnt` 是否被门控。",
+  "summary_meta": {
+    "mode": "real",
+    "input_tokens": 3686,
+    "output_tokens": 1012,
+    "cost": 0.004640399999999999
+  }
+}
