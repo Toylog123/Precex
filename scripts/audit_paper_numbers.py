@@ -52,6 +52,14 @@ for s,(eloc,erep,ecost) in expect.items():
     check("main %s rep" % s, a["rep"] == a["n"], "got %d/%d" % (a["rep"], a["n"]))
     check("main %s cost" % s, abs(a["cost"]-ecost) < 0.02, "got %.2f" % a["cost"])
 check("main total >=395", len(allrows) >= 395, "got %d" % len(allrows))
+# Verify A vs C is significant in clean_stats
+cs = load("experiments/runs/clean_stats.json")
+pw_map = {p["pair"]: p for p in cs.get("pairwise", [])}
+ac = pw_map.get("A vs C", {})
+check("stats A vs C p<0.01", ac.get("p_mcnemar", 1) < 0.01, "got p=%.4f" % ac.get("p_mcnemar", 1))
+check("stats A vs C holm<0.01", ac.get("p_holm", 1) < 0.01, "got p_holm=%.4f" % ac.get("p_holm", 1))
+check("stats A vs C diff ~21.5", abs(ac.get("diff_pct", 0) - 21.5) < 2, "got diff=%.1f" % ac.get("diff_pct", 0))
+
 
 # 2. cross-model 3 seeds
 cm = load("experiments/runs/cross_model_3seeds.json")
