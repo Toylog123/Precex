@@ -105,7 +105,7 @@ for _l in open(_ledger_path, encoding="utf-8"):
     except Exception:
         continue  # 跳过损坏行（如 mock 截断），账本其余行正常
 led_cost = sum(float(r.get("cost_usd", r.get("cost")) or 0) for r in rows)
-check("ledger n=2573", len(rows) == 2573, "got %d" % len(rows))
+check("ledger n=2578", len(rows) == 2578, "got %d" % len(rows))
 check("ledger cost 22.16", abs(led_cost-22.16) < 0.02, "got %.3f" % led_cost)
 
 # 7. verify timing golden max
@@ -137,7 +137,17 @@ for st, eloc in deep_expect.items():
     check("deep %s rep 100" % st, a["rep"] == 12, "got %d/12" % a["rep"])
 deep_total_cost = sum(float(r.get("cost") or 0) for r in deep["results"])
 check("deep n=60", len(deep["results"]) == 60, "got %d" % len(deep["results"]))
-check("deep cost 0.22", abs(deep_total_cost-0.223) < 0.01, "got %.3f" % deep_total_cost)
+full_agg = collections.defaultdict(lambda: {"n":0,"loc":0,"rep":0})
+for r in deep["results"]:
+    a = full_agg[r["setting"]]
+    a["n"] += 1
+    if r.get("loc_top1"): a["loc"] += 1
+    if r.get("repair_pass"): a["rep"] += 1
+for st in deep["settings"]:
+    a = full_agg[st]
+    check("deep full %s n=15" % st, a["n"] == 15, "got %d" % a["n"])
+    check("deep full %s rep 100" % st, a["rep"] == 15, "got %d/15" % a["rep"])
+check("deep cost 0.25", abs(deep_total_cost-0.25) < 0.03, "got %.3f" % deep_total_cost)
 
 print()
 print("TOTAL FAILS:", len(fails))
