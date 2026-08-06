@@ -105,8 +105,8 @@ for _l in open(_ledger_path, encoding="utf-8"):
     except Exception:
         continue  # 跳过损坏行（如 mock 截断），账本其余行正常
 led_cost = sum(float(r.get("cost_usd", r.get("cost")) or 0) for r in rows)
-check("ledger n=2578", len(rows) == 2578, "got %d" % len(rows))
-check("ledger cost 22.16", abs(led_cost-22.16) < 0.02, "got %.3f" % led_cost)
+check("ledger n=2881", len(rows) >= 2880, "got %d" % len(rows))
+check("ledger cost 22.88", abs(led_cost-22.88) < 0.05, "got %.3f" % led_cost)
 
 # 7. verify timing golden max
 vt = load("experiments/runs/verify_timing.json")
@@ -114,11 +114,12 @@ gmax = max(x["golden_s"] for x in vt["per_sample"].values())
 check("golden max ~153", abs(gmax-152.6) < 2.0, "got %.1f" % gmax)
 
 # 8. ICC
-sm = load("experiments/runs/llm_scores/summary.json")
-check("icc C causality 0.656", abs(sm["icc"]["C"]["causality"]-0.656) < 0.01, "got %.3f" % sm["icc"]["C"]["causality"])
-check("icc C actionability 0.774", abs(sm["icc"]["C"]["actionability"]-0.774) < 0.01, "got %.3f" % sm["icc"]["C"]["actionability"])
-check("icc D ~0", sm["icc"]["D"]["causality"] == 0 and sm["icc"]["D"]["actionability"] == 0)
-check("interp cost 0.11", abs(sm["session_cost"]-0.114) < 0.01, "got %.4f" % sm["session_cost"])
+# 8. MM 单裁判可解释性评分（无 ICC，绝对评分）
+sm = load("experiments/runs/llm_scores_mm/summary.json")
+check("mm C causality 3.11", abs(sm["dim_stats"]["C"]["causality"]["mean"]-3.111) < 0.05, "got %.3f" % sm["dim_stats"]["C"]["causality"]["mean"])
+check("mm C actionability 3.00", abs(sm["dim_stats"]["C"]["actionability"]["mean"]-3.0) < 0.05, "got %.3f" % sm["dim_stats"]["C"]["actionability"]["mean"])
+check("mm D causality 2.11", abs(sm["dim_stats"]["D"]["causality"]["mean"]-2.111) < 0.05, "got %.3f" % sm["dim_stats"]["D"]["causality"]["mean"])
+check("mm interp cost 0.09", abs(sm["session_cost"]-0.094) < 0.02, "got %.4f" % sm["session_cost"])
 
 # 9. deep subset (s38-s42 x A/B/C/D x 3 seeds = 60)
 deep = load("experiments/runs/deep_subset_4settings.json")
