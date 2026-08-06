@@ -6,6 +6,7 @@
 import argparse
 import os
 import shutil
+import datetime
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,8 +24,9 @@ ITEMS = [
     ('scripts/audit_paper_numbers.py', 'verification/audit_paper_numbers.py'),
     ('scripts/audit_paper_refs.py', 'verification/audit_paper_refs.py'),
     ('docs/bmc_depth_spotcheck_slim.json', 'verification/bmc_depth_spotcheck_slim.json'),
-    ('experiments/runs/experiments_results_corrected.json', 'verification/data/experiments_results_corrected.json'),
-    ('experiments/runs/experiments_results_D_clean.json', 'verification/data/experiments_results_D_clean.json'),
+    ('experiments/runs/leakfix_merged_clean.json', 'verification/data/leakfix_merged_clean.json'),
+    ('experiments/runs/leakfix_D.json', 'verification/data/leakfix_D.json'),
+    ('experiments/runs/leakfix_l2.json', 'verification/data/leakfix_l2.json'),
     ('experiments/runs/cross_model_3seeds.json', 'verification/data/cross_model_3seeds.json'),
     ('experiments/runs/l2_false_positive_analysis.json', 'verification/data/l2_false_positive_analysis.json'),
     ('experiments/runs/llm_scores/summary.json', 'verification/data/llm_scores/summary.json'),
@@ -34,6 +36,8 @@ ITEMS = [
     ('experiments/runs/t2_audit_D.json', 'verification/data/t2_audit_D.json'),
     ('experiments/runs/token_ledger.jsonl', 'verification/data/token_ledger.jsonl'),
     ('experiments/runs/verify_timing.json', 'verification/data/verify_timing.json'),
+    ('experiments/runs/deep_subset_4settings.json', 'verification/data/deep_subset_4settings.json'),
+    ('experiments/runs/clean_stats.json', 'verification/data/clean_stats.json'),
 ]
 
 
@@ -69,9 +73,9 @@ def main():
         readme = os.path.join(out, 'README.md')
         with open(readme, 'w', encoding='utf-8') as f:
             f.write('# PreCex 投稿包\n\n')
-            f.write('> 由 scripts/build_submission_package.py 自动组装（2026-08-05）。\n\n')
+            f.write('> 由 scripts/build_submission_package.py 自动组装（' + datetime.date.today().strftime('%Y-%m-%d') + '）。v2.1（干净口径 + 深时序子集 60/60）。\n\n')
             f.write('## 内容索引\n\n| 文件 | 用途 |\n|---|---|\n')
-            f.write('| manuscript/precex_paper.pdf | 论文全文（9 页，矢量图） |\n')
+            f.write('| manuscript/precex_paper.pdf | 论文全文（11 页，矢量图） |\n')
             f.write('| manuscript/precex_paper.tex | 论文 LaTeX 主稿（中文） |\n')
             f.write('| figures/*.pdf | 三张矢量图 |\n')
             f.write('| REPRO.md | 可复现性说明 |\n')
@@ -100,7 +104,7 @@ def main():
     print('SHA256SUMS written:', sums_path)
 
     if args.zip:
-        import datetime, zipfile
+        import zipfile
         stamp = datetime.date.today().strftime('%Y%m%d')
         zip_path = os.path.join(REPO, 'Precex_Submission_' + stamp + '.zip')
         with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
