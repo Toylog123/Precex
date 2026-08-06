@@ -90,7 +90,7 @@ cd submission_package && sha256sum -c verification/SHA256SUMS && cd ..
 | 主实验修正（BMC，论文口径） | experiments/runs/experiments_results_corrected.json | 306 条，repair_pass_bmc 全部 True；已入库 |
 | 跨模型重跑（DeepSeek） | experiments/runs/experiments_results_ds.json + experiments_results_ds_full3.json | 102 条（seed0）+ 306 条（三-seed）；均已入库 |
 | L2 假阳性率 | experiments/runs/experiments_results_l2.json | 72 条（A/B/C×24 L2 样本）；已入库 |
-| token 账本 | experiments/runs/token_ledger.jsonl | 2578 条（截至 2026-08-06 深子集补跑完成；experiments/runs 不入库） |
+| token 账本 | experiments/runs/token_ledger.jsonl | 2953 条（截至 2026-08-06 深子集补跑完成；experiments/runs 不入库） |
 | 深子集（DeepSeek A/B） | experiments/runs/deep_subset_ab.json | 30 条（5 深样本 × A/B × 3 seeds，BMC 判据；不入库，与账本约定一致） |
 | 深子集（DeepSeek 四设置，最终） | experiments/runs/deep_subset_4settings.json | 60/60 全部运行完成（5 深样本 x A/B/C/D x 3 seeds），修复率 100%；s38 定位 0/3 但四设置修复均 PASS（此前 6 个 INCONCLUSIVE 已补跑证实为 API/工具噪声）；聚合分析见 scripts/analyze_deep_subset.py |
 | 充分性 | experiments/runs/reverify_bmc_all.json / t2_audit_abc.json / t2_audit_D.json | 303/303、408/408；均已入库 |
