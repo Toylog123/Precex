@@ -11,5 +11,79 @@
   ],
   "dynamic_cone_size": 4,
   "silent_signals": [],
-  "reduction_ratio": 0.4
+  "reduction_ratio": 0.4,
+  "value_trace": [
+    {
+      "cycle": 1,
+      "vals": [
+        "rst_n=0",
+        "state=00",
+        "tx_busy=0",
+        "txd=1"
+      ]
+    },
+    {
+      "cycle": 2,
+      "vals": [
+        "rst_n=1",
+        "state=00",
+        "tx_busy=0",
+        "txd=1"
+      ]
+    },
+    {
+      "cycle": 3,
+      "vals": [
+        "rst_n=1",
+        "state=01",
+        "tx_busy=1",
+        "txd=0"
+      ]
+    },
+    {
+      "cycle": 4,
+      "vals": [
+        "rst_n=1",
+        "state=01",
+        "tx_busy=1",
+        "txd=0"
+      ]
+    },
+    {
+      "cycle": 5,
+      "vals": [
+        "rst_n=1",
+        "state=01",
+        "tx_busy=1",
+        "txd=0"
+      ]
+    },
+    {
+      "cycle": 6,
+      "vals": [
+        "rst_n=1",
+        "state=01",
+        "tx_busy=1",
+        "txd=0"
+      ]
+    },
+    {
+      "cycle": 7,
+      "vals": [
+        "rst_n=1",
+        "state=10",
+        "tx_busy=1",
+        "txd=0"
+      ]
+    },
+    {
+      "cycle": 8,
+      "vals": [
+        "rst_n=1",
+        "state=10",
+        "tx_busy=1",
+        "txd=0"
+      ]
+    }
+  ]
 }

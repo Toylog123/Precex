@@ -11,5 +11,28 @@
   ],
   "dynamic_cone_size": 2,
   "silent_signals": [],
-  "reduction_ratio": 0.07
+  "reduction_ratio": 0.07,
+  "value_trace": [
+    {
+      "cycle": 1,
+      "vals": [
+        "S_AXI_AWREADY=0",
+        "aresetn_d=0"
+      ]
+    },
+    {
+      "cycle": 2,
+      "vals": [
+        "S_AXI_AWREADY=0",
+        "aresetn_d=0"
+      ]
+    },
+    {
+      "cycle": 3,
+      "vals": [
+        "S_AXI_AWREADY=1",
+        "aresetn_d=1"
+      ]
+    }
+  ]
 }

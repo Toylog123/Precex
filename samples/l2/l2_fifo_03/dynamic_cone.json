@@ -10,5 +10,71 @@
   ],
   "dynamic_cone_size": 3,
   "silent_signals": [],
-  "reduction_ratio": 0.21
+  "reduction_ratio": 0.21,
+  "value_trace": [
+    {
+      "cycle": 1,
+      "vals": [
+        "count=000",
+        "rst_n=0",
+        "wr_en_d=0"
+      ]
+    },
+    {
+      "cycle": 2,
+      "vals": [
+        "count=000",
+        "rst_n=1",
+        "wr_en_d=0"
+      ]
+    },
+    {
+      "cycle": 3,
+      "vals": [
+        "count=001",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 4,
+      "vals": [
+        "count=010",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 5,
+      "vals": [
+        "count=011",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 6,
+      "vals": [
+        "count=100",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 7,
+      "vals": [
+        "count=101",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 8,
+      "vals": [
+        "count=110",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    }
+  ]
 }

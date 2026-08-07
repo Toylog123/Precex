@@ -13,5 +13,29 @@
   "silent_signals": [
     "count"
   ],
-  "reduction_ratio": 0.11
+  "reduction_ratio": 0.11,
+  "value_trace": [
+    {
+      "cycle": 1,
+      "vals": [
+        "clk=0",
+        "count=0000",
+        "rst_n=0"
+      ]
+    },
+    {
+      "cycle": 2,
+      "vals": [
+        "clk=0",
+        "count=0000",
+        "rst_n=1"
+      ]
+    },
+    {
+      "cycle": 3,
+      "vals": [
+        "clk=1"
+      ]
+    }
+  ]
 }

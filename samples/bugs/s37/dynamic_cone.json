@@ -16,5 +16,103 @@
   "silent_signals": [
     "S_IDLE"
   ],
-  "reduction_ratio": 0.29
+  "reduction_ratio": 0.29,
+  "value_trace": [
+    {
+      "cycle": 3,
+      "vals": [
+        "baud_cnt_d=0000",
+        "clk=0",
+        "state=01",
+        "state_d=00"
+      ]
+    },
+    {
+      "cycle": 4,
+      "vals": [
+        "baud_cnt_d=0000",
+        "clk=0",
+        "state=01",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 5,
+      "vals": [
+        "baud_cnt_d=0001",
+        "clk=0",
+        "state=01",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 6,
+      "vals": [
+        "baud_cnt_d=0010",
+        "clk=0",
+        "state=01",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 7,
+      "vals": [
+        "baud_cnt_d=0011",
+        "clk=0",
+        "state=01",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 8,
+      "vals": [
+        "baud_cnt_d=0100",
+        "clk=0",
+        "state=01",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 9,
+      "vals": [
+        "baud_cnt_d=0101",
+        "clk=0",
+        "state=01",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 10,
+      "vals": [
+        "baud_cnt_d=0110",
+        "clk=0",
+        "state=01",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 11,
+      "vals": [
+        "baud_cnt_d=0111",
+        "clk=0",
+        "state=01",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 12,
+      "vals": [
+        "baud_cnt_d=1000",
+        "clk=0",
+        "state=10",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 13,
+      "vals": [
+        "clk=1"
+      ]
+    }
+  ]
 }

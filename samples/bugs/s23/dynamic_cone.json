@@ -21,5 +21,123 @@
   "silent_signals": [
     "rst_n"
   ],
-  "reduction_ratio": 0.29
+  "reduction_ratio": 0.29,
+  "value_trace": [
+    {
+      "cycle": 3,
+      "vals": [
+        "clk=0",
+        "count=0001",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 4,
+      "vals": [
+        "clk=0",
+        "count=0010",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 5,
+      "vals": [
+        "clk=0",
+        "count=0011",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 6,
+      "vals": [
+        "clk=0",
+        "count=0100",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 7,
+      "vals": [
+        "clk=0",
+        "count=0101",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 8,
+      "vals": [
+        "clk=0",
+        "count=0110",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 9,
+      "vals": [
+        "clk=0",
+        "count=0111",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 10,
+      "vals": [
+        "clk=0",
+        "count=1000",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 11,
+      "vals": [
+        "clk=0",
+        "count=1001",
+        "full_d=1",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 12,
+      "vals": [
+        "clk=0",
+        "count=1000",
+        "full_d=0",
+        "rd_en_d=1",
+        "rst_n=1",
+        "wr_en_d=0"
+      ]
+    },
+    {
+      "cycle": 13,
+      "vals": [
+        "clk=1"
+      ]
+    }
+  ]
 }

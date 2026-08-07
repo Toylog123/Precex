@@ -14,5 +14,103 @@
   "silent_signals": [
     "done"
   ],
-  "reduction_ratio": 0.3
+  "reduction_ratio": 0.3,
+  "value_trace": [
+    {
+      "cycle": 57,
+      "vals": [
+        "clk=0",
+        "done=0",
+        "rst_n=1",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 58,
+      "vals": [
+        "clk=0",
+        "done=0",
+        "rst_n=1",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 59,
+      "vals": [
+        "clk=0",
+        "done=0",
+        "rst_n=1",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 60,
+      "vals": [
+        "clk=0",
+        "done=0",
+        "rst_n=1",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 61,
+      "vals": [
+        "clk=0",
+        "done=0",
+        "rst_n=1",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 62,
+      "vals": [
+        "clk=0",
+        "done=0",
+        "rst_n=1",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 63,
+      "vals": [
+        "clk=0",
+        "done=0",
+        "rst_n=1",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 64,
+      "vals": [
+        "clk=0",
+        "done=0",
+        "rst_n=1",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 65,
+      "vals": [
+        "clk=0",
+        "done=0",
+        "rst_n=1",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 66,
+      "vals": [
+        "clk=0",
+        "done=0",
+        "rst_n=0",
+        "state_d=00"
+      ]
+    },
+    {
+      "cycle": 67,
+      "vals": [
+        "clk=1"
+      ]
+    }
+  ]
 }

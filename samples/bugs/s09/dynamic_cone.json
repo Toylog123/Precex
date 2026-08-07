@@ -16,5 +16,49 @@
   "silent_signals": [
     "S1_HOLD"
   ],
-  "reduction_ratio": 0.22
+  "reduction_ratio": 0.22,
+  "value_trace": [
+    {
+      "cycle": 1,
+      "vals": [
+        "clk=0",
+        "hold_cnt=0000",
+        "rst_n=0",
+        "state=00"
+      ]
+    },
+    {
+      "cycle": 2,
+      "vals": [
+        "clk=0",
+        "hold_cnt=0000",
+        "rst_n=1",
+        "state=00"
+      ]
+    },
+    {
+      "cycle": 3,
+      "vals": [
+        "clk=0",
+        "hold_cnt=0001",
+        "rst_n=1",
+        "state=10"
+      ]
+    },
+    {
+      "cycle": 4,
+      "vals": [
+        "clk=0",
+        "hold_cnt=0000",
+        "rst_n=1",
+        "state=00"
+      ]
+    },
+    {
+      "cycle": 5,
+      "vals": [
+        "clk=1"
+      ]
+    }
+  ]
 }

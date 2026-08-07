@@ -12,5 +12,53 @@
   ],
   "dynamic_cone_size": 5,
   "silent_signals": [],
-  "reduction_ratio": 0.5
+  "reduction_ratio": 0.5,
+  "value_trace": [
+    {
+      "cycle": 1,
+      "vals": [
+        "clk=0",
+        "rst_n=0",
+        "state=00",
+        "tx_busy=0",
+        "txd=1"
+      ]
+    },
+    {
+      "cycle": 2,
+      "vals": [
+        "clk=0",
+        "rst_n=1",
+        "state=00",
+        "tx_busy=0",
+        "txd=1"
+      ]
+    },
+    {
+      "cycle": 3,
+      "vals": [
+        "clk=0",
+        "rst_n=1",
+        "state=01",
+        "tx_busy=1",
+        "txd=1"
+      ]
+    },
+    {
+      "cycle": 4,
+      "vals": [
+        "clk=0",
+        "rst_n=1",
+        "state=01",
+        "tx_busy=1",
+        "txd=0"
+      ]
+    },
+    {
+      "cycle": 5,
+      "vals": [
+        "clk=1"
+      ]
+    }
+  ]
 }

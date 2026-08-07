@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # PreCex - scripts/run_experiments.py 主实验批量评测（M1 数据集 s04-s37 + 深时序子集 s38+）
 # 作者：Toylog | 版本：v0.2 | 功能概述：对 samples/bugs 与 samples/deep 下 L3 样本批量跑 A/B/C × 3 随机种子评测：
 #   - 证据链：A=cex 原始日志/VCD，B=evidence.json（结构化），C=semantics.json（反例语义化）
@@ -31,6 +31,7 @@ sys.path.insert(0, os.path.join(REPO_ROOT, "scripts"))
 from llm_client import LLMClient  # noqa: E402
 from prompt_templates import SYSTEM_PROMPT, build_prompt, sanitize_design_text  # noqa: E402
 from run_prestudy import parse_llm_output, apply_unified_diff  # noqa: E402
+from structural_repairer import apply_structural_mode  # noqa: E402
 import cex_diff  # noqa: E402
 import evaluator  # noqa: E402
 
@@ -108,6 +109,8 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
     ev_text = _build_evidence_text(setting, sample_dir)
     prompt = build_prompt(setting, design, assertions, ev_text, meta)
     prompt += "\n【重复试验】seed=%d（独立抽样标识，请独立判断）\n" % seed
+    if os.environ.get("PRECEX_STRUCTURAL") == "1":
+        prompt = apply_structural_mode(prompt, meta.get("error_type", ""))
     # 反馈循环：每轮失败的 diff/原因进入下一轮 prompt（history 注入），
     # 避免"开环重试"（重复相同错误补丁）。首次 prompt 与旧版一致。
     retry_history = []
@@ -376,7 +379,7 @@ def _build_evidence_text(setting, sample_dir):
         # CexTracer dynamic cone
         p = os.path.join(sample_dir, "dynamic_cone.json")
         if not os.path.isfile(p):
-            return "?dynamic_cone.json ??????? CexTracer?"
+            return "（dynamic_cone.json 缺失，请先运行 CexTracer）"
         with open(p, "r", encoding="utf-8") as fh:
             cone = json.loads(fh.read())
         evp = os.path.join(sample_dir, "evidence.json")
@@ -384,53 +387,31 @@ def _build_evidence_text(setting, sample_dir):
         if os.path.isfile(evp):
             with open(evp, "r", encoding="utf-8") as fh:
                 ev = json.loads(fh.read())
-        parts = ["??????????CexTracer??"]
-        parts.append("????%s  ?????%s" % (cone.get("fail_step"), ", ".join(cone.get("assert_signals", []))))
+        parts = ["【反例动态轨迹切片（CexTracer）】"]
+        parts.append("失败步：%s  断言信号：%s" % (cone.get("fail_step"), ", ".join(cone.get("assert_signals", []))))
         parts.append("")
         dc = cone.get("dynamic_cone", [])
-        parts.append("?????????????????? %d ???" % len(dc))
+        parts.append("【动态故障锥（实际翻转的关键信号，共 %d 个）】" % len(dc))
         for sig in dc[:20]:
             parts.append("  - %s" % sig)
         parts.append("")
         sl = cone.get("silent_signals", [])
         if sl:
-            parts.append("??????????????????? %d ???" % len(sl))
+            parts.append("【静默可疑信号（断言引用但从未翻转，可能是状态机卡死的根因，共 %d 个）】" % len(sl))
             for sig in sl[:10]:
-                parts.append("  - %s????????????????????????????????" % sig)
+                parts.append("  - %s" % sig)
             parts.append("")
-        parts.append("??????? %d -> ??? %d?%.0f%%?" % (
-            cone.get("static_cone_size", 0), cone.get("dynamic_cone_size", 0),
-            cone.get("reduction_ratio", 0) * 100))
-        parts.append("?????%s" % ev.get("trigger_condition", "?????"))
-        parts.append("?????%s" % ev.get("error_type", "?"))
+        parts.append("压缩率：静态锥 %d -> 动态锥 %d（%.0f%%）" % (cone.get("static_cone_size", 0), cone.get("dynamic_cone_size", 0), cone.get("reduction_ratio", 0) * 100))
+        vt = cone.get("value_trace", [])
+        if vt:
+            parts.append("【关键信号值轨迹（失败窗口内）】")
+            for row in vt[:24]:
+                parts.append("  cyc%s: %s" % (row["cycle"], ", ".join(row["vals"])))
+            parts.append("")
+        parts.append("触发条件：%s" % ev.get("trigger_condition", "（未提取）"))
+        parts.append("错误类型：%s" % ev.get("error_type", "?"))
         return chr(10).join(parts)
-    if setting == "D":
-        # FVDebug 式因果图（确定性提取，无 LLM 生成）：失败断言 + fault_cone 根因节点 + 全周期可读 state_trace + 触发条件
-        parts = []
-        ev_path = os.path.join(sample_dir, "evidence.json")
-        sem_path = os.path.join(sample_dir, "semantics.json")
-        ev = {}
-        sem = {}
-        if os.path.isfile(ev_path):
-            with open(ev_path, "r", encoding="utf-8") as f:
-                ev = json.load(f)
-        if os.path.isfile(sem_path):
-            with open(sem_path, "r", encoding="utf-8") as f:
-                sem = json.load(f)
-        parts.append("## FVDebug 式因果图（D 设置：反例自动提取，无 LLM 生成）")
-        parts.append("### 失败断言")
-        parts.append("module=%s | error_type=%s | fail_stage=%s | fail_step=%s" % (
-            ev.get("module"), ev.get("error_type"), ev.get("fail_stage"), ev.get("fail_step")))
-        parts.append("### 根因节点（fault_cone，按影响排序）")
-        cone = sem.get("fault_cone") or []
-        for node in cone:
-            parts.append("- %s" % (node if isinstance(node, str) else json.dumps(node, ensure_ascii=False)))
-        parts.append("### 因果链状态轨迹（全周期可读信号名）")
-        for row in (sem.get("state_trace") or []):
-            parts.append("cyc%s: %s" % (row.get("cycle", "?"), json.dumps(row, ensure_ascii=False)))
-        parts.append("### 触发条件")
-        parts.append(str(sem.get("trigger_condition") or ev.get("trigger_condition") or "?"))
-        return "\n".join(parts)
+
     raise ValueError("setting 必须是 A/B/C/BT/BH")
 
 
@@ -468,6 +449,9 @@ def main(argv=None):
     if "--out" in argv:
         out_path = argv[argv.index("--out") + 1]
     provider = "minimax"
+    structural = "--structural" in argv
+    if structural:
+        os.environ["PRECEX_STRUCTURAL"] = "1"
     if "--provider" in argv:
         provider = argv[argv.index("--provider") + 1]
     if "--verbose" in argv:

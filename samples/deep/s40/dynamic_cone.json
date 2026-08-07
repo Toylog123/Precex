@@ -21,5 +21,123 @@
   "silent_signals": [
     "wr_en_d"
   ],
-  "reduction_ratio": 0.29
+  "reduction_ratio": 0.29,
+  "value_trace": [
+    {
+      "cycle": 27,
+      "vals": [
+        "clk=0",
+        "count=011001",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 28,
+      "vals": [
+        "clk=0",
+        "count=011010",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 29,
+      "vals": [
+        "clk=0",
+        "count=011011",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 30,
+      "vals": [
+        "clk=0",
+        "count=011100",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 31,
+      "vals": [
+        "clk=0",
+        "count=011101",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 32,
+      "vals": [
+        "clk=0",
+        "count=011110",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 33,
+      "vals": [
+        "clk=0",
+        "count=011111",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 34,
+      "vals": [
+        "clk=0",
+        "count=100000",
+        "full_d=0",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 35,
+      "vals": [
+        "clk=0",
+        "count=100001",
+        "full_d=1",
+        "rd_en_d=0",
+        "rst_n=1",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 36,
+      "vals": [
+        "clk=0",
+        "count=000000",
+        "full_d=0",
+        "rd_en_d=1",
+        "rst_n=0",
+        "wr_en_d=1"
+      ]
+    },
+    {
+      "cycle": 37,
+      "vals": [
+        "clk=1"
+      ]
+    }
+  ]
 }

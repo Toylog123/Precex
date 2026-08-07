@@ -258,6 +258,25 @@ class CexTracer:
 
     # ── Main ─────────────────────────────────────────────────
 
+    def value_trace(self, signals, window=8):
+        """Return compact value trace for given signals around fail_step."""
+        if not self.vp:
+            self.parse_vcd()
+        trace = self.vp.state_trace(list(signals))
+        rows = []
+        for t in trace:
+            c = t.get("cycle", 0)
+            if abs(c - self.fail_step) > window:
+                continue
+            vals = []
+            for sig in sorted(signals):
+                v = t.get(sig)
+                if v is not None:
+                    vals.append("%s=%s" % (sig, v))
+            if vals:
+                rows.append({"cycle": c, "vals": vals})
+        return rows
+
     def build(self, fail_step=None):
         self._load_evidence()
         if fail_step is not None:
@@ -287,6 +306,9 @@ class CexTracer:
             "silent_signals": silent,
             "reduction_ratio": round(len(dynamic) / max(static_size, 1), 2),
         }
+
+        trace_sigs = list(set(dynamic) | set(silent))
+        result["value_trace"] = self.value_trace(trace_sigs) if trace_sigs else []
 
         out_path = os.path.join(self.sample_dir, "dynamic_cone.json")
         with open(out_path, "w", encoding="utf-8") as f:

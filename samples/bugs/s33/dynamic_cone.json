@@ -11,5 +11,42 @@
   ],
   "dynamic_cone_size": 2,
   "silent_signals": [],
-  "reduction_ratio": 0.07
+  "reduction_ratio": 0.07,
+  "value_trace": [
+    {
+      "cycle": 1,
+      "vals": [
+        "S_AXI_WREADY=0",
+        "w_done=0"
+      ]
+    },
+    {
+      "cycle": 2,
+      "vals": [
+        "S_AXI_WREADY=0",
+        "w_done=0"
+      ]
+    },
+    {
+      "cycle": 3,
+      "vals": [
+        "S_AXI_WREADY=0",
+        "w_done=0"
+      ]
+    },
+    {
+      "cycle": 4,
+      "vals": [
+        "S_AXI_WREADY=0",
+        "w_done=0"
+      ]
+    },
+    {
+      "cycle": 5,
+      "vals": [
+        "S_AXI_WREADY=1",
+        "w_done=1"
+      ]
+    }
+  ]
 }

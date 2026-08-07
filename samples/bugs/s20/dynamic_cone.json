@@ -15,5 +15,49 @@
   "silent_signals": [
     "half_full"
   ],
-  "reduction_ratio": 0.17
+  "reduction_ratio": 0.17,
+  "value_trace": [
+    {
+      "cycle": 1,
+      "vals": [
+        "clk=0",
+        "count=0000",
+        "half_full=0",
+        "rst_n=0"
+      ]
+    },
+    {
+      "cycle": 2,
+      "vals": [
+        "clk=0",
+        "count=0000",
+        "half_full=0",
+        "rst_n=1"
+      ]
+    },
+    {
+      "cycle": 3,
+      "vals": [
+        "clk=0",
+        "count=0001",
+        "half_full=0",
+        "rst_n=1"
+      ]
+    },
+    {
+      "cycle": 4,
+      "vals": [
+        "clk=0",
+        "count=0001",
+        "half_full=0",
+        "rst_n=1"
+      ]
+    },
+    {
+      "cycle": 5,
+      "vals": [
+        "clk=1"
+      ]
+    }
+  ]
 }

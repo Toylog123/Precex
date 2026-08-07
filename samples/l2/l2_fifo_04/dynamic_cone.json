@@ -9,5 +9,27 @@
   ],
   "dynamic_cone_size": 2,
   "silent_signals": [],
-  "reduction_ratio": 0.14
+  "reduction_ratio": 0.14,
+  "value_trace": [
+    {
+      "cycle": 1,
+      "vals": [
+        "clk=0",
+        "rst_n=0"
+      ]
+    },
+    {
+      "cycle": 2,
+      "vals": [
+        "clk=0",
+        "rst_n=1"
+      ]
+    },
+    {
+      "cycle": 3,
+      "vals": [
+        "clk=1"
+      ]
+    }
+  ]
 }

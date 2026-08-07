@@ -22,5 +22,49 @@
     "S_IDLE",
     "S_START"
   ],
-  "reduction_ratio": 0.33
+  "reduction_ratio": 0.33,
+  "value_trace": [
+    {
+      "cycle": 1,
+      "vals": [
+        "clk=0",
+        "rst_n=0",
+        "state=00",
+        "state_d=00"
+      ]
+    },
+    {
+      "cycle": 2,
+      "vals": [
+        "clk=0",
+        "rst_n=1",
+        "state=00",
+        "state_d=00"
+      ]
+    },
+    {
+      "cycle": 3,
+      "vals": [
+        "clk=0",
+        "rst_n=1",
+        "state=01",
+        "state_d=00"
+      ]
+    },
+    {
+      "cycle": 4,
+      "vals": [
+        "clk=0",
+        "rst_n=1",
+        "state=01",
+        "state_d=01"
+      ]
+    },
+    {
+      "cycle": 5,
+      "vals": [
+        "clk=1"
+      ]
+    }
+  ]
 }
