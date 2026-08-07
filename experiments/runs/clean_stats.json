@@ -25,14 +25,14 @@
       "out_tok": 1186456
     },
     "C": {
-      "n": 101,
+      "n": 102,
       "loc": 47,
-      "loc_rate": 46.5,
+      "loc_rate": 46.1,
       "wilson_lo": 37.1,
       "wilson_hi": 56.2,
-      "repair": 101,
+      "repair": 102,
       "repair_rate": 100.0,
-      "cost": 0.2742,
+      "cost": 0.2823,
       "in_tok": 918837,
       "out_tok": 519945
     },
@@ -117,8 +117,8 @@
       "ci_hi": 0.1
     }
   ],
-  "total_n": 407,
-  "total_cost": 1.64,
+  "total_n": 408,
+  "total_cost": 1.65,
   "c": {
     "n": 101,
     "loc_rate": 46.5,

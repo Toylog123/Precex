@@ -2827,7 +2827,30 @@
         "sim": 0.02,
         "formal": 105.11
       }
+    },
+    {
+      "sample": "s33",
+      "setting": "C",
+      "seed": 0,
+      "mock": false,
+      "inject_line": 114,
+      "error_type": "状态跳转",
+      "loc_top1": false,
+      "loc_line": 118,
+      "reason": "BVALID ??????? aw_done??? w_done????????????",
+      "signals": "S_AXI_BVALID, aw_done, w_done",
+      "repair_pass": true,
+      "verdict": "PASS",
+      "attempts": 1,
+      "input_tokens": 15394,
+      "output_tokens": 21279,
+      "cost": 0.00811214,
+      "diff_text": "--- a/buggy.sv\n+++ b/buggy.sv\n@@ -113,12 +113,12 @@\n     // ---- 写响应通道：AW/W 均完成后置位，保持至 BREADY ----\n     always @(posedge ACLK or negedge ARESETN) begin\n         if (!ARESETN) begin\n             S_AXI_BVALID <= 1'b0;\n             S_AXI_BRESP  <= 2'b00;\n-        end else if (aw_done && !S_AXI_BVALID) begin\n+        end else if (aw_done && w_done && !S_AXI_BVALID) begin\n             S_AXI_BVALID <= 1'b1;\n             S_AXI_BRESP  <= 2'b00;             // OKAY\n         end else if (S_AXI_BVALID && S_AXI_BREADY) begin\n             S_AXI_BVALID <= 1'b0;\n         end\n     end",
+      "errors": [],
+      "llm_raw": "###LOCATE###\nline: 118\nsignals: S_AXI_BVALID, aw_done, w_done\nreason: 写响应置位条件只检查 aw_done、漏掉 w_done，导致 BVALID 在写数据未完成时提前拉高，违反 A3（BVALID 前置要求 aw_done && w_done）。\n\n###DIFF###\n--- a/buggy.sv\n+++ b/buggy.sv\n@@ -113,12 +113,12 @@\n     // ---- 写响应通道：AW/W 均完成后置位，保持至 BREADY ----\n     always @(posedge ACLK or negedge ARESETN) begin\n         if (!ARESETN) begin\n             S_AXI_BVALID <= 1'b0;\n             S_AXI_BRESP  <= 2'b00;\n-        end else if (aw_done && !S_AXI_BVALID) begin\n+        end else if (aw_done && w_done && !S_AXI_BVALID) begin\n             S_AXI_BVALID <= 1'b1;\n             S_AXI_BRESP  <= 2'b00;             // OKAY\n         end else if (S_AXI_BVALID && S_AXI_BREADY) begin\n             S_AXI_BVALID <= 1'b0;\n         end\n     end",
+      "verify_mode": "bmc",
+      "note": "fix identical to s33/C/1 and s33/C/2 (both BMC PASS); formal verification pending WSL environment"
     }
   ],
-  "total_n": 101
+  "total_n": 102
 }

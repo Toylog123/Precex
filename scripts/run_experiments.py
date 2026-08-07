@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # PreCex - scripts/run_experiments.py 主实验批量评测（M1 数据集 s04-s37 + 深时序子集 s38+）
 # 作者：Toylog | 版本：v0.2 | 功能概述：对 samples/bugs 与 samples/deep 下 L3 样本批量跑 A/B/C × 3 随机种子评测：
 #   - 证据链：A=cex 原始日志/VCD，B=evidence.json（结构化），C=semantics.json（反例语义化）
@@ -144,6 +144,7 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
                     {"role": "user", "content": prompt},
                 ],
                 tag="exp:%s:%s:seed%d" % (sample_id, setting, seed),
+                max_tokens=65536,
             )
         except Exception as e:
             result["errors"].append("attempt %d: llm call failed: %s" % (attempt, e))
