@@ -1,0 +1,19 @@
+{
+  "algorithm": "block_clustering_v3",
+  "fail_step": 3,
+  "assert_signals": [
+    "count",
+    "half_full"
+  ],
+  "static_cone_size": 18,
+  "dynamic_cone": [
+    "clk",
+    "count",
+    "rst_n"
+  ],
+  "dynamic_cone_size": 3,
+  "silent_signals": [
+    "half_full"
+  ],
+  "reduction_ratio": 0.17
+}

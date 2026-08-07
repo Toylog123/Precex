@@ -132,9 +132,42 @@ class CexTracer:
             with open(self.evidence_path, encoding="utf-8") as f:
                 ev = json.load(f)
             tc = ev.get("trigger_condition", "")
-            ids = _extract_ids(tc)
-            self.assert_signals = ids & self.real_signals if self.real_signals else ids
             self.fail_step = ev.get("fail_step", 0)
+
+            if tc:
+                ids = _extract_ids(tc)
+                self.assert_signals = ids & self.real_signals if self.real_signals else ids
+            else:
+                # Fallback: extract from code_slice or find nearest assert statement
+                self.assert_signals = set()
+                
+                # Try code_slice first
+                cs = ev.get("code_slice", "")
+                if cs:
+                    cs = re.sub(r'^\s*\d+:\s*', '', cs, flags=re.MULTILINE)
+                    ids = _extract_ids(cs)
+                    self.assert_signals = ids & self.real_signals if self.real_signals else ids
+                
+                # If still empty, scan buggy.v for assert statements near the failure line
+                if not self.assert_signals and self.buggy_path:
+                    ev_line = ev.get("line", 0)
+                    with open(self.buggy_path, encoding="utf-8") as bf:
+                        bf_lines = bf.readlines()
+                    # Find the nearest assert statement
+                    best_dist = 999
+                    for i, line in enumerate(bf_lines, 1):
+                        stripped = line.strip()
+                        if 'assert' in stripped.lower() and not stripped.startswith('//'):
+                            dist = abs(i - ev_line)
+                            if dist < best_dist and dist < 30:
+                                best_dist = dist
+                                # Extract signals from this line and context
+                                ctx_start = max(0, i-3)
+                                ctx_end = min(len(bf_lines), i+3)
+                                ctx_text = '\n'.join(bf_lines[ctx_start:ctx_end])
+                                ids = _extract_ids(ctx_text)
+                                self.assert_signals.update(ids)
+                    self.assert_signals = self.assert_signals & self.real_signals if self.real_signals else self.assert_signals
 
     # ── Verilog blocks ──────────────────────────────────────
 

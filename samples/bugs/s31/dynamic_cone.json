@@ -1,0 +1,22 @@
+{
+  "algorithm": "block_clustering_v3",
+  "fail_step": 3,
+  "assert_signals": [
+    "DATA_W",
+    "b0",
+    "cnt"
+  ],
+  "static_cone_size": 15,
+  "dynamic_cone": [
+    "clk",
+    "cnt",
+    "rst_n",
+    "rst_n_d"
+  ],
+  "dynamic_cone_size": 4,
+  "silent_signals": [
+    "DATA_W",
+    "b0"
+  ],
+  "reduction_ratio": 0.27
+}

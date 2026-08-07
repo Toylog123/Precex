@@ -118,10 +118,12 @@ def build_prompt(setting, design, assertions, evidence_text, meta=None, history=
         ev_label = "【证据段 B+H：结构化证据 + 握手协议分析（动态切片 + 违规检测 + 协议提示）】"
     elif setting == "D":
         ev_label = "【证据段 D：FVDebug 式因果图（失败断言 + 根因节点 + 因果链状态轨迹，确定性提取）】"
+    elif setting == "E":
+        ev_label = "\u3010\u8bc1\u636e\u6bb5 E\uff1a\u52a8\u6001\u8f68\u8ff9\u5207\u7247\uff08CexTracer\u2014\u2014\u53cd\u4f8b\u7a97\u53e3\u5185\u7ffb\u8f6c\u4fe1\u53f7 + \u9759\u9ed8\u53ef\u7591\u4fe1\u53f7 + \u65ad\u8a00\u4e0a\u4e0b\u6587\uff09\u3011"
     elif setting == "C":
         ev_label = "【证据段 C：反例语义化（周期事件表+状态轨迹+故障锥+NL 摘要）】"
     else:
-        raise ValueError("setting 必须是 A/B/C/BT/BH")
+        raise ValueError("setting 必须是 A/B/C/D/E/BT/BH")
     prompt = (
         head + ev_label + chr(10) + "[证据内容开始]" + chr(10)
         + evidence_text + chr(10) + "[证据内容结束]" + chr(10) + chr(10)
@@ -241,4 +243,36 @@ def build_evidence_text(setting, sample_dir):
             return "（semantics.json 缺失）"
         with open(p, "r", encoding="utf-8") as f:
             return f.read()
-    raise ValueError("setting 必须是 A/B/C/BT/BH")
+    if setting == "E":
+        p = os.path.join(sample_dir, "dynamic_cone.json")
+        if not os.path.isfile(p):
+            return "\uff08dynamic_cone.json \u7f3a\u5931\uff0c\u8bf7\u5148\u8fd0\u884c CexTracer\uff09"
+        with open(p, "r", encoding="utf-8") as fh:
+            import json as _json2
+            cone = _json2.loads(fh.read())
+        evp = os.path.join(sample_dir, "evidence.json")
+        ev = {}
+        if os.path.isfile(evp):
+            with open(evp, "r", encoding="utf-8") as fh:
+                ev = _json2.loads(fh.read())
+        parts = ["\u3010\u53cd\u4f8b\u52a8\u6001\u8f68\u8ff9\u5207\u7247\uff08CexTracer\uff09\u3011"]
+        parts.append("\u5931\u8d25\u6b65\uff1a%s  \u65ad\u8a00\u4fe1\u53f7\uff1a%s" % (cone.get("fail_step"), ", ".join(cone.get("assert_signals", []))))
+        parts.append("")
+        dc = cone.get("dynamic_cone", [])
+        parts.append("\u3010\u52a8\u6001\u6545\u969c\u9525\uff08\u5b9e\u9645\u7ffb\u8f6c\u7684\u5173\u952e\u4fe1\u53f7\uff0c\u5171 %d \u4e2a\uff09\u3011" % len(dc))
+        for sig in dc[:20]:
+            parts.append("  - %s" % sig)
+        parts.append("")
+        sl = cone.get("silent_signals", [])
+        if sl:
+            parts.append("\u3010\u9759\u9ed8\u53ef\u7591\u4fe1\u53f7\uff08\u65ad\u8a00\u5f15\u7528\u4f46\u4ece\u672a\u7ffb\u8f6c\uff0c\u5171 %d \u4e2a\uff09\u3011" % len(sl))
+            for sig in sl[:10]:
+                parts.append("  - %s\uff08\u8be5\u4fe1\u53f7\u5728\u65ad\u8a00\u4e2d\u5f15\u7528\u4f46\u53cd\u4f8b\u7a97\u53e3\u5185\u672a\u7ffb\u8f6c\uff0c\u53ef\u80fd\u662f\u72b6\u6001\u673a\u5361\u6b7b\u7684\u6839\u56e0\uff09" % sig)
+            parts.append("")
+        parts.append("\u538b\u7f29\u7387\uff1a\u9759\u6001\u9525 %d -> \u52a8\u6001\u9525 %d\uff08%.0f%%\uff09" % (
+            cone.get("static_cone_size", 0), cone.get("dynamic_cone_size", 0),
+            cone.get("reduction_ratio", 0) * 100))
+        parts.append("\u89e6\u53d1\u6761\u4ef6\uff1a%s" % ev.get("trigger_condition", "\uff08\u672a\u63d0\u53d6\uff09"))
+        parts.append("\u9519\u8bef\u7c7b\u578b\uff1a%s" % ev.get("error_type", "?"))
+        return chr(10).join(parts)
+    raise ValueError("setting 必须是 A/B/C/D/E/BT/BH")

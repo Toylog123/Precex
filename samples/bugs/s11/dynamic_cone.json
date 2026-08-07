@@ -1,0 +1,40 @@
+{
+  "algorithm": "block_clustering_v3",
+  "fail_step": 3,
+  "assert_signals": [
+    "DATA_W",
+    "a",
+    "a_d",
+    "alu_out",
+    "alu_out_d",
+    "b",
+    "b_d",
+    "clk",
+    "cnt",
+    "cnt_en_d",
+    "rst_n"
+  ],
+  "static_cone_size": 14,
+  "dynamic_cone": [
+    "a",
+    "a_d",
+    "alu_out",
+    "alu_out_d",
+    "b",
+    "b_d",
+    "clk",
+    "cnt",
+    "cnt_d",
+    "cnt_en",
+    "cnt_en_d",
+    "op",
+    "op_d",
+    "rst_n",
+    "rst_n_d"
+  ],
+  "dynamic_cone_size": 15,
+  "silent_signals": [
+    "DATA_W"
+  ],
+  "reduction_ratio": 1.07
+}

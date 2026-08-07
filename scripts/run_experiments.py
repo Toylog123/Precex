@@ -372,6 +372,38 @@ def _build_evidence_text(setting, sample_dir):
         if ts:
             slim["text_summary"] = ts[:300] + ("…" if len(ts) > 300 else "")
         return json.dumps(slim, ensure_ascii=False, indent=2)
+    if setting == "E":
+        # CexTracer dynamic cone
+        p = os.path.join(sample_dir, "dynamic_cone.json")
+        if not os.path.isfile(p):
+            return "?dynamic_cone.json ??????? CexTracer?"
+        with open(p, "r", encoding="utf-8") as fh:
+            cone = json.loads(fh.read())
+        evp = os.path.join(sample_dir, "evidence.json")
+        ev = {}
+        if os.path.isfile(evp):
+            with open(evp, "r", encoding="utf-8") as fh:
+                ev = json.loads(fh.read())
+        parts = ["??????????CexTracer??"]
+        parts.append("????%s  ?????%s" % (cone.get("fail_step"), ", ".join(cone.get("assert_signals", []))))
+        parts.append("")
+        dc = cone.get("dynamic_cone", [])
+        parts.append("?????????????????? %d ???" % len(dc))
+        for sig in dc[:20]:
+            parts.append("  - %s" % sig)
+        parts.append("")
+        sl = cone.get("silent_signals", [])
+        if sl:
+            parts.append("??????????????????? %d ???" % len(sl))
+            for sig in sl[:10]:
+                parts.append("  - %s????????????????????????????????" % sig)
+            parts.append("")
+        parts.append("??????? %d -> ??? %d?%.0f%%?" % (
+            cone.get("static_cone_size", 0), cone.get("dynamic_cone_size", 0),
+            cone.get("reduction_ratio", 0) * 100))
+        parts.append("?????%s" % ev.get("trigger_condition", "?????"))
+        parts.append("?????%s" % ev.get("error_type", "?"))
+        return chr(10).join(parts)
     if setting == "D":
         # FVDebug 式因果图（确定性提取，无 LLM 生成）：失败断言 + fault_cone 根因节点 + 全周期可读 state_trace + 触发条件
         parts = []
