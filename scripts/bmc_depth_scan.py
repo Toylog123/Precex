@@ -1,92 +1,138 @@
 # -*- coding: utf-8 -*-
-"""BMC 深度扫描（1x -> 2x -> 4x -> 8x -> 10x 自适配），替代固定 2x 抽查。"""
-import os, re, sys, json, subprocess, tempfile, shutil
+"""BMC depth scan over REPAIRED designs (1x-2x-4x-8x-10x)."""
+import os, sys, json, re
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(REPO, "harness"))
+from evaluator import formal_check
+
+BASE_DEPTHS = {
+    "fifo_sync": 12, "uart_tx": 12, "fsm_ctrl": 12, "counter_alu": 12,
+    "axi_lite_slave": 16, "uart_rx": 24,
+}
+DIFF_SOURCES = [
+    os.path.join(REPO, "experiments", "runs", "leakfix_merged_clean.json"),
+    os.path.join(REPO, "experiments", "runs", "leakfix_D.json"),
+    os.path.join(REPO, "experiments", "runs", "exp_c_ds_full.json"),
+]
 
 
-def _to_wsl(path):
-    p = os.path.abspath(path).replace("\\", "/")
-    drive, rest = p.split(":", 1)
-    return "/mnt/%s%s" % (drive.lower(), rest)
+def load_repairs():
+    repairs = {}
+    for src in DIFF_SOURCES:
+        if not os.path.isfile(src):
+            continue
+        with open(src, encoding="utf-8") as f:
+            data = json.load(f)
+        for r in data.get("results", []):
+            sid = r.get("sample")
+            diff = r.get("diff_text")
+            verdict = r.get("verdict")
+            if not sid or not diff or verdict != "PASS":
+                continue
+            repairs.setdefault(sid, []).append({
+                "setting": r.get("setting"), "seed": r.get("seed"), "diff": diff,
+            })
+    out = {}
+    for sid, items in repairs.items():
+        seen = set()
+        uniq = []
+        for it in items:
+            k = (it["setting"], it["seed"])
+            if k not in seen:
+                seen.add(k)
+                uniq.append(it)
+        out[sid] = uniq
+    return out
 
 
-def run_sby_workdir(work_dir, sby_name, timeout=900):
-    """在 WSL 中于 work_dir 内运行 sby，返回 (rc, stdout)。"""
-    cmd = "cd %s && bash %s -f %s" % (
-        _to_wsl(work_dir),
-        _to_wsl(os.path.join(REPO, "smoke", "run_sby.sh")),
-        sby_name,
-    )
-    try:
-        r = subprocess.run(["wsl", "bash", "-lc", cmd],
-                           capture_output=True, text=True, timeout=timeout)
-        return r.returncode, (r.stdout or "") + (r.stderr or "")
-    except subprocess.TimeoutExpired:
-        return -1, "timeout"
+def apply_diff(buggy_text, diff_text):
+    lines = diff_text.split(chr(10))
+    new_lines = buggy_text.split(chr(10))
+    i = 0
+    while i < len(lines):
+        m = re.match(r"@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@", lines[i])
+        if not m:
+            i += 1
+            continue
+        old_start = int(m.group(1)) - 1
+        i += 1
+        del_list, add_list = [], []
+        while i < len(lines) and not lines[i].startswith("@@"):
+            ln = lines[i]
+            if ln.startswith("---") or ln.startswith("+++"):
+                i += 1
+                continue
+            if ln.startswith("-"):
+                del_list.append(ln[1:])
+            elif ln.startswith("+"):
+                add_list.append(ln[1:])
+            else:
+                del_list.append(ln[1:])
+                add_list.append(ln[1:])
+            i += 1
+        new_lines[old_start:old_start + len(del_list)] = add_list
+    return chr(10).join(new_lines)
 
 
-def scan_sample(sample_dir, base_depth, out_dir=None):
-    """对单个样本做深度扫描。使用 sample_dir/buggy.v（修复后）+ verify.sby 模板。"""
-    work = out_dir or tempfile.mkdtemp(prefix="depth_scan_")
-    buggy = os.path.join(sample_dir, "buggy.v")
-    tb = os.path.join(sample_dir, "tb_weak.sv")
-    sby = os.path.join(sample_dir, "verify.sby")
-
-    if not (os.path.isfile(buggy) and os.path.isfile(tb) and os.path.isfile(sby)):
-        return {"sample": os.path.basename(sample_dir), "error": "missing files"}
-
-    shutil.copy2(buggy, os.path.join(work, "buggy.v"))
-    shutil.copy2(tb, os.path.join(work, "tb_weak.sv"))
-    with open(sby, encoding="utf-8") as f:
+def scan_repaired(sample_dir, repairs):
+    sid = os.path.basename(sample_dir)
+    buggy_path = os.path.join(sample_dir, "buggy.v")
+    sby_path = os.path.join(sample_dir, "verify.sby")
+    if not (os.path.isfile(buggy_path) and os.path.isfile(sby_path)):
+        return {"sample": sid, "error": "missing files"}
+    with open(buggy_path, encoding="utf-8") as f:
+        buggy_text = f.read()
+    with open(sby_path, encoding="utf-8") as f:
         sby_text = f.read()
-
+    meta_path = os.path.join(sample_dir, "meta.json")
+    module = "?"
+    if os.path.isfile(meta_path):
+        with open(meta_path, encoding="utf-8") as f:
+            module = json.load(f).get("module", "?")
+    base = BASE_DEPTHS.get(module, 12)
     depths = []
-    d = base_depth
-    while d <= base_depth * 10:
+    d = base
+    while d <= base * 10:
         depths.append(d)
         d *= 2
-
     results = {}
+    it = repairs[0] if repairs else None
+    if not it:
+        return {"sample": sid, "error": "no repair", "depths": depths, "results": {}}
+    repaired = apply_diff(buggy_text, it["diff"])
+    work = os.path.join(REPO, "experiments", "runs", "_depth_work", sid)
+    os.makedirs(work, exist_ok=True)
+    with open(os.path.join(work, "buggy.v"), "w", encoding="utf-8") as f:
+        f.write(repaired)
+    with open(os.path.join(work, "verify.sby"), "w", encoding="utf-8") as f:
+        f.write(sby_text)
     for depth in depths:
-        patched = re.sub(r"(depth\s+)\d+", r"\g<1>%d" % depth, sby_text)
-        sby_work = os.path.join(work, "verify_depth_%d.sby" % depth)
-        with open(sby_work, "w", encoding="utf-8") as f:
-            f.write(patched)
-
-        rc, out = run_sby_workdir(work, os.path.basename(sby_work))
-        if "DONE (PASS" in out:
-            results[str(depth)] = "PASS"
-        elif "Assert failed" in out or "DONE (FAIL" in out:
-            results[str(depth)] = "FAIL"
-        elif rc == -1:
-            results[str(depth)] = "TIMEOUT"
-        else:
-            results[str(depth)] = "UNKNOWN"
-        print("  [%s] depth=%d -> %s" % (os.path.basename(sample_dir), depth, results[str(depth)]), flush=True)
-
+        design_dir = os.path.join(work, "bmc_%d" % depth)
+        os.makedirs(design_dir, exist_ok=True)
+        res = formal_check(
+            os.path.join(work, "verify.sby"), timeout=900,
+            run_script=None, sby="sby", cwd=work,
+            design_dir=design_dir, depth_override=depth,
+        )
+        r = res.get("result")
+        results[str(depth)] = r.upper() if r else "UNKNOWN"
+        print("  [%s] depth=%d -> %s" % (sid, depth, results[str(depth)]), flush=True)
     return {
-        "sample": os.path.basename(sample_dir),
-        "base_depth": base_depth,
-        "depths": depths,
-        "results": results,
-        "work_dir": work,
+        "sample": sid, "base_depth": base, "depths": depths,
+        "results": results, "repair_setting": it.get("setting"), "work_dir": work,
     }
 
 
 def main():
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("--sample", help="sample id e.g. s04")
+    ap.add_argument("--sample")
     ap.add_argument("--all", action="store_true")
-    ap.add_argument("--out", default=os.path.join(REPO, "experiments", "runs", "depth_scan.json"))
+    ap.add_argument("--out", default=os.path.join(REPO, "experiments", "runs", "depth_scan_repaired.json"))
     args = ap.parse_args()
-
-    base_depths = {
-        "fifo_sync": 12, "uart_tx": 12, "fsm_ctrl": 12, "counter_alu": 12,
-        "axi_lite_slave": 16, "uart_rx": 24,
-    }
-
+    repairs = load_repairs()
+    print("[depth] loaded repairs for %d samples" % len(repairs), flush=True)
     samples = []
     if args.sample:
         samples = [os.path.join(REPO, "samples", "bugs", args.sample)]
@@ -94,21 +140,14 @@ def main():
         bugs = os.path.join(REPO, "samples", "bugs")
         for sid in sorted(os.listdir(bugs)):
             sp = os.path.join(bugs, sid)
-            if os.path.isdir(sp) and os.path.isfile(os.path.join(sp, "buggy.v")):
+            if os.path.isdir(sp) and sid in repairs:
                 samples.append(sp)
-
     results = []
     for sp in samples:
-        meta_path = os.path.join(sp, "meta.json")
-        module = "?"
-        if os.path.isfile(meta_path):
-            with open(meta_path, encoding="utf-8") as f:
-                module = json.load(f).get("module", "?")
-        base = base_depths.get(module, 12)
-        print("[depth] %s base=%d" % (os.path.basename(sp), base), flush=True)
-        r = scan_sample(sp, base)
+        sid = os.path.basename(sp)
+        print("[depth] %s" % sid, flush=True)
+        r = scan_repaired(sp, repairs.get(sid, []))
         results.append(r)
-
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
     print("[depth] saved %d samples -> %s" % (len(results), args.out))
