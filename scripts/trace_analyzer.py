@@ -126,10 +126,34 @@ def _cycle_compare(golden_vcd, buggy_vcd, clk_sig):
             b_unique = {v for v in bvals if v is not None}
             if len(g_unique) > 1 and len(b_unique) <= 1:
                 stuck.append(s)
+    diff_detail = {}
+    if first_anomaly is not None:
+        # 失败窗口内（首次异常前后各 4 拍）逐信号 golden/buggy 值序列：
+        # 期望（golden）vs 实际（buggy），供证据注入使用；不含任何行号，不泄露注入行。
+        lo = max(0, first_anomaly - 4)
+        hi = min(n, first_anomaly + 5)
+        for s in sigs:
+            if s in diffs:
+                def _hold(vals):
+                    # VCD 只在信号变化时记录事件：将 null 填充为保持值（前值）
+                    out = []
+                    cur = None
+                    for v in vals:
+                        if v is not None:
+                            cur = v
+                        out.append(cur)
+                    return out
+                diff_detail[s] = {
+                    "first_diff_cycle": diffs[s],
+                    "cycles": list(range(lo, hi)),
+                    "golden": _hold([gt[i].get(s) for i in range(lo, hi)]),
+                    "buggy": _hold([bt[i].get(s) for i in range(lo, hi)]),
+                }
     return {
         "first_anomaly_cycle": first_anomaly,
         "key_signal_diffs": sorted(diffs.items(), key=lambda x: x[1]),
         "stuck_signals": sorted(stuck),
+        "diff_detail": diff_detail,
         "cycles_compared": n,
     }
 

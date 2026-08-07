@@ -119,7 +119,7 @@ def build_hygiene_prompt(setting, sample_dir, meta, variant):
                    "2) 找出第一个偏离期望的信号（或应翻转未翻转的信号）及其所在行；\n"
                    "3) 沿数据依赖推断根因行；\n"
                    "4) 生成最小 unified diff。\n\n")
-    if variant in ("handshake", "handshake_cot"):
+    if variant in ("handshake", "handshake_cot", "handshake_v2"):
         ta = _load_json(os.path.join(sample_dir, "trace_analysis.json"))
         an = ta.get("analysis") or {}
         rows = []
@@ -131,6 +131,11 @@ def build_hygiene_prompt(setting, sample_dir, meta, variant):
         ss = an.get("stuck_signals") or []
         if ss:
             rows.append("静默信号=%s" % json.dumps(ss, ensure_ascii=False))
+        if variant == "handshake_v2":
+            dd = an.get("diff_detail") or {}
+            if dd:
+                rows.append("逐周期期望(golden)vs实际(buggy)值序列=" +
+                            json.dumps(dd, ensure_ascii=False))
         if rows:
             prompt += ("【静默信号分析（TraceAnalyzer 动态切片）】%s\n"
                        "说明：这些信号在失败窗口内应翻转/变化但未变化，是握手/时序缺陷的直接证据。\n\n"
