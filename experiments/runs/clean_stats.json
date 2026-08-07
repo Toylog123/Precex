@@ -25,16 +25,16 @@
       "out_tok": 1186456
     },
     "C": {
-      "n": 95,
-      "loc": 41,
-      "loc_rate": 43.16,
-      "wilson_lo": 33.7,
-      "wilson_hi": 53.2,
-      "repair": 95,
+      "n": 101,
+      "loc": 47,
+      "loc_rate": 46.5,
+      "wilson_lo": 37.1,
+      "wilson_hi": 56.2,
+      "repair": 101,
       "repair_rate": 100.0,
-      "cost": 0.2336,
-      "in_tok": 854761,
-      "out_tok": 406801
+      "cost": 0.2742,
+      "in_tok": 918837,
+      "out_tok": 519945
     },
     "D": {
       "n": 102,
@@ -117,6 +117,13 @@
       "ci_hi": 0.1
     }
   ],
-  "total_n": 401,
-  "total_cost": 1.6039
+  "total_n": 407,
+  "total_cost": 1.64,
+  "c": {
+    "n": 101,
+    "loc_rate": 46.5,
+    "cost": 0.27,
+    "tokens": 1.44,
+    "note": "101/102 (s33/C/seed0 pending), DS summary"
+  }
 }
