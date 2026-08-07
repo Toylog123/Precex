@@ -19,6 +19,116 @@
       ]
     ],
     "stuck_signals": [],
+    "diff_detail": {
+      "count": {
+        "first_diff_cycle": 42,
+        "cycles": [
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46
+        ],
+        "golden": [
+          null,
+          null,
+          "1",
+          "1",
+          "1",
+          "1",
+          "10",
+          "10",
+          "11"
+        ],
+        "buggy": [
+          null,
+          null,
+          "1",
+          "1",
+          "10",
+          "10",
+          "11",
+          "11",
+          "100"
+        ]
+      },
+      "count_d": {
+        "first_diff_cycle": 43,
+        "cycles": [
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          "1",
+          "1",
+          "1",
+          "1",
+          "10",
+          "10"
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          "1",
+          "1",
+          "10",
+          "10",
+          "11",
+          "11"
+        ]
+      },
+      "half_full": {
+        "first_diff_cycle": 46,
+        "cycles": [
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "1"
+        ]
+      }
+    },
     "cycles_compared": 51
   },
   "clk_sig": "clk"

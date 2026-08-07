@@ -47,6 +47,368 @@
       ]
     ],
     "stuck_signals": [],
+    "diff_detail": {
+      "count": {
+        "first_diff_cycle": 20,
+        "cycles": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "golden": [
+          "111",
+          "111",
+          "1000",
+          "1000",
+          "1000",
+          "1000",
+          "111",
+          "111",
+          "110"
+        ],
+        "buggy": [
+          "111",
+          "111",
+          "1000",
+          "1000",
+          "1001",
+          "1001",
+          "1000",
+          "1000",
+          "111"
+        ]
+      },
+      "count_d": {
+        "first_diff_cycle": 21,
+        "cycles": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "golden": [
+          null,
+          "111",
+          "111",
+          "1000",
+          "1000",
+          "1000",
+          "1000",
+          "111",
+          "111"
+        ],
+        "buggy": [
+          null,
+          "111",
+          "111",
+          "1000",
+          "1000",
+          "1001",
+          "1001",
+          "1000",
+          "1000"
+        ]
+      },
+      "head": {
+        "first_diff_cycle": 38,
+        "cycles": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "1",
+          "1",
+          "10"
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "1",
+          "1",
+          "10"
+        ]
+      },
+      "tail": {
+        "first_diff_cycle": 20,
+        "cycles": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "golden": [
+          "111",
+          "111",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "buggy": [
+          "111",
+          "111",
+          "0",
+          "0",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "full": {
+        "first_diff_cycle": 20,
+        "cycles": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "golden": [
+          null,
+          null,
+          "1",
+          "1",
+          "1",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "buggy": [
+          null,
+          null,
+          "1",
+          "1",
+          "0",
+          "0",
+          "1",
+          "1",
+          "0"
+        ]
+      },
+      "empty": {
+        "first_diff_cycle": 36,
+        "cycles": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "half_full": {
+        "first_diff_cycle": 30,
+        "cycles": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "full_d": {
+        "first_diff_cycle": 21,
+        "cycles": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          "1",
+          "1",
+          "1",
+          "1",
+          "0",
+          "0"
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          "1",
+          "1",
+          "0",
+          "0",
+          "1",
+          "1"
+        ]
+      },
+      "empty_d": {
+        "first_diff_cycle": 37,
+        "cycles": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "dout": {
+        "first_diff_cycle": 22,
+        "cycles": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "1"
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "11111111",
+          "11111111",
+          "1"
+        ]
+      }
+    },
     "cycles_compared": 51
   },
   "clk_sig": "clk"

@@ -19,6 +19,89 @@
       ]
     ],
     "stuck_signals": [],
+    "diff_detail": {
+      "S_AXI_ARREADY": {
+        "first_diff_cycle": 24,
+        "cycles": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "golden": [
+          "x",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "buggy": [
+          "x",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "S_AXI_RDATA": {
+        "first_diff_cycle": 24,
+        "cycles": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "golden": [
+          "x",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "buggy": [
+          "x",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "S_AXI_RVALID": {
+        "first_diff_cycle": 1,
+        "cycles": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "golden": [
+          "x",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "buggy": [
+          "x",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      }
+    },
     "cycles_compared": 37
   },
   "clk_sig": "ACLK"

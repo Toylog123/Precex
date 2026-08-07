@@ -11,6 +11,35 @@
       ]
     ],
     "stuck_signals": [],
+    "diff_detail": {
+      "rx_busy": {
+        "first_diff_cycle": 1,
+        "cycles": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "golden": [
+          "x",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1"
+        ],
+        "buggy": [
+          "x",
+          "1",
+          "1",
+          "1",
+          "0",
+          "1"
+        ]
+      }
+    },
     "cycles_compared": 21493
   },
   "clk_sig": "clk"

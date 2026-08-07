@@ -6,6 +6,7 @@
     "first_anomaly_cycle": null,
     "key_signal_diffs": [],
     "stuck_signals": [],
+    "diff_detail": {},
     "cycles_compared": 53
   },
   "clk_sig": "ACLK"

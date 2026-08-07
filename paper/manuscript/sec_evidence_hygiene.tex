@@ -24,6 +24,6 @@ off8（行号 -8 偏移） & 16 & \textbf{16/16}（dev=0） & 16/16 \\
 \end{tabular}
 \end{table}
 
-\textbf{握手样本 s15 的 2$\times$2 分解}：在证据中人工补充\textquotedblleft 应翻转未翻转信号\textquotedblright（TraceAnalyzer 的 key\_signal\_diffs）与逐步推理指令均未改变其精确行命中（4 变体 $\times$ 3 seeds 全部 loc\_top1=False），但 12 次运行的理由文本全部正确指认\textquotedblleft S\_IDLE 的 tx\_start 分支未同步拉低 txd\textquotedblright，修复通过 11/12，定位偏差 $\le 2$ 行占 9/12、$\le 6$ 行占 12/12。这揭示第三类判据卫生问题：\textbf{删除型缺陷（被删语句行在 buggy 中不存在）下，精确行号判据系统性过严}，定位评估应结合修复正确性与容差口径，而非单点行命中。
+\textbf{握手样本 s15 的 2$\times$2 分解}：在证据中人工补充\textquotedblleft 应翻转未翻转信号\textquotedblright（TraceAnalyzer 的 key\_signal\_diffs）与逐步推理指令均未改变其精确行命中（4 变体 $\times$ 3 seeds 全部 loc\_top1=False），但 12 次运行的理由文本全部正确指认\textquotedblleft S\_IDLE 的 tx\_start 分支未同步拉低 txd\textquotedblright，且\textbf{11/12 的 diff 实际修到了根因插入点}（在 tx\_start 分支内补 \verb|txd <= 1'b0|，即缺失语句的语义插入位置，行 55--60），修复通过 11/12，定位偏差 $\le 2$ 行占 9/12、$\le 6$ 行占 12/12。该结论在删除型缺陷样本 s29（缺失写分支）上复现：3 个 seed 的 diff 全部修到根因插入点且修复通过，但精确行号仅命中 1 个 seed。这揭示第三类判据卫生问题：\textbf{删除型缺陷（被删语句行在 buggy 中不存在）下，精确行号判据系统性过严}，任何正确修复都不可能精确命中被删行；定位评估应结合修复语义正确性与插入点容差口径，而非单点行命中。
 
 该消融为判据卫生（第~V-D 节）补充了证据卫生维度：定位失败需先排除呈现层假象（行号基准、断言行语义、删除型缺陷判据），再归因于模型或证据内容。

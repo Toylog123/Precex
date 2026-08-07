@@ -27,6 +27,158 @@
       ]
     ],
     "stuck_signals": [],
+    "diff_detail": {
+      "state": {
+        "first_diff_cycle": 64,
+        "cycles": [
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          "0",
+          "0"
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "state_d": {
+        "first_diff_cycle": 65,
+        "cycles": [
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "0"
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          "0",
+          "0"
+        ]
+      },
+      "step_cnt": {
+        "first_diff_cycle": 65,
+        "cycles": [
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66
+        ],
+        "golden": [
+          "11100",
+          "11101",
+          "11110",
+          "11111",
+          "100000",
+          "100001",
+          "0"
+        ],
+        "buggy": [
+          "11100",
+          "11101",
+          "11110",
+          "11111",
+          "100000",
+          "0",
+          "0"
+        ]
+      },
+      "step_cnt_d": {
+        "first_diff_cycle": 66,
+        "cycles": [
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66
+        ],
+        "golden": [
+          "11011",
+          "11100",
+          "11101",
+          "11110",
+          "11111",
+          "100000",
+          "100001"
+        ],
+        "buggy": [
+          "11011",
+          "11100",
+          "11101",
+          "11110",
+          "11111",
+          "100000",
+          "0"
+        ]
+      },
+      "timeout_irq": {
+        "first_diff_cycle": 64,
+        "cycles": [
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          "1",
+          "0"
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          "1",
+          "0",
+          "0"
+        ]
+      }
+    },
     "cycles_compared": 67
   },
   "clk_sig": "clk"

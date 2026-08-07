@@ -33,6 +33,224 @@
     "stuck_signals": [
       "rx_data"
     ],
+    "diff_detail": {
+      "state": {
+        "first_diff_cycle": 13,
+        "cycles": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          "10",
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          "11",
+          "11",
+          "11",
+          "11",
+          "11"
+        ]
+      },
+      "state_d": {
+        "first_diff_cycle": 14,
+        "cycles": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          "10",
+          "10",
+          "10",
+          "10"
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          "11",
+          "11",
+          "11",
+          "11"
+        ]
+      },
+      "bit_cnt": {
+        "first_diff_cycle": 29,
+        "cycles": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "rx_busy": {
+        "first_diff_cycle": 29,
+        "cycles": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "rx_data": {
+        "first_diff_cycle": 157,
+        "cycles": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "rx_valid": {
+        "first_diff_cycle": 29,
+        "cycles": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      }
+    },
     "cycles_compared": 674
   },
   "clk_sig": "clk"

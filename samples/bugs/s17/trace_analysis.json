@@ -13,6 +13,44 @@
     "stuck_signals": [
       "S_AXI_BVALID"
     ],
+    "diff_detail": {
+      "S_AXI_BVALID": {
+        "first_diff_cycle": 6,
+        "cycles": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "golden": [
+          null,
+          null,
+          null,
+          "1",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0"
+        ],
+        "buggy": [
+          null,
+          null,
+          null,
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      }
+    },
     "cycles_compared": 53
   },
   "clk_sig": "ACLK"
