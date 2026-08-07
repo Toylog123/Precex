@@ -168,9 +168,17 @@ def run_one(sample_dir, sample_id, setting, seed, llm, out_dir, mock=False, retr
         result["diff_text"] = (diff_text or "")[:4000]
         # loc_top1 判据：LLM 看到的是带头注释的 buggy.v，行号须对 buggy_inject_line；
         # 旧样本无该字段时回退 inject_line（golden 行号，仅近似）
-        golden_line = meta.get("inject_line")
-        buggy_line = meta.get("buggy_inject_line", (golden_line + BUGGY_HEADER_OFFSET) if golden_line else None)
-        result["loc_top1"] = (loc["line"] == buggy_line)
+        # loc_top1: score against true defect lines in buggy.v.
+        # Prefer meta.buggy_inject_lines (from scripts/ground_truth.py);
+        # fall back to buggy_inject_line, then old golden+offset approx.
+        buggy_lines = meta.get("buggy_inject_lines") or []
+        if not buggy_lines:
+            golden_line = meta.get("inject_line")
+            bl = meta.get("buggy_inject_line",
+                          (golden_line + BUGGY_HEADER_OFFSET) if golden_line else None)
+            if bl:
+                buggy_lines = [bl]
+        result["loc_top1"] = (loc["line"] in buggy_lines) if buggy_lines else False
         if not diff_text:
             result["errors"].append("attempt %d: no diff" % attempt)
             _record_retry("attempt %d: 未生成 diff（输出格式不符合 ###DIFF### 约定）" % attempt)
@@ -245,7 +253,8 @@ def _build_evidence_text(setting, sample_dir):
         except Exception:
             return raw
         if isinstance(obj, dict):
-            for k in ("inject_line", "inject_desc", "diff", "buggy_inject_line"):
+            for k in ("inject_line", "inject_desc", "diff", "buggy_inject_line",
+                        "buggy_inject_lines", "gt_method", "gt_content_lines", "gt_updated_at"):
                 obj.pop(k, None)
             return json.dumps(obj, ensure_ascii=False, indent=2)
         return raw

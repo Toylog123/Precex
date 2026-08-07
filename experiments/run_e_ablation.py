@@ -9,6 +9,7 @@ os.chdir(REPO)
 
 from experiments.configs.prompt_templates import sanitize_design_text, build_prompt, SYSTEM_PROMPT
 from scripts.run_experiments import _build_evidence_text
+from scripts.ground_truth import ground_truth_lines
 
 OUT = os.path.join(REPO, "experiments", "runs", "exp_e_ablation.json")
 API_KEY = "sk-4a3c3804e6954f1c98b04a059e2b40ba"
@@ -39,6 +40,7 @@ def call_api(sample_id, base, setting):
     with open(os.path.join(sd, "meta.json"), encoding="utf-8") as f:
         meta = json.load(f)
     inject_line = meta.get("inject_line", -1)
+    true_lines = ground_truth_lines(sd)["lines"]
     with open(os.path.join(sd, "buggy.v"), encoding="utf-8") as f:
         design = f.read()
     design_clean = sanitize_design_text(design)
@@ -80,11 +82,13 @@ def call_api(sample_id, base, setting):
                     loc_line = int(digits[0])
                     break
 
-        hit = bool(loc_line == inject_line)
+        hit = bool(loc_line in true_lines) if loc_line is not None else False
+        loc_dev_min = min(abs(loc_line - t) for t in true_lines) if (loc_line is not None and true_lines) else None
         cost = in_tok * 0.14 / 1e6 + out_tok * 0.28 / 1e6
         return {
             "sample": sample_id, "base": base, "setting": setting,
             "loc_top1": hit, "loc_line": loc_line, "inject_line": inject_line,
+            "true_lines": true_lines, "loc_dev_min": loc_dev_min,
             "input_tokens": in_tok, "output_tokens": out_tok,
             "cost": round(cost, 6), "elapsed": round(elapsed, 1),
             "evidence_chars": len(ev_text),

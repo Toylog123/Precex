@@ -61,7 +61,8 @@ def _evidence_text(setting, sample_dir):
         try:
             obj = json.loads(raw)
             if isinstance(obj, dict):
-                for k in ("inject_line", "inject_desc", "diff", "buggy_inject_line"):
+                for k in ("inject_line", "inject_desc", "diff", "buggy_inject_line",
+                         "buggy_inject_lines", "gt_method", "gt_content_lines", "gt_updated_at"):
                     obj.pop(k, None)
                 return json.dumps(obj, ensure_ascii=False, indent=2)
         except Exception:
@@ -135,9 +136,12 @@ def _generate_candidate(sample_dir, sample_id, setting, temp, llm, timeout, base
     row["cost"] = res["cost"]
     loc, diff_text = parse_llm_output(res["content"])
     row["loc_line"] = loc.get("line")
-    golden_line = meta.get("inject_line")
-    buggy_line = meta.get("buggy_inject_line", (golden_line + BUGGY_HEADER_OFFSET) if golden_line else None)
-    row["loc_top1"] = (loc.get("line") == buggy_line)
+    buggy_lines = meta.get("buggy_inject_lines") or []
+    if not buggy_lines:
+        golden_line = meta.get("inject_line")
+        bl = meta.get("buggy_inject_line", (golden_line + BUGGY_HEADER_OFFSET) if golden_line else None)
+        buggy_lines = [bl] if bl else []
+    row["loc_top1"] = (loc.get("line") in buggy_lines) if buggy_lines else False
     if not diff_text:
         row["error"] = "no_diff"
         return row

@@ -1,0 +1,29 @@
+
+\subsection{证据卫生消融：行号基准与断言行语义}\label{sec:evidence-hygiene}
+\newcommand{\hyth}{证据卫生（行号标注 + 断言行语义纠偏）}
+
+C 设置 40 个定位 miss 的逐样本审计揭示，绝大多数失败并非模型推理能力不足，而是\textbf{证据呈现层的两个可修复缺陷}：
+(1) \textbf{行号计数基准错位}：设计代码在 prompt 中不带行号，LLM 需自行数行，倾向按 module 相对行计数。由于 buggy 文件头注释占 8 行，16 个 miss 的报行满足 $\mathrm{loc} = \mathrm{truth} - 8$，且这 16 条的定位理由文本全部正确指认缺陷机制；
+(2) \textbf{断言行语义误导}：反例语义化证据中的 failed\_line 字段是 sby 报告的\textbf{断言行}而非缺陷行，12 个 miss 的报行恰好等于 failed\_line（如 s08 报 137 而真值为 63、s17 报 234 而真值为 122--123）。
+
+为验证这两类归因，本文实施证据卫生消融：对 28 条已知 miss 重跑修复，仅修改证据/提示呈现——(a) 设计代码加绝对行号前缀并在输出格式中规定 line 必须为文件绝对行号；(b) C 证据 failed\_line 改名为 assert\_line 并显式标注\textquotedblleft 断言行不等于缺陷行\textquotedblright。结果如表~ref{tab:hygiene} 所示：\textbf{28/28 全部精确定位（行偏差为 0），27/28 修复通过 BMC 回归}。该结果证明：C 设置 60.8\% 的定位精度低估了系统真实能力，证据呈现层的行号语义纠偏即可将 C 的定位外推至 88.2\%（90/102）。
+
+\begin{table}[t]
+\centering
+\caption{证据卫生消融结果（DeepSeek v4-flash，行号判据修复后口径）}
+\label{tab:hygiene}
+\begin{tabular}{lccc}
+\toprule
+失败聚类 & miss 数 & 卫生修复后定位 & 修复通过 \\
+\midrule
+eq\_sem（断言行误导） & 12 & \textbf{12/12}（dev=0） & 11/12 \\
+off8（行号 -8 偏移） & 16 & \textbf{16/16}（dev=0） & 16/16 \\
+\midrule
+合计 & 28 & \textbf{28/28} & 27/28 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{握手样本 s15 的 2$\times$2 分解}：在证据中人工补充\textquotedblleft 应翻转未翻转信号\textquotedblright（TraceAnalyzer 的 key\_signal\_diffs）与逐步推理指令均未改变其精确行命中（4 变体 $\times$ 3 seeds 全部 loc\_top1=False），但 12 次运行的理由文本全部正确指认\textquotedblleft S\_IDLE 的 tx\_start 分支未同步拉低 txd\textquotedblright，修复通过 11/12，定位偏差 $\le 2$ 行占 9/12、$\le 6$ 行占 12/12。这揭示第三类判据卫生问题：\textbf{删除型缺陷（被删语句行在 buggy 中不存在）下，精确行号判据系统性过严}，定位评估应结合修复正确性与容差口径，而非单点行命中。
+
+该消融为判据卫生（第~V-D 节）补充了证据卫生维度：定位失败需先排除呈现层假象（行号基准、断言行语义、删除型缺陷判据），再归因于模型或证据内容。

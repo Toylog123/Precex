@@ -12,6 +12,7 @@ os.chdir(REPO)
 from experiments.configs.prompt_templates import sanitize_design_text, build_prompt, SYSTEM_PROMPT
 from scripts.run_experiments import _build_evidence_text
 from structural_repairer import apply_structural_mode
+from scripts.ground_truth import ground_truth_lines
 
 OUT = os.path.join(REPO, "experiments", "runs", "exp_structural_ablation.json")
 # 凭据从根 .env 读取（绝不硬编码入库）；DEEPSEEK_BASE_URL 缺省为官方 OpenAI 兼容端点
@@ -55,6 +56,7 @@ def call_api(sample_id, mode):
     with open(os.path.join(sd, "meta.json"), encoding="utf-8") as f:
         meta = json.load(f)
     inject_line = meta.get("inject_line", -1)
+    true_lines = ground_truth_lines(sd)["lines"]
     with open(os.path.join(sd, "buggy.v"), encoding="utf-8") as f:
         design = f.read()
     design_clean = sanitize_design_text(design)
@@ -86,8 +88,11 @@ def call_api(sample_id, mode):
                 digits = re.findall(r"\d+", ll)
                 if digits:
                     loc_line = int(digits[0]); break
-        return {"sample": sample_id, "mode": mode, "loc_top1": bool(loc_line == inject_line),
-                "loc_line": loc_line, "inject_line": inject_line, "input_tokens": in_tok,
+        loc_dev_min = min(abs(loc_line - t) for t in true_lines) if (loc_line is not None and true_lines) else None
+        return {"sample": sample_id, "mode": mode, "loc_top1": bool(loc_line in true_lines) if loc_line is not None else False,
+                "loc_line": loc_line, "inject_line": inject_line,
+                "true_lines": true_lines, "loc_dev_min": loc_dev_min,
+                "input_tokens": in_tok,
                 "output_tokens": out_tok, "elapsed": round(elapsed, 1), "status": "ok"}
     except Exception as e:
         return {"sample": sample_id, "mode": mode, "loc_top1": False, "loc_line": None,

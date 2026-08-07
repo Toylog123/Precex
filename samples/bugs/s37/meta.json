@@ -23,5 +23,13 @@
     "golden_formal_result": "pass",
     "verdict": "L3_VALID"
   },
-  "buggy_inject_line": 64
+  "buggy_inject_line": 64,
+  "buggy_inject_lines": [
+    64
+  ],
+  "gt_method": "difflib(golden vs buggy), non-header edit regions; delete anchor = insertion point",
+  "gt_content_lines": [
+    64
+  ],
+  "gt_updated_at": "2026-08-07T14:30:40"
 }

@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.join(REPO, 'experiments', 'configs'))
 sys.path.insert(0, os.path.join(REPO, 'scripts'))
 import prompt_templates as PT
 import run_experiments as RE
-LEAK_WORDS = ('注入', '击穿', '单点注入', 'inject_line', 'inject_desc', 'buggy_inject_line')
+LEAK_WORDS = ('注入', '击穿', '单点注入', 'inject_line', 'inject_desc', 'buggy_inject_line', 'buggy_inject_lines', 'gt_method', 'gt_content_lines', 'gt_updated_at')
 def check_text(text, name, issues):
     for w in LEAK_WORDS:
         if w in text:
@@ -57,7 +57,7 @@ if __name__ == '__main__':
 #   防止 ground-truth 泄漏回归（2026-08-05 泄漏修复后固化）。
 import json, os, re, sys
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LEAK_WORDS = ('注入', '击穿', '单点注入', 'inject_line', 'inject_desc', 'buggy_inject_line')
+LEAK_WORDS = ('注入', '击穿', '单点注入', 'inject_line', 'inject_desc', 'buggy_inject_line', 'buggy_inject_lines', 'gt_method', 'gt_content_lines', 'gt_updated_at')
 CONSUMERS = ['scripts/run_experiments.py', 'scripts/run_prestudy.py', 'scripts/multi_candidate.py',
              'scripts/patch_assembler.py', 'scripts/llm_interpretability.py']
 def check_text(text, name, issues):

@@ -699,6 +699,7 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
         "error_type": verify["err_name"], "error_type_code": verify["code"],
         "level": level, "inject_line": line_no,
         "buggy_inject_line": line_no + BUGGY_HEADER_OFFSET,
+        "buggy_inject_lines": [line_no + BUGGY_HEADER_OFFSET],
 
         "inject_desc": variant["desc"], "diff": diff,
         "hit_assertion": variant["hit"],
@@ -710,6 +711,12 @@ def _write_sample(sample_dir, module, sample_id, golden_src, buggy_src, assertio
     with open(os.path.join(sample_dir, "meta.json"), "w", encoding="utf-8") as f:
         json.dump(meta, f, ensure_ascii=False, indent=2)
     # evidence.json 空骨架（留待证据管线填充）
+    # ???????????difflib golden vs buggy ??????
+    try:
+        from ground_truth import update_meta_ground_truth
+        update_meta_ground_truth(sample_dir)
+    except Exception:
+        pass
     with open(os.path.join(sample_dir, "evidence.json"), "w", encoding="utf-8") as f:
         json.dump({
             "_doc": "PreCex 结构化证据（由 EvidenceEngine 管线生成）| 作者：Toylog | 版本：v0.1",

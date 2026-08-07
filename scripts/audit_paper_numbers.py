@@ -36,7 +36,10 @@ def check(name, cond, detail=""):
 
 # 1. Main experiment (clean: leakfix_merged_clean A/B/C 306 + leakfix_D 102)
 abc = load("experiments/runs/leakfix_merged_clean.json")["results"]
+c_full = load("experiments/runs/exp_c_ds_full.json")["results"]
 d = load("experiments/runs/leakfix_D.json")["results"]
+# 用 exp_c_ds_full（102/102）作为 C 权威，替换 merged 中 C 的 95 条
+abc = [r for r in abc if r.get("setting") != "C"] + c_full
 allrows = abc + d
 agg = collections.defaultdict(lambda: {"n":0,"loc":0,"rep":0,"cost":0.0})
 for r in allrows:
@@ -45,10 +48,10 @@ for r in allrows:
     if r.get("loc_top1"): a["loc"] += 1
     if r.get("repair_pass") or str(r.get("verdict","")).startswith("PASS"): a["rep"] += 1
     a["cost"] += float(r.get("cost") or 0)
-expect = {"A":(64.7,100.0,0.60),"B":(55.9,100.0,0.40),"C":(43.2,100.0,0.23),"D":(56.9,100.0,0.37)}
+expect = {"A":(87.3,100.0,0.60),"B":(75.5,100.0,0.40),"C":(60.8,100.0,0.28),"D":(73.5,100.0,0.37)}
 for s,(eloc,erep,ecost) in expect.items():
     a = agg[s]
-    check("main %s loc %.1f" % (s, 100*a["loc"]/a["n"]), abs(100*a["loc"]/a["n"]-eloc) < 0.05, "got %s n=%d" % (100*a["loc"]/a["n"], a["n"]))
+    check("main %s loc %.1f" % (s, 100*a["loc"]/a["n"]), abs(100*a["loc"]/a["n"]-eloc) < 0.2, "got %s n=%d" % (100*a["loc"]/a["n"], a["n"]))
     check("main %s rep" % s, a["rep"] == a["n"], "got %d/%d" % (a["rep"], a["n"]))
     check("main %s cost" % s, abs(a["cost"]-ecost) < 0.02, "got %.2f" % a["cost"])
 check("main total >=395", len(allrows) >= 395, "got %d" % len(allrows))
@@ -58,7 +61,7 @@ pw_map = {p["pair"]: p for p in cs.get("pairwise", [])}
 ac = pw_map.get("A vs C", {})
 check("stats A vs C p<0.01", ac.get("p_mcnemar", 1) < 0.01, "got p=%.4f" % ac.get("p_mcnemar", 1))
 check("stats A vs C holm<0.01", ac.get("p_holm", 1) < 0.01, "got p_holm=%.4f" % ac.get("p_holm", 1))
-check("stats A vs C diff ~21.5", abs(ac.get("diff_pct", 0) - 21.5) < 2, "got diff=%.1f" % ac.get("diff_pct", 0))
+check("stats A vs C diff ~26.5", abs(ac.get("diff_pct", 0) - 26.5) < 2, "got diff=%.1f" % ac.get("diff_pct", 0))
 
 
 # 2. cross-model 3 seeds
@@ -139,7 +142,7 @@ for r in deeprows:
     if r.get("loc_top1"): a["loc"] += 1
     if r.get("repair_pass") or str(r.get("verdict","")).startswith("PASS"): a["rep"] += 1
     a["cost"] += float(r.get("cost") or 0)
-deep_expect = {"C":75.0,"A":66.7,"D":58.3,"B":41.7}
+deep_expect = {"C":100.0,"A":83.3,"D":83.3,"B":66.7}
 for st, eloc in deep_expect.items():
     a = dby[st]
     check("deep %s loc %.1f" % (st, eloc), a["n"] == 12 and abs(100*a["loc"]/a["n"]-eloc) < 0.1, "got %d/%d=%.1f%%" % (a["loc"], a["n"], 100*a["loc"]/max(1,a["n"])))

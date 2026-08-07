@@ -152,7 +152,8 @@ def build_user_prompt(sample_dir, setting):
             with open(ev_path, encoding="utf-8") as f:
                 ev = json.load(f)
         ev_safe = {k: v for k, v in ev.items()
-                   if k not in ("inject_line", "inject_desc", "diff", "buggy_inject_line")}
+                   if k not in ("inject_line", "inject_desc", "diff", "buggy_inject_line",
+                             "buggy_inject_lines", "gt_method", "gt_content_lines", "gt_updated_at")}
         parts = ["### 结构化证据（evidence.json）",
                  json.dumps(ev_safe, ensure_ascii=False, indent=2)[:1800]]
         sem_path = os.path.join(sample_dir, "semantics.json")
@@ -237,6 +238,9 @@ def _repair_json(cand):
 
 
 def true_line(meta):
+    lines = meta.get("buggy_inject_lines") or []
+    if lines:
+        return lines[0]
     buggy = meta.get("buggy_inject_line")
     if buggy:
         return buggy
