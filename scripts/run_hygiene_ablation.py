@@ -260,7 +260,12 @@ def main():
             sp = os.path.join(REPO_ROOT, "samples", "bugs", sid)
             targets.append((sid, sp, "C", seed))
 
-    results = []
+    # 断点续跑：加载已有结果并按 (sample, setting, seed, variant) 去重，
+    # 避免中断重启后整组重跑造成 API 重复花费（deep_bd 两次事故的教训）
+    data0 = _load_json(args.out)
+    results = [r for r in data0.get("results", []) if isinstance(r, dict)]
+    done = {(r.get("sample"), r.get("setting"), r.get("seed"), r.get("variant"))
+            for r in results if r.get("sample") and r.get("variant")}
 
     def _flush():
         # 每样本增量落盘：进程异常退出时已完成的样本不丢失
@@ -273,6 +278,10 @@ def main():
 
     for sid, sp, setting, seed in targets:
         for variant in variants:
+            key = (sid, setting, seed, variant)
+            if key in done:
+                print("[hygiene] skip %s %s %s seed%d variant=%s (done)" % (sid, setting, args.group, seed, variant), flush=True)
+                continue
             print("[hygiene] %s %s %s seed%d variant=%s" % (sid, setting, args.group, seed, variant), flush=True)
             try:
                 r = run_one(sp, sid, setting, seed, variant, llm, out_dir, mock=args.mock)
@@ -282,6 +291,7 @@ def main():
                      "loc_line": None, "loc_top1": False, "loc_dev": None, "verdict": None,
                      "repair_pass": False, "diff_text": "", "errors": ["run_one: %s" % repr(e)[:300]], "reason": ""}
             results.append(r)
+            done.add(key)
             _flush()
             print("   -> loc=%s top1=%s verdict=%s errs=%d" % (
                 r.get("loc_line"), r.get("loc_top1"), r.get("verdict"), len(r.get("errors", []))), flush=True)
