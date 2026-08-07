@@ -117,7 +117,7 @@ for _l in open(_ledger_path, encoding="utf-8"):
         continue  # 跳过损坏行（如 mock 截断），账本其余行正常
 led_cost = sum(float(r.get("cost_usd", r.get("cost")) or 0) for r in rows)
 check("ledger n>=2970", len(rows) >= 2970, "got %d" % len(rows))
-check("ledger cost 23.69", abs(led_cost-23.69) < 0.05, "got %.3f" % led_cost)
+check("ledger cost 24.25", abs(led_cost-24.25) < 0.05, "got %.3f" % led_cost)  # 口径：账本含全部后台线（structural/st_transition/depth_scan 等）成本，2026-08-07 21:25 基线，仅做完整性 sanity check，非论文引用数字
 
 # 7. verify timing golden max
 vt = load("experiments/runs/verify_timing.json")

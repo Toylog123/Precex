@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Paper cross-reference integrity audit (P0.3)."""
-import os, re, sys
+import io, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def _find_tex():
@@ -20,6 +20,40 @@ def _find_abstract_en():
 DEFAULT_TEX = _find_tex()
 DEFAULT_EN = _find_abstract_en()
 
+
+def _expand_inputs(text, base_dir, _depth=0):
+    """Recursively expand \input{...} children so labels/refs/tables in subfiles are audited."""
+    if _depth > 8:
+        return text
+    token = "\input{"
+    out = []
+    i = 0
+    while True:
+        j = text.find(token, i)
+        if j < 0:
+            out.append(text[i:])
+            break
+        out.append(text[i:j])
+        k = text.find("}", j + len(token))
+        if k < 0:
+            out.append(text[j:])
+            break
+        fname = text[j + len(token):k].strip()
+        if not fname.endswith(".tex"):
+            fname += ".tex"
+        cand = fname if os.path.isabs(fname) else os.path.join(base_dir, fname)
+        if os.path.isfile(cand):
+            try:
+                sub = io.open(cand, encoding="utf-8").read()
+            except Exception:
+                out.append(text[j:k + 1])
+            else:
+                out.append(_expand_inputs(sub, base_dir, _depth + 1))
+        else:
+            out.append(text[j:k + 1])
+        i = k + 1
+    return "".join(out)
+
 def check(name, cond, detail=""):
     print(("PASS" if cond else "FAIL") + ": " + name + (" | " + detail if detail else ""))
     return cond
@@ -28,6 +62,8 @@ def main():
     tex_path = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_TEX
     en_path = sys.argv[2] if len(sys.argv) > 2 else DEFAULT_EN
     tex = open(os.path.abspath(tex_path), encoding="utf-8").read()
+    tex_base = os.path.dirname(os.path.abspath(tex_path))
+    tex = _expand_inputs(tex, tex_base)
     en = open(os.path.abspath(en_path), encoding="utf-8").read()
     fails = 0
 
