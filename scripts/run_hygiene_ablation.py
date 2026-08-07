@@ -29,6 +29,8 @@ from prompt_templates import SYSTEM_PROMPT, sanitize_design_text  # noqa: E402
 from run_prestudy import parse_llm_output, apply_unified_diff  # noqa: E402
 import evaluator  # noqa: E402
 import run_experiments as rex  # noqa: E402
+import sys as _sys
+_sys.path.insert(0, os.path.join(REPO_ROOT, "agents", "cex_tracer"))
 
 OUTPUT_FORMAT = rex.build_prompt.__globals__["OUTPUT_FORMAT"]
 
@@ -38,6 +40,7 @@ GROUPS = {
     "deep_bd": ["s38", "s39", "s40", "s41", "s42"],
     "s15": ["s15"],
     "near1_other": ["s10", "s15", "s16", "s29", "s30", "s31", "s34"],
+    "st_transition": ["s07", "s08", "s09", "s18", "s36"],
 }
 
 EQ_SEM_SEEDS = {"s08": [0, 1, 2], "s11": [0], "s17": [0, 1, 2], "s18": [1],
@@ -52,6 +55,14 @@ DEEP_BD_TARGETS = [
     ("s38", "B", 1), ("s39", "B", 0), ("s39", "B", 1), ("s40", "A", 2),
     ("s41", "A", 0), ("s42", "B", 0), ("s42", "B", 2), ("s40", "D", 1),
     ("s40", "D", 2), ("s38", "C", 2), ("s38", "D", 0), ("s38", "D", 2),
+]
+
+ST_TRANSITION_TARGETS = [
+    ("s07", "A", 0), ("s07", "A", 1), ("s07", "A", 2),
+    ("s08", "A", 0), ("s08", "A", 1), ("s08", "A", 2),
+    ("s09", "A", 0), ("s09", "A", 1), ("s09", "A", 2),
+    ("s18", "A", 0), ("s18", "A", 1), ("s18", "A", 2),
+    ("s36", "A", 0), ("s36", "A", 1), ("s36", "A", 2),
 ]
 
 
@@ -89,7 +100,44 @@ def _sanitize_diff_lines(diff_text):
 def build_hygiene_prompt(setting, sample_dir, meta, variant):
     design = sanitize_design_text(open(os.path.join(sample_dir, "buggy.v"), encoding="utf-8").read())
     assertions = rex._extract_inline_assertions(design)
-    ev_text = rex._build_evidence_text(setting, sample_dir)
+    ev_text = None
+    if setting == "D":
+        # D 证据：FVDebug 式因果图（与 scripts/llm_interpretability.d_evidence_text 同协议）
+        ev_obj = _load_json(os.path.join(sample_dir, "evidence.json"))
+        sem = _load_json(os.path.join(sample_dir, "semantics.json"))
+        dparts = ["## FVDebug 式因果图（D 设置：反例自动提取，无 LLM 生成）",
+                  "### 失败断言",
+                  "module=%s | error_type=%s | fail_stage=%s | fail_step=%s" % (
+                      ev_obj.get("module"), ev_obj.get("error_type"),
+                      ev_obj.get("fail_stage"), ev_obj.get("fail_step")),
+                  "### 根因节点（fault_cone，按影响排序）"]
+        for node in (sem.get("fault_cone") or []):
+            dparts.append("- %s" % (node if isinstance(node, str) else json.dumps(node, ensure_ascii=False)))
+        dparts.append("### 因果链状态轨迹（全周期可读信号名）")
+        for row in (sem.get("state_trace") or []):
+            dparts.append("cyc%s: %s" % (row.get("cycle", "?"), json.dumps(row, ensure_ascii=False)))
+        dparts.append("### 触发条件")
+        dparts.append(str(sem.get("trigger_condition") or ev_obj.get("trigger_condition") or "?"))
+        ev_text = chr(10).join(dparts)
+    else:
+        ev_text = rex._build_evidence_text(setting, sample_dir)
+        # D 证据：FVDebug 式因果图（与 scripts/llm_interpretability.d_evidence_text 同协议）
+        ev_obj = _load_json(os.path.join(sample_dir, "evidence.json"))
+        sem = _load_json(os.path.join(sample_dir, "semantics.json"))
+        dparts = ["## FVDebug 式因果图（D 设置：反例自动提取，无 LLM 生成）",
+                  "### 失败断言",
+                  "module=%s | error_type=%s | fail_stage=%s | fail_step=%s" % (
+                      ev_obj.get("module"), ev_obj.get("error_type"),
+                      ev_obj.get("fail_stage"), ev_obj.get("fail_step")),
+                  "### 根因节点（fault_cone，按影响排序）"]
+        for node in (sem.get("fault_cone") or []):
+            dparts.append("- %s" % (node if isinstance(node, str) else json.dumps(node, ensure_ascii=False)))
+        dparts.append("### 因果链状态轨迹（全周期可读信号名）")
+        for row in (sem.get("state_trace") or []):
+            dparts.append("cyc%s: %s" % (row.get("cycle", "?"), json.dumps(row, ensure_ascii=False)))
+        dparts.append("### 触发条件")
+        dparts.append(str(sem.get("trigger_condition") or ev_obj.get("trigger_condition") or "?"))
+        ev_text = chr(10).join(dparts)
 
     prompt = "请定位并修复以下 RTL 设计中的跨周期行为缺陷（L3：弱 tb 通过但形式验证失败）。\n\n"
     shown_design = number_design(design) if variant != "base" else design
@@ -106,7 +154,12 @@ def build_hygiene_prompt(setting, sample_dir, meta, variant):
         except Exception:
             pass
 
-    ev_label = "【证据段 C：反例语义化（周期事件表+状态轨迹+故障锥+NL 摘要）】" if setting == "C" else "【证据段】"
+    if setting == "C":
+        ev_label = "【证据段 C：反例语义化（周期事件表+状态轨迹+故障锥+NL 摘要）】"
+    elif setting == "D":
+        ev_label = "【证据段 D：FVDebug 式因果图（失败断言 + 根因节点 + 因果链状态轨迹，确定性提取）】"
+    else:
+        ev_label = "【证据段】"
     prompt += ev_label + "\n[证据内容开始]\n" + ev_text + "\n[证据内容结束]\n\n"
 
     if variant != "base":
@@ -119,7 +172,7 @@ def build_hygiene_prompt(setting, sample_dir, meta, variant):
                    "2) 找出第一个偏离期望的信号（或应翻转未翻转的信号）及其所在行；\n"
                    "3) 沿数据依赖推断根因行；\n"
                    "4) 生成最小 unified diff。\n\n")
-    if variant in ("handshake", "handshake_cot", "handshake_v2"):
+    if variant in ("handshake", "handshake_cot", "handshake_v2", "handshake_v3"):
         ta = _load_json(os.path.join(sample_dir, "trace_analysis.json"))
         an = ta.get("analysis") or {}
         rows = []
@@ -131,7 +184,15 @@ def build_hygiene_prompt(setting, sample_dir, meta, variant):
         ss = an.get("stuck_signals") or []
         if ss:
             rows.append("静默信号=%s" % json.dumps(ss, ensure_ascii=False))
-        if variant == "handshake_v2":
+        if variant in ("handshake_v2", "handshake_v3"):
+            if variant == "handshake_v3":
+                try:
+                    import temporal_graph as _tg
+                    _tgtxt = _tg.render(sample_dir)
+                    if _tgtxt:
+                        rows.append(_tgtxt)
+                except Exception as _e:
+                    rows.append("(temporal_graph extraction failed: %s)" % repr(_e)[:80])
             dd = an.get("diff_detail") or {}
             if dd:
                 rows.append("逐周期期望(golden)vs实际(buggy)值序列=" +
@@ -259,6 +320,10 @@ def main():
         for sid, seed in NEAR1_OTHER_TARGETS:
             sp = os.path.join(REPO_ROOT, "samples", "bugs", sid)
             targets.append((sid, sp, "C", seed))
+    elif args.group == "st_transition":
+        for sid, setting, seed in ST_TRANSITION_TARGETS:
+            sp = os.path.join(REPO_ROOT, "samples", "bugs", sid)
+            targets.append((sid, sp, setting, seed))
 
     # 断点续跑：加载已有结果并按 (sample, setting, seed, variant) 去重，
     # 避免中断重启后整组重跑造成 API 重复花费（deep_bd 两次事故的教训）
