@@ -27,6 +27,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(REPO_ROOT, "harness"))
 sys.path.insert(0, os.path.join(REPO_ROOT, "experiments", "configs"))
 sys.path.insert(0, os.path.join(REPO_ROOT, "scripts"))
+sys.path.insert(0, os.path.join(REPO_ROOT, "agents", "local_repairer"))
 
 from llm_client import LLMClient  # noqa: E402
 from prompt_templates import SYSTEM_PROMPT, build_prompt, sanitize_design_text  # noqa: E402
